@@ -1,0 +1,56 @@
+import { Meta, Story } from '@storybook/addon-docs';
+import * as stories from './index.stories';
+import { Button } from '../../Button';
+
+<Meta component={Button} id="docs-in-mdx" />
+
+# Defining Documentation in MDX files
+
+<Story story={stories.DocsInMDX} id="docs-in-mdx" />
+
+The storybook preferred way of writing stories in CSF format but adding documentation in MDX files is to follow [this recipe](https://github.com/storybookjs/storybook/blob/next/code/addons/docs/docs/recipes.md#csf-stories-with-mdx-docs).
+
+For cypress tests purposes, we'll want to include the default export but then add `includeStories: []`, which is a pattern hinted at in that documentation but which must have changed slightly. However, for automatic testing purposes, that will be a problem for `composeStories`. As such, you should add `cyIncludeStories: true` to your default export. For this repo specifically, we don't want to show the component itself in the docs, so we set `parameters.docs.disable` to `true`. All in, the story file looks like this
+
+```ts
+import type { ComponentStory } from "@storybook/react";
+import * as React from "react";
+import { Button } from "../../Button";
+
+// eslint-disable-next-line storybook/story-exports
+export default {
+  component: Button,
+  // mdx generated docs
+  includeStories: [],
+  cyIncludeStories: true,
+};
+
+export const DocsInMDX: ComponentStory<typeof Button> = (args) => (
+  <Button {...args} />
+);
+DocsInMDX.args = {
+  label: "Documentation provided by mdx file while component is written in csf",
+};
+// don't show the component in the docs created by mdx
+DocsInMDX.parameters = {
+  docs: { disable: true },
+};
+```
+
+and the MDX file looks like, well..., this file. But here's a snippet:
+
+```tsx
+import { Meta, Story } from '@storybook/addon-docs';
+import * as stories from './index.stories';
+import { Button } from '../../Button';
+
+<Meta title="Docs In MDX" component={Button} />
+
+# Defining Documentation in MDX files
+
+<Story story={stories.DocsInMDX} />
+
+The storybook preferred way of writing stories in CSF format but adding documentation in MDX files...
+```
+
+See [External Test](/docs/external-test) for another example and one in which the tests are external, and so don't need the `cyIncludeStories` but which will need to override the `includeStories` manually.

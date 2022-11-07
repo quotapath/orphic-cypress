@@ -1,0 +1,78 @@
+{
+  "name": "cypress-storybook-component-tests",
+  "version": "1.0.0",
+  "description": "Set of utilities and typescript transformers to cover storybook stories with cypress component tests",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "scripts": {
+    "test": "cypress run --component",
+    "test:headed": "cypress open --project . --component",
+    "test:isolated": "CYPRESS_USE_ISOLATED_CT_FILES=true cypress run --component",
+    "test:isolated:headed": "CYPRESS_USE_ISOLATED_CT_FILES=true cypress open --project . --component",
+    "prebuild": "rm -rf ./dist",
+    "build": "tsc --module commonjs --esModuleInterop true",
+    "lint": "eslint \"**/*.{t,j}s{,x}\"",
+    "lint:fix": "npm run lint -- --fix",
+    "fmt": "npm run lint:fix && prettier --write .",
+    "typecheck": "tsc --noEmit",
+    "storybook": "start-storybook -p 6006",
+    "storybook:build": "build-storybook -o docs/storybook/",
+    "docs": "typedoc && IS_HTML=true typedoc && npm run storybook:build"
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/quotapath/cypress-storybook-component-tests.git"
+  },
+  "keywords": [
+    "cypress",
+    "component",
+    "storybook",
+    "transformer"
+  ],
+  "author": "quotapath",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/quotapath/cypress-storybook-component-tests/issues"
+  },
+  "homepage": "https://github.com/quotapath/cypress-storybook-component-tests#readme",
+  "devDependencies": {
+    "@babel/core": "^7.20.2",
+    "@storybook/addon-actions": "^6.5.13",
+    "@storybook/addon-essentials": "^6.5.13",
+    "@storybook/addon-interactions": "^6.5.13",
+    "@storybook/addon-links": "^6.5.13",
+    "@storybook/addon-storysource": "^6.5.13",
+    "@storybook/builder-webpack5": "^6.5.13",
+    "@storybook/manager-webpack5": "^6.5.13",
+    "@storybook/react": "^6.5.13",
+    "@storybook/testing-library": "^0.0.13",
+    "@storybook/testing-react": "^1.3.0",
+    "@types/react": "^17.0.2",
+    "@types/sinon": "^10.0.13",
+    "@typescript-eslint/eslint-plugin": "^5.42.0",
+    "@typescript-eslint/parser": "^5.42.0",
+    "babel-loader": "^8.3.0",
+    "cypress": "^10.11.0",
+    "eslint": "^8.27.0",
+    "eslint-plugin-react": "^7.31.10",
+    "eslint-plugin-storybook": "^0.6.7",
+    "fork-ts-checker-webpack-plugin": "^7.2.13",
+    "prettier": "^2.7.1",
+    "react-docgen-typescript-plugin": "^1.0.2",
+    "react-dom": "^17.0.2",
+    "sinon": "^14.0.2",
+    "ts-loader": "^9.4.1",
+    "typedoc": "^0.23.20",
+    "typedoc-plugin-markdown": "^3.13.6",
+    "typedoc-plugin-merge-modules": "^4.0.1",
+    "typescript": "^4.8.4",
+    "webpack": "^5.74.0"
+  },
+  "dependencies": {
+    "react": "^17.0.2"
+  }
+}

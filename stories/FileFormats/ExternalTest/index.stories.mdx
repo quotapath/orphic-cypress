@@ -1,0 +1,55 @@
+import { Meta, Story } from '@storybook/addon-docs';
+import * as stories from './index.stories';
+import { Button } from '../../Button';
+
+<!-- id here and in story is just for doc permalink purposes -->
+<Meta title="File Formats/External Test" component={Button} id="external-test" />
+
+# Defining Tests in an External File
+
+<Story story={stories.ExternalTest} id="external-test" />
+
+In an external file, you could write a test which used composeStories
+and cy.mount explicitly. In fact, you could do this entirely without this package.
+
+```tsx
+import { composeStories } from "@storybook/react";
+import React from "react";
+import * as stories from "./index.stories";
+
+const { ExternalTest } = composeStories(stories);
+
+describe("External test file", () => {
+  it("should contain the external label", () => {
+    cy.mount(<ExternalTest />);
+    cy.dataCy("button").should(
+      "contain",
+      "Will be tested in external .cy file"
+    );
+  });
+});
+```
+
+If the stories feature mdx docs according to [this recipe](https://github.com/storybookjs/storybook/blob/next/code/addons/docs/docs/recipes.md) (although actually you'll want to include the default export and add `includeStories: []` which it hints at), then you'll want to override the `includeStories` in the test file so that `composeStories` can find the proper tests. That is in fact what this ExternalTest is doing.
+
+```ts
+// this is necessary b/c stories here have mdx generated docs
+delete (stories.default as { includeStories?: string[] }).includeStories;
+const { ExternalTest } = composeStories(stories);
+```
+
+In the story file, define stories exactly as you normally would, although you may
+want to skip automatic test execution.
+
+```ts
+export default {
+  component: Button,
+  // otherwise this would do a mount test like Untested.stories.tsx
+  // which would be fine in this case, just redundant
+  cySkip: true,
+};
+
+export const ExternalTest: ComponentStory<typeof Button> = (args) => (
+  <Button {...args} />
+);
+```

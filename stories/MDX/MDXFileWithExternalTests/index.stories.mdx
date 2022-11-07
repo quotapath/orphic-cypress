@@ -1,0 +1,109 @@
+import { Meta, Story } from '@storybook/addon-docs';
+import { ClickCount } from '../../Button';
+
+<Meta
+  title="MDX/MDXFileWithExternalTests"
+  component={ClickCount}
+  id="mdx-file-with-external-tests"
+/>
+
+# Defining Stories in MDX
+
+You can define stories in MDX format! I really didn't think this'd work, but if you mimic storybook's own webpack rules for .mdx files, then they acte exactly like CSF files.
+
+```ts
+import { Meta, Story } from '@storybook/addon-docs';
+import { ClickCount } from '../../Button';
+
+<Meta title="MDX/MDXFileWithExternalTests" component={ClickCount} />
+
+# Whatever Markdown
+
+<Story name="MDXFileWithExternalTests">
+  {(args) => (
+    <>
+      <div>This is a story</div>
+      <ClickCount label="In MDX" {...args} />
+    </>
+  )}
+</Story>
+```
+
+<Story
+  name="MDXFileWithExternalTests"
+  parameters={{ docs: {disable: true } }}
+  id="mdx-file-with-external-tests"
+>
+  {(args) => (
+    <>
+      <div>This is a story</div>
+      <ClickCount label="In MDX" {...args} />
+    </>
+  )}
+</Story>
+
+And the test would look like this:
+```ts
+import { composeStories } from "@storybook/react";
+import React from "react";
+// @ts-ignore
+import * as stories from "./index.stories.mdx";
+
+const { mdxFileWithExternalTests: MDXFileWithExternalTests } =
+  composeStories(stories);
+
+describe("External test file", () => {
+  it("should contain the external label", () => {
+    const onClick = cy.stub();
+    cy.mount(<MDXFileWithExternalTests onClick={onClick} />);
+    cy.dataCy("button").should("contain", "In MDX");
+    cy.dataCy("button")
+      .click()
+      .then(() => expect(onClick).to.be.calledOnceWith(0));
+  });
+});
+```
+
+## Caveats
+* Component name comes in camelCased.
+* automatic action stubs does not work, nor does a manual `stubStoryActions`, only directly passing arguments
+
+## Webpack config in cypress.config.ts
+
+```ts
+import webpackConfig from "./webpack.config";
+
+// ...
+
+webpackConfig.module.rules.push({
+  test: /\.mdx$/,
+  use: [
+    {
+      loader: "babel-loader",
+      options: {
+        babelrc: false,
+        configFile: false,
+        sourceType: "unambiguous",
+        presets: ["@babel/preset-env", "@babel/preset-react"],
+        // possible copying over more could help with caveats or fix edgecases I've yet to find
+      },
+    },
+    {
+      loader: require.resolve("@storybook/mdx1-csf/loader"),
+      options: { skipCsf: false },
+      // same here, there were two `remark` options
+    },
+  ],
+});
+
+export default defineConfig({
+  component: {
+    devServer: {
+      framework: "react",
+      bundler: "webpack",
+      webpackConfig,
+    },
+    // ...
+  }
+});
+```

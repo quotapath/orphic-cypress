@@ -1,0 +1,5 @@
+node_modules
+# build artifacts
+dist/
+cypress/videos/
+cypress/screenshots/
