@@ -16,18 +16,33 @@
 <a href="#cypress-storybook-component-tests" id="cypress-storybook-component-tests" style="color: inherit; text-decoration: none;">
   <h1>Cypress Storybook Component Tests</h1>
 </a>
-<p>A set of utilities and typescript transformers to cover storybook stories with cypress component tests.</p>
-<p><a href="md-docs/README.md">See here</a> for detailed module documentation in markdown, or this documentation in <a href="https://quotapath.github.io/cypress-storybook-component-tests/">github pages</a> and some documentation, though more of a testing artifact, at the <a href="https://quotapath.github.io/cypress-storybook-component-tests/storybook/">hosted storybook</a></p>
-<hr>
+<p>A set of utilities, typescript transformers, and general examples on how to cover storybook stories with cypress component tests.</p>
+
+<a href="#features" id="features" style="color: inherit; text-decoration: none;">
+  <h2>Features</h2>
+</a>
+<ul>
+<li>An automatic cypress component test executor for storybook stories to test that stories render without any additional files or changes</li>
+<li><a href="#additional-syntaxes">A series of file syntaxes</a> to support <code>.play</code> like functionality inside of story files for extremely terse testing</li>
+<li><a href="#stubbing-actions">Automatic action stubs and spies</a> with first level cypress support</li>
+<li><a href="#isolated-component-files-transformer">A typescript transform</a> that turns your <code>stories.tsx</code> files into cypress executable files with just a bit of black magic, making for pleasent headed cypress runs and better debuggability</li>
+<li>Tools for turning <a href="#intercepting-api-requests">storybook addon mock api calls into cypress intercepts</a></li>
+<li><a href="https://quotapath.github.io/cypress-storybook-component-tests/storybook/">A comprehensive set of examples</a> for using cypress to test storybook with or without tools given here, including some surprising finds <a href="https://quotapath.github.io/cypress-storybook-component-tests/storybook/?path=/docs/mdx-file-with-external-tests">like how to use composeStories with mdx files</a></li>
+</ul>
+<p>See extended module documentation in <a href="https://quotapath.github.io/cypress-storybook-component-tests/">github pages</a> and numerous examples at a <a href="https://quotapath.github.io/cypress-storybook-component-tests/storybook/">hosted storybook</a></p>
+<br/>
+
 
 <a href="#what-this-is" id="what-this-is" style="color: inherit; text-decoration: none;">
-  <h2>What this is</h2>
+  <h1>What this is</h1>
 </a>
 <p>We love storybook and component driven development, but we also love cypress!</p>
 <p>We were initially excited about <a href="https://storybook.js.org/docs/react/writing-tests/interaction-testing">storybook&#39;s interaction testing</a>. We even wrote some tests and committed to this as the direction forward, translating over our early enzyme tests.</p>
 <p>Ultimately though, we found that the bringing in net-new technologies like jest and testing-library would be too much cognitive overhead and dissonance alongside our end-to-end tests already written using cypress, and our unit tests already using the mocha/chai/sinon stack.</p>
 <p>So, we set out to come up with a standard for executing storybook tests in cypress with just the right balance of spooky magic that we have minimal boilerplate, encourage writing tests early and often, and cover stories which don&#39;t have explicit tests. Although it&#39;s with a heavy heart that we leave behind some of the benefits of storybook&#39;s solution, we&#39;re thrilled to have test coverage that fits with our existing paradigms. And cypress component testing is really slick.</p>
 <p>We also export a few helpers that we find useful for things like creating commands and tasks in typescript.</p>
+<br/>
+
 
 <a href="#using-this-package" id="using-this-package" style="color: inherit; text-decoration: none;">
   <h1>Using this package</h1>
@@ -39,9 +54,11 @@
 <p>Instead we could write some simple utilities so that we can keep the files in the <code>*.stories.tsx</code>:</p>
 <pre><code class="language-ts"><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-6">CompWithLabel</span><span class="hl-1"> = () </span><span class="hl-4">=&gt;</span><span class="hl-1"> &lt;</span><span class="hl-7">Something</span><span class="hl-1"> </span><span class="hl-7">label</span><span class="hl-1">=</span><span class="hl-3">&quot;test&quot;</span><span class="hl-1"> /&gt;; </span><span class="hl-8">// was already here</span><br/><span class="hl-2">CompWithLabel</span><span class="hl-1">.</span><span class="hl-6">cy</span><span class="hl-1"> = () </span><span class="hl-4">=&gt;</span><br/><span class="hl-1">  </span><span class="hl-2">cy</span><span class="hl-1">.</span><span class="hl-6">get</span><span class="hl-1">(</span><span class="hl-3">&quot;.typography&quot;</span><span class="hl-1">).</span><span class="hl-6">should</span><span class="hl-1">(</span><span class="hl-3">&quot;be.visible&quot;</span><span class="hl-1">).</span><span class="hl-6">and</span><span class="hl-1">(</span><span class="hl-3">&quot;contain&quot;</span><span class="hl-1">, </span><span class="hl-3">&quot;test&quot;</span><span class="hl-1">);</span>
 </code></pre>
+<br/>
+
 
 <a href="#additional-syntaxes" id="additional-syntaxes" style="color: inherit; text-decoration: none;">
-  <h2>Additional Syntaxes</h2>
+  <h1>Additional Syntaxes</h1>
 </a>
 <p>There are 3 available syntaxes for in-file use.</p>
 <ol>
@@ -55,24 +72,35 @@
 </code></pre>
  This executes within it&#39;s own <code>describe</code> block and is useful for providing component props or setup not included in stories, or for writing <code>before</code>, <code>beforeEach</code>, etc hooks.</li>
 </ol>
-<p>You can opt out of allowing any or all of these syntaxes via cypress configuration. See <a href="md-docs/modules/config.md#cytestconfig">config module documentation</a> for more details.</p>
+<p>You can opt out of allowing any or all of these syntaxes via cypress configuration. See <a href="https://quotapath.github.io/cypress-storybook-component-tests/types/config.CyTestConfig.html">config module documentation</a> for more details and <a href="https://quotapath.github.io/cypress-storybook-component-tests/storybook/?path=/docs/file-formats">storybook</a> for comprehensive examples.</p>
+<br/>
+
 
 <a href="#stubbing-actions" id="stubbing-actions" style="color: inherit; text-decoration: none;">
-  <h2>Stubbing Actions</h2>
+  <h1>Stubbing Actions</h1>
 </a>
 <p>By default, <code>composeStories</code> will not stub your actions. This package introduces <code>stubStoryActions</code> to do this automatically when running in the cypress test mode. See <a href="md-docs/modules/actions.md#stubstoryactions">its documentation</a> for manual use.</p>
 <p>TODO: screenshots including the stub</p>
+<br/>
+
 
 <a href="#isolated-component-files-transformer" id="isolated-component-files-transformer" style="color: inherit; text-decoration: none;">
-  <h2>Isolated Component Files Transformer</h2>
+  <h1>Isolated Component Files Transformer</h1>
 </a>
 <p>TODO</p>
+<br/>
+
 
 <a href="#intercepting-api-requests" id="intercepting-api-requests" style="color: inherit; text-decoration: none;">
-  <h2>Intercepting API Requests</h2>
+  <h1>Intercepting API Requests</h1>
 </a>
 <p>TODO</p>
-<hr>
+<br/>
+
+
+<a href="#a-general-overview-of-the-landscape" id="a-general-overview-of-the-landscape" style="color: inherit; text-decoration: none;">
+  <h1>A General Overview of the Landscape</h1>
+</a>
 
 <a href="#what-are-component-tests" id="what-are-component-tests" style="color: inherit; text-decoration: none;">
   <h2>What are component tests?</h2>
@@ -87,6 +115,7 @@
 <pre><code class="language-ts"><span class="hl-6">it</span><span class="hl-1">(</span><span class="hl-3">&quot;should show copy for a user without permissions&quot;</span><span class="hl-1">, () </span><span class="hl-4">=&gt;</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-5">element</span><span class="hl-1"> = </span><span class="hl-6">render</span><span class="hl-1">(&lt;</span><span class="hl-7">OurComponent</span><span class="hl-1">&gt;);</span><br/><span class="hl-1">  </span><span class="hl-6">expect</span><span class="hl-1">(</span><span class="hl-2">element</span><span class="hl-1">.</span><span class="hl-2">text</span><span class="hl-1">).</span><span class="hl-2">to</span><span class="hl-1">.</span><span class="hl-6">equal</span><span class="hl-1">(</span><span class="hl-3">&quot;No soup for you!&quot;</span><span class="hl-1">);</span><br/><span class="hl-1">});</span><br/><br/><span class="hl-6">it</span><span class="hl-1">(</span><span class="hl-3">&quot;should show details for a user &quot;</span><span class="hl-1">, () </span><span class="hl-4">=&gt;</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-5">element</span><span class="hl-1"> = </span><span class="hl-6">render</span><span class="hl-1">(&lt;</span><span class="hl-7">OurComponent</span><span class="hl-1"> </span><span class="hl-7">isPermissioned</span><span class="hl-1">={</span><span class="hl-2">true</span><span class="hl-1">} </span><span class="hl-7">flagCount</span><span class="hl-1">={</span><span class="hl-9">4</span><span class="hl-1">}&gt;);</span><br/><span class="hl-1">  </span><span class="hl-6">expect</span><span class="hl-1">(</span><span class="hl-2">element</span><span class="hl-1">.</span><span class="hl-2">text</span><span class="hl-1">).</span><span class="hl-2">to</span><span class="hl-1">.</span><span class="hl-6">equal</span><span class="hl-1">(</span><span class="hl-3">&quot;You have four flagged items you need to address&quot;</span><span class="hl-1">);</span><br/><span class="hl-1">  </span><span class="hl-6">expect</span><span class="hl-1">(</span><span class="hl-2">numToWord</span><span class="hl-1">).</span><span class="hl-2">to</span><span class="hl-1">.</span><span class="hl-2">be</span><span class="hl-1">.</span><span class="hl-2">calledOnce</span><span class="hl-1">.</span><span class="hl-6">with</span><span class="hl-1">(</span><span class="hl-9">4</span><span class="hl-1">);</span><br/><span class="hl-1">});</span>
 </code></pre>
 <p>Storybook stories make fantastic jumping off points for testing because they&#39;re fundamentally designed to illustrate common use cases and already perform a majority of the work that&#39;d need to be done to setup for that component in terms of component state and mocking API or function calls.</p>
+<hr>
 
 <a href="#nice-to-haves-for-component-tests" id="nice-to-haves-for-component-tests" style="color: inherit; text-decoration: none;">
   <h3>Nice-to-haves for component tests</h3>
@@ -97,6 +126,7 @@
 <li>Optional headed execution so that you can visually see whats happening and debug in a real browser</li>
 <li>When executing headlessly in CI for instance, screenshots on errors make for similarly easy debugging as local headed execution</li>
 </ul>
+<hr>
 
 <a href="#comparison-of-existing-solutions" id="comparison-of-existing-solutions" style="color: inherit; text-decoration: none;">
   <h3>Comparison of Existing Solutions</h3>
@@ -126,10 +156,8 @@
 <a href="#cypress-execution-of-builtin-interactive-tests-by-visiting-the-story39s-url-or-iframe" id="cypress-execution-of-builtin-interactive-tests-by-visiting-the-story39s-url-or-iframe" style="color: inherit; text-decoration: none;">
   <h4>Cypress execution of builtin interactive tests by visiting the story&#39;s url or iframe</h4>
 </a>
-
-<a href="#todo" id="todo" style="color: inherit; text-decoration: none;">
-  <h2>TODO</h2>
-</a>
+<p>TODO</p>
+<hr>
 
 <a href="#cypress-component-tests-directly-without-storybook" id="cypress-component-tests-directly-without-storybook" style="color: inherit; text-decoration: none;">
   <h4>Cypress component tests directly without storybook</h4>
