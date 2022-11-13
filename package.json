@@ -13,6 +13,7 @@
     "build": "tsc --module commonjs --esModuleInterop true",
     "lint": "eslint \"**/*.{t,j}s{,x}\"",
     "lint:fix": "npm run lint -- --fix",
+    "lint:check": "npm run lint && prettier --check .",
     "fmt": "npm run lint:fix && prettier --write .",
     "typecheck": "tsc --noEmit",
     "storybook": "start-storybook -p 6006",

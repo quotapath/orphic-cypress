@@ -1,5 +1,5 @@
-import { Meta, Story } from '@storybook/addon-docs';
-import { ClickCount } from '../../Button';
+import { Meta, Story } from "@storybook/addon-docs";
+import { ClickCount } from "../../Button";
 
 <Meta
   title="MDX/MDXFileWithExternalTests"
@@ -29,10 +29,7 @@ import { ClickCount } from '../../Button';
 </Story>
 ```
 
-<Story
-  name="MDXFileWithExternalTests"
-  parameters={{ docs: {disable: true } }}
->
+<Story name="MDXFileWithExternalTests" parameters={{ docs: { disable: true } }}>
   {(args) => (
     <>
       <div>This is a story</div>
@@ -42,6 +39,7 @@ import { ClickCount } from '../../Button';
 </Story>
 
 And the test would look like this:
+
 ```ts
 import { composeStories } from "@storybook/react";
 import React from "react";
@@ -64,8 +62,9 @@ describe("External test file", () => {
 ```
 
 ## Caveats
-* Component name comes in camelCased.
-* Same as for external files in general, some manual setup and currently the global parameters must be provided directly to support automocking.
+
+- Component name comes in camelCased.
+- Same as for external files in general, some manual setup and currently the global parameters must be provided directly to support automocking.
 
 ## Webpack config in cypress.config.ts
 
@@ -103,6 +102,6 @@ export default defineConfig({
       webpackConfig,
     },
     // ...
-  }
+  },
 });
 ```
