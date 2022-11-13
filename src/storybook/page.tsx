@@ -46,7 +46,7 @@ export const CustomStories = () => {
 
   let stories: DocsStoryProps[] = componentStories();
   stories = stories.filter((story) => !story.parameters?.docs?.disable);
-  if (!stories || stories.length === 0) return null;
+  if (!stories || stories?.length === 0) return null;
 
   return (
     <>

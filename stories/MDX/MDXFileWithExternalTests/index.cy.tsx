@@ -1,18 +1,22 @@
 import { composeStories } from "@storybook/react";
 import React from "react";
+import { stubStoryActions } from "src";
 // @ts-ignore
 import * as stories from "./index.stories.mdx";
+import * as sbPreview from "../../../.storybook/preview";
 
-const { mdxFileWithExternalTests: MDXFileWithExternalTests } =
-  composeStories(stories);
+const { mdxFileWithExternalTests: MDXFileWithExternalTests } = composeStories(
+  stories,
+  sbPreview
+);
 
 describe("External test file", () => {
   it("should contain the external label", () => {
-    const onClick = cy.stub();
-    cy.mount(<MDXFileWithExternalTests onClick={onClick} />);
+    const actions = stubStoryActions(MDXFileWithExternalTests, stories);
+    cy.mount(<MDXFileWithExternalTests {...actions} />);
     cy.dataCy("button").should("contain", "In MDX");
     cy.dataCy("button")
       .click()
-      .then(() => expect(onClick).to.be.calledOnceWith(0));
+      .then(() => expect(actions.onClick).to.be.calledOnceWith(0));
   });
 });
