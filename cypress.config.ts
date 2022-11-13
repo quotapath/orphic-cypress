@@ -27,6 +27,8 @@ webpackConfig.module.rules.push({
 });
 
 export default defineConfig({
+  videoUploadOnPasses: false,
+
   component: {
     devServer: {
       framework: "react",

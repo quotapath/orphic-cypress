@@ -1,4 +1,14 @@
+<div align="center">
+  <img
+    src="assets/van-gogh-road-with-cypress-and-star.jpeg"
+    alt="Van Gogh's Painting of 'Road with Cypress and Star'"
+    width="400px"
+  />
+</div>
+
 # Cypress Storybook Component Tests
+
+[![CI](https://github.com/quotapath/cypress-storybook-component-tests/actions/workflows/ci.yml/badge.svg)](https://github.com/quotapath/cypress-storybook-component-tests/actions/workflows/ci.yml)
 
 A set of utilities, typescript transformers, and general examples on how to cover storybook stories with cypress component tests.
 In short, this is a little overengineering, a little black magic, and a lot of documentation on making these kinds of tests as easy and concise as possible.
