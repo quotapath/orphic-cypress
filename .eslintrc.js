@@ -17,7 +17,7 @@ module.exports = {
     sourceType: "module",
   },
   plugins: ["react", "@typescript-eslint"],
-  ignorePatterns: ["dist"],
+  ignorePatterns: ["dist", "docs"],
   rules: {
     "linebreak-style": ["error", "unix"],
     "storybook/use-storybook-expect": "off",

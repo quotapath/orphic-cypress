@@ -40,14 +40,12 @@ export const tComposeStories: typeof composeStories = (
   for (const key in composed) {
     const typedKey = key as keyof typeof composed;
     // TODO: something could be done on the types here
-    /* eslint-disable @typescript-eslint/ban-ts-comment */
     // @ts-ignore
     composed[typedKey].cy = storiesImport[typedKey].cy;
     // @ts-ignore
     composed[typedKey].cyTest = storiesImport[typedKey].cyTest;
     // @ts-ignore
     composed[typedKey].argTypes = storiesImport[typedKey].argTypes;
-    /* eslint-enable @typescript-eslint/ban-ts-comment */
   }
   return composed;
 };

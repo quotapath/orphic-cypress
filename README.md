@@ -1,6 +1,7 @@
 # Cypress Storybook Component Tests
 
 A set of utilities, typescript transformers, and general examples on how to cover storybook stories with cypress component tests.
+In short, this is a little overengineering, a little black magic, and a lot of documentation on making these kinds of tests as easy and concise as possible.
 
 ## Features
 
@@ -216,7 +217,7 @@ it('stepper should default to 0', () => {
 
 #### Cypress component tests using storybook components. **What this project does**
 
-These could be written in the storybook file with some type updates, or alongside in a new file. See [Using this package](README.md#using-this-package) above for an example of what this'll look like.
+These could be written in the storybook file with some type updates, or alongside in a new file. See [Using this package](#using-this-package) above for an example of what this'll look like.
 
 * Pros:
   * We already know and love cypress
@@ -244,3 +245,10 @@ Use composeStories from above and then execute the .play
   * we’d have to build out some infrastructure to support automatic discovery and execution
   * headless, so won’t get screens of component on error, but could still interact in storybook
   * back to having to know jest + testing-library
+
+
+<br/>
+
+# Prior Art
+
+[Cypress's recommendation on component testing storybook](https://www.cypress.io/blog/2021/05/19/cypress-x-storybook-2-0/) is essentially the 'what you can do without this package'
