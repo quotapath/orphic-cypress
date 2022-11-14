@@ -1,6 +1,6 @@
 <div align="center">
   <img
-    src="assets/van-gogh-road-with-cypress-and-star.jpeg"
+    src="https://quotapath.github.io/cypress-storybook-component-tests/assets/van-gogh-road-with-cypress-and-star.jpeg"
     alt="Van Gogh's Painting of 'Road with Cypress and Star'"
     width="400px"
   />
@@ -8,7 +8,7 @@
 
 # Cypress Storybook Component Tests
 
-[![CI](https://github.com/quotapath/cypress-storybook-component-tests/actions/workflows/ci.yml/badge.svg)](https://github.com/quotapath/cypress-storybook-component-tests/actions/workflows/ci.yml)
+[![Storybook](https://raw.githubusercontent.com/storybookjs/brand/main/badge/badge-storybook.svg)](https://quotapath.github.io/cypress-storybook-component-tests/storybook/) [![CI](https://github.com/quotapath/cypress-storybook-component-tests/actions/workflows/ci.yml/badge.svg)](https://github.com/quotapath/cypress-storybook-component-tests/actions/workflows/ci.yml)
 
 A set of utilities, typescript transformers, and general examples on how to cover storybook stories with cypress component tests.
 In short, this is a little overengineering, a little black magic, and a lot of documentation on making these kinds of tests as easy and concise as possible.
@@ -77,44 +77,58 @@ CompWithLabel.cy = () =>
 
 # Additional Syntaxes
 
-There are 3 available syntaxes for in-file use.
+There are 3 available syntaxes for in-file use. See [storybook](https://quotapath.github.io/cypress-storybook-component-tests/storybook/?path=/docs/fileformats-storybookfiles) for comprehensive examples.
 
-1) 'function' syntax, already shown above is the most succinct
-    ```ts
-    CompWithLabel.cy = () =>
-      cy.get(".typography").should("be.visible").and("contain", "test");
-    ```
-1) 'object' syntax allows you to tag the test with a description of the expectation and to write multiple tests for the same component
-    ```ts
-    CompWithLabel.cy = {
-      "should contain the 'test' label": () =>
-        cy.get(".typography").should("be.visible").and("contain", "test"),
+## `function` syntax
 
-      "should show an expanded label when clicked": () => {
-        cy.get(".typography").click();
-        cy.get(".expanded-label").should("be.visible").and("contain", "more details here");
-      },
-    };
-    ```
-    Each of these is executed in it's own isolated `it` function.
-1) 'cyTest' syntax allows the most control but backs off of some of the automatic setup that takes place
-    ```ts
-    CompWithLabel.cyTest = (Story) => {
-      it("should contain the 'test' label", () => {
-        cy.mount(<Story />);
-        cy.get(".typography").should("be.visible").and("contain", "test");
-      });
+already shown above is the most succinct
 
-      it("should show an expanded label when clicked", () => {
-        cy.mount(<Story additionalArgs="more details" />);
-        cy.get(".typography").click();
-        cy.get(".expanded-label").should("be.visible").and("contain", "more details here");
-      });
-    };
-    ```
-    This executes within it's own `describe` block and is useful for providing component props or setup not included in stories, or for writing `before`, `beforeEach`, etc hooks.
+```ts
+CompWithLabel.cy = () =>
+  cy.get(".typography").should("be.visible").and("contain", "test");
+```
 
-You can opt out of allowing any or all of these syntaxes via cypress configuration. See [config module documentation](https://quotapath.github.io/cypress-storybook-component-tests/types/config.CyTestConfig.html) for more details and [storybook](https://quotapath.github.io/cypress-storybook-component-tests/storybook/?path=/docs/file-formats) for comprehensive examples.
+## `object` syntax
+
+allows you to tag the test with a description of the expectation and to write multiple tests for the same component
+
+```ts
+CompWithLabel.cy = {
+  "should contain the 'test' label": () =>
+    cy.get(".typography").should("be.visible").and("contain", "test"),
+
+  "should show an expanded label when clicked": () => {
+    cy.get(".typography").click();
+    cy.get(".expanded-label").should("be.visible").and("contain", "more details here");
+  },
+};
+```
+
+Each of these is executed in it's own isolated `it` function.
+
+## `cyTest` syntax
+
+allows the most control but backs off of some of the automatic setup that takes place
+```ts
+CompWithLabel.cyTest = (Story) => {
+  it("should contain the 'test' label", () => {
+    cy.mount(<Story />);
+    cy.get(".typography").should("be.visible").and("contain", "test");
+  });
+
+  it("should show an expanded label when clicked", () => {
+    cy.mount(<Story additionalArgs="more details" />);
+    cy.get(".typography").click();
+    cy.get(".expanded-label").should("be.visible").and("contain", "more details here");
+  });
+};
+```
+
+This executes within it's own `describe` block and is useful for providing component props or setup not included in stories, or for writing `before`, `beforeEach`, etc hooks.
+
+## Opting out
+
+You can opt out of allowing any or all of these syntaxes via cypress configuration. See [config module documentation](https://quotapath.github.io/cypress-storybook-component-tests/types/config.CyTestConfig.html) for more details.
 
 <br/>
 

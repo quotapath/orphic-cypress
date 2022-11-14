@@ -1,14 +1,18 @@
-import React from "react";
-import type { ComponentStoryCy } from "src";
-import { Button } from "../Button";
-// @ts-ignore
-import mdx from "./IgnoringViaCyIncludeStories.mdx";
+import { Meta } from "@storybook/addon-docs";
 
-export default {
-  component: Button,
-  cyIncludeStories: ["NotSkippedFunction", "NotSkippedObject"],
-  id: "ignoring-via-cyincludestories",
-};
+<Meta />
+
+# Selecting stories with .cyOnly
+
+`cyOnly` property on either the default export or individual stories effectively
+calls the cypress test with `describe.only` or `it.only`, restively.
+
+That should be used with caution of course, e.g. actually including something
+like these tests would effectively narrow down which tests were running in a major way,
+especially in the non-isolated, 'mount' test.
+
+```ts
+export default { component: Button };
 
 export const NotSkippedFunction: ComponentStoryCy<typeof Button> = (args) => (
   <Button {...args} label="Story function" />
@@ -16,7 +20,8 @@ export const NotSkippedFunction: ComponentStoryCy<typeof Button> = (args) => (
 
 NotSkippedFunction.cy = () =>
   cy.dataCy("button").should("contain", "Story function");
-NotSkippedFunction.parameters = { docs: { page: mdx } };
+
+NotSkippedFunction.cyOnly = true;
 
 export const SkippedFunction: ComponentStoryCy<typeof Button> = (args) => (
   <Button {...args} label="Story function" />
@@ -24,16 +29,15 @@ export const SkippedFunction: ComponentStoryCy<typeof Button> = (args) => (
 
 SkippedFunction.cy = () =>
   cy.dataCy("button").should("contain", "Would fail if not skipped");
-SkippedFunction.parameters = { docs: { page: mdx } };
 
 export const NotSkippedObject = {
-  ...SkippedFunction,
   args: { label: "Another" },
   cy: () => cy.dataCy("button").should("contain", "Another"),
+  cyOnly: true,
 };
 
 export const SkippedObject = {
-  ...SkippedFunction,
   args: { label: "Another" },
   cy: () => cy.dataCy("button").should("contain", "Would fail if not skipped"),
 };
+```

@@ -3,8 +3,8 @@ import type { ComponentStoryCy, ComponentStoryObjCy } from "src";
 import { Button } from "../Button";
 
 export default {
-  title: "File Formats/Storybook Files",
   component: Button,
+  id: "fileformats-storybookfiles",
 };
 
 // These are more repetitive than necessary, real story scenarios would use a 'render'
@@ -114,7 +114,61 @@ StoryFunctionWithCyTest.cyTest = (Story) => {
   });
 };
 
+StoryFunctionWithCyTest.parameters = {
+  docs: {
+    description: {
+      story: `
+.cyTest offers the most control and is the most verbose.
+It allows executing test hooks like beforeEach, calling it.skip,
+or passing new arguments to the story at each test, but requires
+manually calling cy.mount on the component that comes in as an argument.`,
+    },
+    source: {
+      code: `
+export const StoryFunctionWithCyTest: ComponentStoryCy<typeof Button> = (
+  args
+) => <Button label="Story test" {...args} />;
+
+StoryFunctionWithCyTest.cyTest = (Story) => {
+  it("should contain 'Story test' label", () => {
+    cy.mount(<Story />);
+    cy.dataCy("button").should("contain", "Story test");
+  });
+
+  it("should accept a disabled prop", () => {
+    cy.mount(<Story disabled />);
+    cy.dataCy("button").should("be.disabled");
+  });
+
+  it.skip("should skip a test", () => {
+    cy.mount(<Story />);
+    cy.dataCy("button").should(
+      "contain",
+      "This test would fail if not skipped"
+    );
+  });
+};`,
+    },
+  },
+};
+
 export const StoryObjectWithCyFunction: ComponentStoryObjCy<typeof Button> = {
   args: { label: "Story function" },
   cy: () => cy.dataCy("button").should("contain", "Story function"),
+  parameters: {
+    docs: {
+      description: {
+        story: `
+.cy is the most concise testing syntax and CSF object syntax is the most concise
+story format. Together, they can make for some truly small but powerful tests.`,
+      },
+      source: {
+        code: `
+export const StoryObjectWithCyFunction: ComponentStoryObjCy<typeof Button> = {
+  args: { label: "Story function" },
+  cy: () => cy.dataCy("button").should("contain", "Story function"),
+};`,
+      },
+    },
+  },
 };

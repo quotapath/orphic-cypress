@@ -1,13 +1,13 @@
 import React from "react";
 import type { ComponentStoryCy } from "src";
-import { Button } from "./Button";
+import { Button } from "../Button";
 
 export default {
   component: Button,
   cy: () => {
     beforeEach(() => {
       // just something simple to prove this happens at top
-      cy.wrap("Wrapped label").as("wrappedLabel");
+      cy.wrap("DefaultCyProperty label").as("wrappedLabel");
     });
   },
 };
@@ -15,18 +15,18 @@ export default {
 // These are more repetitive than necessary, real story scenarios would use a 'render'
 // prop to the default export, use object syntax throughout, build a template, etc.
 
-export const Wrapped: ComponentStoryCy<typeof Button> = (args) => (
-  <Button {...args} label="Wrapped label" />
+export const DefaultCyProperty: ComponentStoryCy<typeof Button> = (args) => (
+  <Button {...args} label="DefaultCyProperty label" />
 );
 
-Wrapped.cy = () => {
+DefaultCyProperty.cy = () => {
   cy.get("@wrappedLabel").then((wrappedLabel) =>
     cy.dataCy("button").should("contain", wrappedLabel)
   );
   cy.wrap("This will be reset").as("wrappedLabel");
 };
 
-Wrapped.parameters = {
+DefaultCyProperty.parameters = {
   docs: {
     description: {
       story: `
@@ -40,16 +40,16 @@ export default {
   cy: () => {
     beforeEach(() => {
       // just something simple to prove this happens at top
-      cy.wrap("Wrapped label").as("wrappedLabel");
+      cy.wrap("DefaultCyProperty label").as("wrappedLabel");
     });
   },
 };
 
-export const Wrapped: ComponentStoryCy<typeof Button> = (args) => (
-  <Button {...args} label="Wrapped label" />
+export const DefaultCyProperty: ComponentStoryCy<typeof Button> = (args) => (
+  <Button {...args} label="DefaultCyProperty label" />
 );
 
-Wrapped.cy = () => {
+DefaultCyProperty.cy = () => {
   cy.get("@wrappedLabel").then((wrappedLabel) =>
     cy.dataCy("button").should("contain", wrappedLabel)
   );
@@ -59,11 +59,11 @@ Wrapped.cy = () => {
   },
 };
 
-export const WrappedCyTest: ComponentStoryCy<typeof Button> = (args) => (
+export const CyTestFunctionBody: ComponentStoryCy<typeof Button> = (args) => (
   <Button {...args} />
 );
 
-WrappedCyTest.cyTest = (Story) => {
+CyTestFunctionBody.cyTest = (Story) => {
   beforeEach(() => {
     cy.wrap("Before Wrapped label").as("beforeWrappedLabel");
   });
@@ -80,7 +80,7 @@ WrappedCyTest.cyTest = (Story) => {
   });
 };
 
-WrappedCyTest.parameters = {
+CyTestFunctionBody.parameters = {
   docs: {
     description: {
       story: `
@@ -90,10 +90,10 @@ which is the only way to have such hooks execute for only specific story tests.
     },
     source: {
       code: `
-export const WrappedCyTest: ComponentStoryCy<typeof Button> = (args) => (
+export const CyTestFunctionBody: ComponentStoryCy<typeof Button> = (args) => (
   <Button {...args} />
 );
-WrappedCyTest.cyTest = (Story) => {
+CyTestFunctionBody.cyTest = (Story) => {
   beforeEach(() => {
     cy.wrap("Before Wrapped label").as("beforeWrappedLabel");
   });

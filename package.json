@@ -18,7 +18,7 @@
     "typecheck": "tsc --noEmit",
     "storybook": "start-storybook -p 6006",
     "storybook:build": "build-storybook -o docs/storybook/",
-    "docs": "typedoc && npm run storybook:build",
+    "docs": "typedoc && npm run storybook:build && cp -r assets docs",
     "typedoc": "typedoc"
   },
   "files": [

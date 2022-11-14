@@ -19,13 +19,13 @@ jobs:
             cmd: "./node_modules/cypress/bin/cypress install && npm run test:isolated"
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Setup Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
 
       - name: Retrieve the cached "node_modules" directory (if present)
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         id: node-cache
         with:
           path: node_modules
@@ -40,16 +40,17 @@ jobs:
 
   build_docs:
     runs-on: ubuntu-latest
-    needs: ["ci_checks"]
+    # TODO: commenting for now so that docs build immediately for faster feedback loop
+    # needs: ["ci_checks"]
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Setup Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
 
       - name: Retrieve the cached "node_modules" directory (if present)
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         id: node-cache
         with:
           path: node_modules
@@ -63,7 +64,7 @@ jobs:
         run: npm run docs
 
       - name: Deploy 🚀
-        uses: JamesIves/github-pages-deploy-action@4.1.4
+        uses: JamesIves/github-pages-deploy-action@4.4.1
         with:
           branch: gh-pages
           folder: docs

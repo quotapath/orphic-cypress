@@ -1,12 +1,14 @@
-import React from "react";
-import type { ComponentStoryCy } from "src";
-import { Button } from "../Button";
+# Ignoring Via cyIncludeStories
 
-// eslint-disable-next-line storybook/story-exports
+`cyIncludeStories` allows similar functionality to includeStories on the default export.
+It can be used to ensure that only some stories are tested while the others don't
+register with cypress at all, where [.cySkip](/docs/skippingandselecting-fullyskipped--skipped)
+will designate them as 'pending'.
+
+```ts
 export default {
   component: Button,
-  // comment out this line to see the only's apply
-  includeStories: [],
+  cyIncludeStories: ["NotSkippedFunction", "NotSkippedObject"],
 };
 
 export const NotSkippedFunction: ComponentStoryCy<typeof Button> = (args) => (
@@ -15,7 +17,6 @@ export const NotSkippedFunction: ComponentStoryCy<typeof Button> = (args) => (
 
 NotSkippedFunction.cy = () =>
   cy.dataCy("button").should("contain", "Story function");
-NotSkippedFunction.cyOnly = true;
 
 export const SkippedFunction: ComponentStoryCy<typeof Button> = (args) => (
   <Button {...args} label="Story function" />
@@ -25,12 +26,14 @@ SkippedFunction.cy = () =>
   cy.dataCy("button").should("contain", "Would fail if not skipped");
 
 export const NotSkippedObject = {
+  ...SkippedFunction,
   args: { label: "Another" },
   cy: () => cy.dataCy("button").should("contain", "Another"),
-  cyOnly: true,
 };
 
 export const SkippedObject = {
+  ...SkippedFunction,
   args: { label: "Another" },
   cy: () => cy.dataCy("button").should("contain", "Would fail if not skipped"),
 };
+```

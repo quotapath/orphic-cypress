@@ -17,4 +17,9 @@ export const parameters = {
     expanded: true,
     hideNoControlsWarning: true,
   },
+  options: {
+    storySort: {
+      order: ["*", "SkippingAndSelecting", ["Overview"]],
+    },
+  },
 };
