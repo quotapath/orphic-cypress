@@ -1,7 +1,6 @@
 import { defineConfig } from "cypress";
 import ReactDocgenTypescriptPlugin from "react-docgen-typescript-plugin";
 import { setStorybookFiles, useIsolatedComponentFiles } from "./src";
-// eslint-disable-next-line
 // @ts-ignore
 import webpackConfig from "./webpack.config";
 

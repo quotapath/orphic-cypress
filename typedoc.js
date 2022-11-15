@@ -12,7 +12,7 @@ module.exports = {
   name: "Cypress Storybook Component Tests",
   mergeModulesMergeMode: "module",
   // including these with module merge would just mean adding a bunch of 're-exports' lines
-  exclude: ["**/*/index.ts", "src/storybook/**/*.ts{,x}"],
+  exclude: ["**/*/index.ts", "src/storybook/**/{index,page}.ts{,x}"],
   navigationLinks: {
     Storybook:
       "https://quotapath.github.io/cypress-storybook-component-tests/storybook/",

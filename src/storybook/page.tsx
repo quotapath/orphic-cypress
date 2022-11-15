@@ -4,10 +4,11 @@
 import {
   Anchor,
   Subheading,
+  Canvas,
   Description,
   DocsContext,
   DocsStoryProps,
-  Source,
+  Story,
   Title,
 } from "@storybook/addon-docs";
 import React, { useContext } from "react";
@@ -30,13 +31,9 @@ export const CustomDocsStory: React.FC<DocsStoryProps> = ({
     <Anchor storyId={id ?? ""}>
       {subheading && <Subheading>{subheading}</Subheading>}
       {description && <Description markdown={description} />}
-      {docs.source.code === null ? null : docs.source.code ? (
-        <Source code={docs.source.code} dark />
-      ) : (
-        <div style={{ color: "white", padding: "20px" }}>
-          No code block provided, see Canvas → Story tab instead
-        </div>
-      )}
+      <Canvas>
+        <Story id={id} parameters={parameters} />
+      </Canvas>
     </Anchor>
   );
 };

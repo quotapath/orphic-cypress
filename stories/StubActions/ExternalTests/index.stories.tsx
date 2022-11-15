@@ -1,3 +1,4 @@
+import React from "react";
 import type { ComponentStoryObjCy } from "src";
 import { ClickCount } from "../../Button";
 
@@ -13,14 +14,14 @@ export default {
   // },
 };
 
-export const CallExplicitArgtypeActionStubAutomatically: ComponentStoryObjCy<
+export const CallExplicitArgtypeActionStub = () => <ClickCount />;
+CallExplicitArgtypeActionStub.argTypes = {
+  onClick: { action: "myClickStub" },
+};
+// story-code @end @include-start
+
+export const CallImplicitArgtypeActionStubViaRegex: ComponentStoryObjCy<
   typeof ClickCount
 > = {
-  argTypes: {
-    onClick: { action: "myClickStub" },
-  },
+  args: { label: "Call via Regex" },
 };
-
-export const CallImplicitArgtypeActionStubAutomaticallyViaRegex: ComponentStoryObjCy<
-  typeof ClickCount
-> = {};

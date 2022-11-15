@@ -8,6 +8,7 @@ export const ShouldMount: ComponentStory<typeof Button> = (args) => (
   <Button {...args} />
 );
 ShouldMount.args = { label: "No cypress tests here" };
+// story-code @end @include-start
 ShouldMount.parameters = {
   docs: {
     description: {

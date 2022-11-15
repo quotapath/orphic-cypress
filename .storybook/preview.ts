@@ -1,10 +1,12 @@
 import { themes } from "@storybook/theming";
 import { DocsPage } from "../src/storybook/page";
+import { transformSource } from "../src/storybook/story-code";
 
 export const parameters = {
   docs: {
     page: DocsPage,
     source: { state: "open" },
+    transformSource,
     theme: themes.dark,
   },
   viewMode: "docs",

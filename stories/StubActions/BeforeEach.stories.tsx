@@ -5,12 +5,9 @@ import { ClickCount } from "../Button";
 
 // With both of these, you'd probably just be passing in normal functions,
 // but here we're spying for the sake of meta-test assertions.
-const onClickSpy = (global as any).Cypress
-  ? Cypress.sinon.spy(() => 1)
-  : ((() => 1) as Sinon.SinonSpy);
-const onClickSpy2 = (global as any).Cypress
-  ? Cypress.sinon.spy(() => 1)
-  : ((() => 1) as Sinon.SinonSpy);
+const hasCypress = Boolean((global as any).Cypress);
+const onClickSpy = hasCypress ? Cypress.sinon.spy(() => 1) : () => 1;
+const onClickSpy2 = hasCypress ? Cypress.sinon.spy(() => 1) : () => 1;
 
 export default {
   component: ClickCount,
@@ -40,32 +37,8 @@ export const StubActionsDefinedOnDefaultExport: ComponentStoryObjCy<
 
     cy.dataCy("count").should("contain", 1);
   },
-  parameters: {
-    docs: {
-      source: {
-        code: `
-export const StubActionsDefinedOnDefaultExport: ComponentStoryObjCy<
-  typeof ClickCount
-> = {
-  cy: () => {
-    cy.dataCy("count").should("contain", 0);
-    cy.dataCy("button").click();
-
-    // name on actions is \`onClick\`
-    cy.get("@actions").its("onClick").should("be.calledOnceWith", 0);
-    // but the action string also functions as an alias
-    cy.get("@myClickStub").should("be.calledOnceWith", 0);
-    // which is a nice-to-have, but is important during test b/c the stub
-    // for the regex is still created, its just overwritten
-    cy.get("@argTypesRegex.onClick").should("not.be.called");
-
-    cy.dataCy("count").should("contain", 1);
-  }
-};`,
-      },
-    },
-  },
 };
+// story-code @include-start
 
 export const SpyOnArgsWhichAreAlreadyProvided: ComponentStoryObjCy<
   typeof ClickCount
@@ -74,7 +47,7 @@ export const SpyOnArgsWhichAreAlreadyProvided: ComponentStoryObjCy<
     onClick: onClickSpy,
   },
   cy: () => {
-    onClickSpy.resetHistory();
+    (onClickSpy as Sinon.SinonSpy).resetHistory();
     cy.dataCy("button")
       .click()
       // So the spy itself is already called (you'd probably just provide a normal function)
@@ -86,26 +59,27 @@ export const SpyOnArgsWhichAreAlreadyProvided: ComponentStoryObjCy<
   },
 };
 
-export const SpyOnArgsWhichAreProvidedToFnSyntax: ComponentStoryCy<
-  typeof ClickCount
-> = (args) => <ClickCount {...args} />;
-SpyOnArgsWhichAreProvidedToFnSyntax.args = {
+export const SpyOnProvided: ComponentStoryCy<typeof ClickCount> = (args) => (
+  <ClickCount {...args} />
+);
+SpyOnProvided.args = {
   onClick: onClickSpy,
 };
-SpyOnArgsWhichAreProvidedToFnSyntax.cy = () => {
-  onClickSpy.resetHistory();
+SpyOnProvided.cy = () => {
+  (onClickSpy as Sinon.SinonSpy).resetHistory();
   cy.dataCy("button")
     .click()
     .then(() => expect(onClickSpy).to.be.calledOnceWith(0));
   cy.get("@actions").its("onClick").should("be.calledOnceWith", 0);
   cy.get("@argTypesRegex.onClick").should("not.be.called");
 };
+// story-code @end SpyOnProvided
 
 export const SpyOnArgsWhichAreProvidedInDefaultExport: ComponentStoryObjCy<
   typeof ClickCount
 > = {
   cy: () => {
-    onClickSpy2.resetHistory();
+    (onClickSpy2 as Sinon.SinonSpy).resetHistory();
     cy.dataCy("button-2")
       .click()
       .then(() => expect(onClickSpy2).to.be.calledOnceWith(0));

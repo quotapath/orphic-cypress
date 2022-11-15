@@ -21,9 +21,4 @@ module.exports = {
   core: {
     builder: "webpack5",
   },
-  // webpackFinal: async (config, opts) => {
-  //   console.log(config.module.rules[4].use[0]);
-  //   console.log(config.module.rules[4].use[1]);
-  //   return config;
-  // },
 };

@@ -1,30 +1,30 @@
 import React from "react";
-import type { ComponentStoryObjCy } from "src";
+import type { ComponentStoryCy, ComponentStoryObjCy } from "src";
 import { ClickCount } from "../Button";
 
 export default { component: ClickCount };
 
-export const CallExplicitArgtypeActionStubAutomatically: ComponentStoryObjCy<
-  typeof ClickCount
-> = {
-  argTypes: {
-    onClick: { action: "myClickStub" },
-  },
-  cy: () => {
-    cy.dataCy("count").should("contain", 0);
-    cy.dataCy("button").click();
-
-    // name on actions is `onClick`
-    cy.get("@actions").its("onClick").should("be.calledOnceWith", 0);
-    // but the action string also functions as an alias
-    cy.get("@myClickStub").should("be.calledOnceWith", 0);
-    // which is a nice-to-have, but is important during test b/c the stub
-    // for the regex is still created, its just overwritten
-    cy.get("@argTypesRegex.onClick").should("not.be.called");
-
-    cy.dataCy("count").should("contain", 1);
-  },
+export const CallExplicitArgtypeStub: ComponentStoryCy<typeof ClickCount> = (
+  args
+) => <ClickCount {...args} />;
+CallExplicitArgtypeStub.argTypes = {
+  onClick: { action: "myClickStub" },
 };
+CallExplicitArgtypeStub.cy = () => {
+  cy.dataCy("count").should("contain", 0);
+  cy.dataCy("button").click();
+
+  // name on actions is `onClick`
+  cy.get("@actions").its("onClick").should("be.calledOnceWith", 0);
+  // but the action string also functions as an alias
+  cy.get("@myClickStub").should("be.calledOnceWith", 0);
+  // which is a nice-to-have, but is important during test b/c the stub
+  // for the regex is still created, its just overwritten
+  cy.get("@argTypesRegex.onClick").should("not.be.called");
+
+  cy.dataCy("count").should("contain", 1);
+};
+// story-code @end
 
 export const CallImplicitArgtypeActionStubAutomaticallyViaRegex: ComponentStoryObjCy<
   typeof ClickCount
@@ -64,7 +64,6 @@ export const MockIfProvidedViaArgsRegardlessOfDocgen: ComponentStoryObjCy<
   typeof ClickCount
 > = {
   args: {
-    // eslint-disable-next-line
     // @ts-ignore
     onSomethingElse: () => 1,
   },
@@ -73,6 +72,7 @@ export const MockIfProvidedViaArgsRegardlessOfDocgen: ComponentStoryObjCy<
     cy.get("@actions").its("onSomethingElse").should("not.be.called");
     cy.get("@argTypesRegex.onSomethingElse").should("not.be.called");
   },
+  // story-code @skip-start
   parameters: {
     docs: {
       description: {
@@ -83,13 +83,13 @@ without docgen`,
       },
     },
   },
+  // story-code @skip-end
 };
 
 export const MockIfProvidedViaArgTypesRegardlessOfDocgen: ComponentStoryObjCy<
   typeof ClickCount
 > = {
   argTypes: {
-    // eslint-disable-next-line
     // @ts-ignore
     onSomethingElse: { action: "onSomethingElseAlias" },
   },

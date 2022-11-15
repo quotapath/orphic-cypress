@@ -4,7 +4,7 @@ import { Button } from "../Button";
 
 export default {
   component: Button,
-  id: "fileformats-storybookfiles",
+  id: "fileformats-storybookfiles", // story-code @skip
 };
 
 // These are more repetitive than necessary, real story scenarios would use a 'render'
@@ -16,23 +16,12 @@ export const StoryFunctionWithCyFunction: ComponentStoryCy<typeof Button> = (
 
 StoryFunctionWithCyFunction.cy = () =>
   cy.dataCy("button").should("contain", "Story function");
-
+// story-code @end @include-default
 StoryFunctionWithCyFunction.parameters = {
   docs: {
     description: {
       story:
         ".cy is the simplest format, expecting just a function which executes in cypress",
-    },
-    source: {
-      code: `
-export default { component: Button };
-
-export const StoryFunctionWithCyFunction: ComponentStoryCy<typeof Button> = (
-  args
-) => <Button {...args} label="Story function" />;
-
-StoryFunctionWithCyFunction.cy = () =>
-  cy.dataCy("button").should("contain", "Story function");`,
     },
   },
 };
@@ -113,7 +102,7 @@ StoryFunctionWithCyTest.cyTest = (Story) => {
     );
   });
 };
-
+// story-code @end
 StoryFunctionWithCyTest.parameters = {
   docs: {
     description: {
@@ -123,38 +112,13 @@ It allows executing test hooks like beforeEach, calling it.skip,
 or passing new arguments to the story at each test, but requires
 manually calling cy.mount on the component that comes in as an argument.`,
     },
-    source: {
-      code: `
-export const StoryFunctionWithCyTest: ComponentStoryCy<typeof Button> = (
-  args
-) => <Button label="Story test" {...args} />;
-
-StoryFunctionWithCyTest.cyTest = (Story) => {
-  it("should contain 'Story test' label", () => {
-    cy.mount(<Story />);
-    cy.dataCy("button").should("contain", "Story test");
-  });
-
-  it("should accept a disabled prop", () => {
-    cy.mount(<Story disabled />);
-    cy.dataCy("button").should("be.disabled");
-  });
-
-  it.skip("should skip a test", () => {
-    cy.mount(<Story />);
-    cy.dataCy("button").should(
-      "contain",
-      "This test would fail if not skipped"
-    );
-  });
-};`,
-    },
   },
 };
 
 export const StoryObjectWithCyFunction: ComponentStoryObjCy<typeof Button> = {
   args: { label: "Story function" },
   cy: () => cy.dataCy("button").should("contain", "Story function"),
+  // story-code @skip-start
   parameters: {
     docs: {
       description: {
@@ -162,13 +126,7 @@ export const StoryObjectWithCyFunction: ComponentStoryObjCy<typeof Button> = {
 .cy is the most concise testing syntax and CSF object syntax is the most concise
 story format. Together, they can make for some truly small but powerful tests.`,
       },
-      source: {
-        code: `
-export const StoryObjectWithCyFunction: ComponentStoryObjCy<typeof Button> = {
-  args: { label: "Story function" },
-  cy: () => cy.dataCy("button").should("contain", "Story function"),
-};`,
-      },
     },
   },
+  // story-code @skip-end
 };

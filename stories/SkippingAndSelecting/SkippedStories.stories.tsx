@@ -1,8 +1,6 @@
 import React from "react";
 import type { ComponentStoryCy } from "src";
 import { Button } from "../Button";
-// @ts-ignore
-import mdx from "./SkippedStories.mdx";
 
 export default { component: Button };
 
@@ -11,7 +9,15 @@ export const NotSkipped: ComponentStoryCy<typeof Button> = (args) => (
 );
 
 NotSkipped.cy = () => cy.dataCy("button").should("contain", "Story function");
-NotSkipped.parameters = { docs: { page: mdx } };
+// story-code @end @include-default
+NotSkipped.parameters = {
+  docs: {
+    description: {
+      story:
+        "You can skip individual stories via `.cySkip` property on the story itself.",
+    },
+  },
+};
 
 export const SkippedFunction: ComponentStoryCy<typeof Button> = (args) => (
   <Button {...args} label="Story function" />
@@ -20,9 +26,8 @@ export const SkippedFunction: ComponentStoryCy<typeof Button> = (args) => (
 SkippedFunction.cy = () =>
   cy.dataCy("button").should("contain", "Would fail if not skipped");
 SkippedFunction.cySkip = true;
-SkippedFunction.parameters = { docs: { page: mdx } };
+// story-code @end
 
-// Also shows object spread syntax
 export const Skipped = {
   ...NotSkipped,
   args: { label: "Another" },
