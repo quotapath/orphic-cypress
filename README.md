@@ -2,6 +2,7 @@
   <object
     data="https://quotapath.github.io/cypress-storybook-component-tests/assets/van-gogh-road-with-cypress-and-star.jpeg"
     type="image/jpeg"
+    width="400px"
   >
     <img
       src="assets/van-gogh-road-with-cypress-and-star.jpeg"
