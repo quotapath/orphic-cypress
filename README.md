@@ -1,9 +1,14 @@
 <div align="center">
-  <img
-    src="https://quotapath.github.io/cypress-storybook-component-tests/assets/van-gogh-road-with-cypress-and-star.jpeg"
-    alt="Van Gogh's Painting of 'Road with Cypress and Star'"
-    width="400px"
-  />
+  <object
+    data="https://quotapath.github.io/cypress-storybook-component-tests/assets/van-gogh-road-with-cypress-and-star.jpeg"
+    type="image/jpeg"
+  >
+    <img
+      src="assets/van-gogh-road-with-cypress-and-star.jpeg"
+      alt="Van Gogh's Painting of 'Road with Cypress and Star'"
+      width="400px"
+    />
+  </object>
 </div>
 
 # Cypress Storybook Component Tests
