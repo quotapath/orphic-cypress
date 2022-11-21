@@ -145,7 +145,7 @@ export const stubStoryActions = <T extends StoryFileCy>(
     : {};
 
   const argTypesFromStoryObj = storyName
-    ? (stories as Stories)[storyName]?.argTypes
+    ? (stories as any as Stories)[storyName]?.argTypes
     : null;
   const actions = stubArgTypeActions(
     { ...(stories.default?.args ?? {}), ...composedStory.args },

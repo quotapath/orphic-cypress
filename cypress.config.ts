@@ -42,5 +42,6 @@ export default defineConfig({
       config.env.storyLocation = "./stories/";
       return setStorybookFiles(on, config);
     },
+    experimentalSingleTabRunMode: true,
   },
 });

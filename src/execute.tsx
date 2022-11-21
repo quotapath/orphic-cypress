@@ -103,7 +103,7 @@ export const executeCyTests = <T extends StoryFileCy>(
       if (typeof Comp !== "function") return;
 
       describe(storyNameFromExport(name), () => {
-        const story = (filteredStories as Stories)[name];
+        const story = (filteredStories as any as Stories)[name];
         beforeEach(() => {
           if (story.cyTest && config?.format?.cyTest === false) {
             throw new CyTestConfigError("cyTest", stories.default.title);
