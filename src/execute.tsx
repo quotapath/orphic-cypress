@@ -125,7 +125,7 @@ export const executeCyTests = <T extends StoryFileCy>(
                 throw new CyTestConfigError("function", stories.default.title);
               }
               cy.mount(<Comp {...this.actions} />);
-              storyCy();
+              storyCy.bind(this)();
             });
           }
           // otherwise cy is an object with story descriptions as keys and test
@@ -136,7 +136,7 @@ export const executeCyTests = <T extends StoryFileCy>(
                 throw new CyTestConfigError("object", stories.default.title);
               }
               cy.mount(<Comp {...this.actions} />);
-              cyTest();
+              cyTest.bind(this)();
             });
           });
         }

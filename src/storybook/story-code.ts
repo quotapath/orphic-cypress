@@ -69,7 +69,11 @@ const removeSkips = (codeLines: string[]) => {
  * to better parse story objects.
  *
  * TODO: Some of this might be suitable contribution to storysource, but
- * the goals there might be very different
+ * the goals there often different, e.g. to show how to use a component
+ * whereas here we're showing how to build stories.
+ *
+ * TODO: ideas include-render, include-template, include-region
+ * opt-in for object story support
  *
  * All comments start with `// story-code` or with `/*` or `/**` style
  * single line comments. So `// story-code @end SomeComponent @include-default`

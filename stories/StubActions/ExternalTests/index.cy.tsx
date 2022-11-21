@@ -31,9 +31,8 @@ describe("ExternalTests", () => {
         cy.get("@actions").its("onClick").should("be.calledOnceWith", 0);
         // but the action string also functions as an alias
         cy.get("@myClickStub").should("be.calledOnceWith", 0);
-        // which is a nice-to-have, but is important during test b/c the stub
-        // for the regex is still created, its just overwritten
-        cy.get("@argTypesRegex.onClick").should("not.be.called");
+        // would also come from regex
+        cy.get("@argTypesRegex.onClick").should("be.calledOnceWith", 0);
 
         cy.dataCy("count").should("contain", 1);
       });
@@ -52,13 +51,9 @@ describe("ExternalTests", () => {
         cy.dataCy("button")
           .click()
           .then(() => expect(this.actions.onClick).to.be.calledOnceWith(0));
-        // or get its alias name on actions is `onClick`
         cy.get("@actions").its("onClick").should("be.calledOnceWith", 0);
-        // but the action string also functions as an alias
         cy.get("@myClickStub").should("be.calledOnceWith", 0);
-        // which is a nice-to-have, but is important during test b/c the stub
-        // for the regex is still created, its just overwritten
-        cy.get("@argTypesRegex.onClick").should("not.be.called");
+        cy.get("@argTypesRegex.onClick").should("be.calledOnceWith", 0);
       });
     });
   });

@@ -31,6 +31,14 @@ const mockAs = (alias: string, toSpy?: any) => {
   return stub;
 };
 
+const addAlias = (
+  stubOrSpy: ReturnType<typeof cy.stub | typeof cy.spy>,
+  alias: string
+) => {
+  stubOrSpy.as(alias);
+  return stubOrSpy;
+};
+
 /**
  * Wrap argTypes in cy.stubs. Unit test framework from storybook at this point doesn't do
  * anything with these argTypes, nor does it add props/stubs for actions.argTypesRegex.
@@ -52,7 +60,12 @@ const stubArgTypeActions = (
     if (value && value.action) {
       // alias the stub with the name given to the action. shows up really well in cypress
       // as a stub with call count and in assertion names etc.
-      return { ...acc, [key]: mockAs(value.action, args?.[key]) };
+      return {
+        ...acc,
+        [key]: acc[key]
+          ? addAlias(acc[key], value.action)
+          : mockAs(value.action, args?.[key]),
+      };
     }
     return acc;
   }, seed ?? {});
@@ -88,9 +101,12 @@ const stubStoryActionsPerArgTypes = <T extends StoryFileCy>(
     stories.default?.component as any as { __docgenInfo: any }
   )?.__docgenInfo;
   const asRegex = new RegExp(argTypesRegex);
+  // start with args and props
   const argKeys = [
-    ...Object.keys(docgenInfo?.props ?? {}),
-    ...Object.keys(args ?? {}),
+    ...new Set([
+      ...Object.keys(args ?? {}),
+      ...Object.keys(docgenInfo?.props ?? {}),
+    ]),
   ];
   const toAutoMock = argTypesRegex
     ? Object.fromEntries(
@@ -106,8 +122,12 @@ const stubStoryActionsPerArgTypes = <T extends StoryFileCy>(
     ? (stories as Stories)[storyName]?.argTypes
     : null;
   const actions = stubArgTypeActions(
-    composedStory.args,
-    argTypes ?? argTypesFromStoryObj ?? {},
+    { ...(stories.default?.args ?? {}), ...composedStory.args },
+    {
+      ...(stories.default?.argTypes ?? {}),
+      ...(argTypes ?? {}),
+      ...(argTypesFromStoryObj ?? {}),
+    },
     {
       ...toAutoMock,
       ...(seed ?? {}),
@@ -148,18 +168,16 @@ const stubStoryActionsPerArgTypes = <T extends StoryFileCy>(
  *   cy.get("@actions").its("someAction").should("have.callCount", 2);
  * });
  * ```
+ *
+ * Mostly an internal detail: precedence order, 3 through end will have essentially the same effect
+ * 1) explicitly provided args/props for story which will become spies
+ * 2) explicitly provided args at default export which will become spies
+ * 3) local argTypes action definition
+ * 4) global argTypes action definition
+ * 5) local argTypes regex definition
+ * 6) global argTypes regex definition
  */
 export const stubStoryActions = <T extends StoryFileCy>(
   composedStory: ComponentStoryCy<any> | ComponentStoryObjCy<any>,
   stories: T
-): WrappedActions => {
-  const defaultExportActions = stubArgTypeActions(
-    { ...(stories.default?.args ?? {}), ...composedStory.args },
-    stories.default?.argTypes
-  );
-  return stubStoryActionsPerArgTypes(
-    composedStory,
-    stories,
-    defaultExportActions
-  );
-};
+): WrappedActions => stubStoryActionsPerArgTypes(composedStory, stories);

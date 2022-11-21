@@ -1,5 +1,5 @@
 import React from "react";
-import type { ComponentStoryObjCy } from "src";
+import type { ComponentStoryCy, ComponentStoryObjCy } from "src";
 import { ClickCount } from "../../Button";
 
 export default {
@@ -14,7 +14,9 @@ export default {
   // },
 };
 
-export const CallExplicitArgtypeActionStub = () => <ClickCount />;
+export const CallExplicitArgtypeActionStub: ComponentStoryCy<
+  typeof ClickCount
+> = (args) => <ClickCount {...args} />;
 CallExplicitArgtypeActionStub.argTypes = {
   onClick: { action: "myClickStub" },
 };

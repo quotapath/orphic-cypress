@@ -31,9 +31,8 @@ export const StubActionsDefinedOnDefaultExport: ComponentStoryObjCy<
     cy.get("@actions").its("onClick").should("be.calledOnceWith", 0);
     // but the action string also functions as an alias
     cy.get("@myClickStub").should("be.calledOnceWith", 0);
-    // which is a nice-to-have, but is important during test b/c the stub
-    // for the regex is still created, its just overwritten
-    cy.get("@argTypesRegex.onClick").should("not.be.called");
+    // and if it would have come from argtypes regex as well, then
+    cy.get("@argTypesRegex.onClick").should("be.calledOnceWith", 0);
 
     cy.dataCy("count").should("contain", 1);
   },
@@ -54,8 +53,9 @@ export const SpyOnArgsWhichAreAlreadyProvided: ComponentStoryObjCy<
       .then(() => expect(onClickSpy).to.be.calledOnceWith(0));
     // And then the important thing: actions object wraps that provided function in a spy
     cy.get("@actions").its("onClick").should("be.calledOnceWith", 0);
-    // this time, it is the regex and no other stubs were created
-    cy.get("@argTypesRegex.onClick").should("not.be.called");
+    // still aliased as the argtype name as well and not from regex
+    cy.get("@myClickStub").should("be.calledOnceWith", 0);
+    cy.get("@argTypesRegex.onClick").should("be.calledOnceWith", 0);
   },
 };
 
@@ -71,7 +71,8 @@ SpyOnProvided.cy = () => {
     .click()
     .then(() => expect(onClickSpy).to.be.calledOnceWith(0));
   cy.get("@actions").its("onClick").should("be.calledOnceWith", 0);
-  cy.get("@argTypesRegex.onClick").should("not.be.called");
+  cy.get("@myClickStub").should("be.calledOnceWith", 0);
+  cy.get("@argTypesRegex.onClick").should("be.calledOnceWith", 0);
 };
 // story-code @end SpyOnProvided
 
@@ -84,7 +85,7 @@ export const SpyOnArgsWhichAreProvidedInDefaultExport: ComponentStoryObjCy<
       .click()
       .then(() => expect(onClickSpy2).to.be.calledOnceWith(0));
     cy.get("@actions").its("onClick2").should("be.calledOnceWith", 0);
-    // No argTypes provided for onClick2, so this goes to the argTypesRegex genereted stub
+    // No argTypes provided for onClick2, so this goes to the argTypesRegex generated stub
     cy.get("@argTypesRegex.onClick2").should("be.calledOnceWith", 0);
   },
 };

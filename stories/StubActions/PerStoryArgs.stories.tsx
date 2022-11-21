@@ -10,7 +10,7 @@ export const CallExplicitArgtypeStub: ComponentStoryCy<typeof ClickCount> = (
 CallExplicitArgtypeStub.argTypes = {
   onClick: { action: "myClickStub" },
 };
-CallExplicitArgtypeStub.cy = () => {
+CallExplicitArgtypeStub.cy = function () {
   cy.dataCy("count").should("contain", 0);
   cy.dataCy("button").click();
 
@@ -18,23 +18,37 @@ CallExplicitArgtypeStub.cy = () => {
   cy.get("@actions").its("onClick").should("be.calledOnceWith", 0);
   // but the action string also functions as an alias
   cy.get("@myClickStub").should("be.calledOnceWith", 0);
-  // which is a nice-to-have, but is important during test b/c the stub
-  // for the regex is still created, its just overwritten
-  cy.get("@argTypesRegex.onClick").should("not.be.called");
+  // and it's also aliased as argTypesRegex.onClick since the argtypes would have applied
+  cy.get("@argTypesRegex.onClick").should("be.calledWith", 0);
 
   cy.dataCy("count").should("contain", 1);
+
+  cy.dataCy("button")
+    .click()
+    .then(() => {
+      // just proving that `this` access works
+      const self = this as any;
+      expect(self.actions.onClick).to.have.callCount(2).and.be.calledWith(1);
+      expect(self.myClickStub).to.have.callCount(2).and.be.calledWith(1);
+      expect(self["argTypesRegex.onClick"])
+        .to.have.callCount(2)
+        .and.be.calledWith(1);
+      cy.dataCy("count").should("contain", 2);
+    });
 };
 // story-code @end
 
 export const CallImplicitArgtypeActionStubAutomaticallyViaRegex: ComponentStoryObjCy<
   typeof ClickCount
 > = {
-  cy: () => {
+  cy: function () {
     cy.dataCy("button").click();
 
     cy.get("@actions").its("onClick").should("be.calledOnceWith", 0);
-    // this time, it is the regex and no other stubs were created
     cy.get("@argTypesRegex.onClick").should("be.calledOnceWith", 0);
+    // confirming that `this` access also works
+    // @ts-ignore
+    expect(this.actions.onClick).to.be.calledOnceWith(0);
   },
 };
 
