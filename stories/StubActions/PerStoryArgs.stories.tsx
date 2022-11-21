@@ -41,14 +41,19 @@ CallExplicitArgtypeStub.cy = function () {
 export const CallImplicitArgtypeActionStubAutomaticallyViaRegex: ComponentStoryObjCy<
   typeof ClickCount
 > = {
-  cy: function () {
-    cy.dataCy("button").click();
-
-    cy.get("@actions").its("onClick").should("be.calledOnceWith", 0);
-    cy.get("@argTypesRegex.onClick").should("be.calledOnceWith", 0);
-    // confirming that `this` access also works
-    // @ts-ignore
-    expect(this.actions.onClick).to.be.calledOnceWith(0);
+  cy: {
+    "should stub via argtype regex when no other reasons for stubbing exist":
+      function () {
+        cy.dataCy("button")
+          .click()
+          .then(() => {
+            // confirming that `this` access also works
+            // @ts-ignore
+            expect(this.actions.onClick).to.be.calledOnceWith(0);
+          });
+        cy.get("@actions").its("onClick").should("be.calledOnceWith", 0);
+        cy.get("@argTypesRegex.onClick").should("be.calledOnceWith", 0);
+      },
   },
 };
 

@@ -76,68 +76,6 @@ export type Stories = {
 };
 
 /**
- * Get argTypes either from the story if in ComponentStory format,
- * or from the story object if in ComponentStoryObj format,
- * defaulting to an empty object, then stub all and wrap as `@actions`,
- * optionally taking a seed such as the result of `stubArgTypeActions`
- * from the top level default export.
- *
- * Useful outside of executeStories, but note that it doesn't stub
- * both argTypes locations, the default export and the particular story.
- * For that, you want `stubStoryActions`.
- *
- * I can't see a reason someone would want to use this directly over stubStoryActions
- * @private
- */
-const stubStoryActionsPerArgTypes = <T extends StoryFileCy>(
-  composedStory: ComponentStoryCy<any> | ComponentStoryObjCy<any>,
-  stories: T,
-  seed?: WrappedActions
-): WrappedActions => {
-  const { argTypes, storyName, parameters, args } = composedStory;
-  const argTypesRegex = parameters?.actions?.argTypesRegex;
-
-  const docgenInfo = (
-    stories.default?.component as any as { __docgenInfo: any }
-  )?.__docgenInfo;
-  const asRegex = new RegExp(argTypesRegex);
-  // start with args and props
-  const argKeys = [
-    ...new Set([
-      ...Object.keys(args ?? {}),
-      ...Object.keys(docgenInfo?.props ?? {}),
-    ]),
-  ];
-  const toAutoMock = argTypesRegex
-    ? Object.fromEntries(
-        argKeys.flatMap((key) =>
-          asRegex.test(key)
-            ? [[key, mockAs(`argTypesRegex.${key}`, args?.[key])]]
-            : []
-        )
-      )
-    : {};
-
-  const argTypesFromStoryObj = storyName
-    ? (stories as Stories)[storyName]?.argTypes
-    : null;
-  const actions = stubArgTypeActions(
-    { ...(stories.default?.args ?? {}), ...composedStory.args },
-    {
-      ...(stories.default?.argTypes ?? {}),
-      ...(argTypes ?? {}),
-      ...(argTypesFromStoryObj ?? {}),
-    },
-    {
-      ...toAutoMock,
-      ...(seed ?? {}),
-    }
-  );
-  cy.wrap(actions).as("actions");
-  return actions;
-};
-
-/**
  * Get argTypes from both the default export and the individual story.
  * Useful for a per-component beforeEach or top-of-test declaration.
  * Note that you'll want to return undefined from `beforeEach`
@@ -179,5 +117,48 @@ const stubStoryActionsPerArgTypes = <T extends StoryFileCy>(
  */
 export const stubStoryActions = <T extends StoryFileCy>(
   composedStory: ComponentStoryCy<any> | ComponentStoryObjCy<any>,
-  stories: T
-): WrappedActions => stubStoryActionsPerArgTypes(composedStory, stories);
+  stories: T,
+  seed?: WrappedActions
+): WrappedActions => {
+  const { argTypes, storyName, parameters, args } = composedStory;
+  const argTypesRegex = parameters?.actions?.argTypesRegex;
+
+  const docgenInfo = (
+    stories.default?.component as any as { __docgenInfo: any }
+  )?.__docgenInfo;
+  const asRegex = new RegExp(argTypesRegex);
+  // start with args and props, unique
+  const argKeys = [
+    ...new Set([
+      ...Object.keys(args ?? {}),
+      ...Object.keys(docgenInfo?.props ?? {}),
+    ]),
+  ];
+  const toAutoMock = argTypesRegex
+    ? Object.fromEntries(
+        argKeys.flatMap((key) =>
+          asRegex.test(key)
+            ? [[key, mockAs(`argTypesRegex.${key}`, args?.[key])]]
+            : []
+        )
+      )
+    : {};
+
+  const argTypesFromStoryObj = storyName
+    ? (stories as Stories)[storyName]?.argTypes
+    : null;
+  const actions = stubArgTypeActions(
+    { ...(stories.default?.args ?? {}), ...composedStory.args },
+    {
+      ...(stories.default?.argTypes ?? {}),
+      ...(argTypes ?? {}),
+      ...(argTypesFromStoryObj ?? {}),
+    },
+    {
+      ...toAutoMock,
+      ...(seed ?? {}),
+    }
+  );
+  cy.wrap(actions).as("actions");
+  return actions;
+};

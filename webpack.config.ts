@@ -6,6 +6,8 @@ import {
   useIsolatedComponentFiles,
 } from "./src";
 
+const port = process.env.PORT || 3001;
+
 module.exports = {
   resolve: {
     alias: {
@@ -33,8 +35,8 @@ module.exports = {
     allowedHosts: "all",
     open: false,
     host: "0.0.0.0",
-    hot: true,
-    port: 3001,
+    hot: false,
+    port,
     historyApiFallback: true,
     client: {
       webSocketURL: "ws://0.0.0.0:80/ws",
