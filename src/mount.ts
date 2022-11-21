@@ -72,7 +72,7 @@ export const mountTest = (
           `No stories found! you may want to add this to skipFile: ${file}`
         );
       }
-      executeCyTests(stories);
+      executeCyTests(stories, stories.default.title || file);
     });
   });
 };
