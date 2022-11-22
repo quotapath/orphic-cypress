@@ -9,9 +9,13 @@ import { Method } from "cypress/types/net-stubbing";
  */
 export const mockToCyIntercept = (
   mockData: Array<{
+    /** url pattern to intercept */
     url: string;
+    /** REST method */
     method: string;
+    /** Expected status code */
     status: number;
+    /** Response to send upon mocked request */
     response: unknown;
   }>
 ) =>

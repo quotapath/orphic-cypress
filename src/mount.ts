@@ -14,23 +14,29 @@ import { executeCyTests } from "./execute";
 import { StoryFileCy } from "./types";
 
 /**
-const defaultRequireFileCallback = (
+ * A function which will gather the required storybook files.
+ * Often, require strings need to be hardcoded. Ours looked like this
+ *
+ * ```ts
+ * const requireFileCallback: RequireFileCallback = (fullFilePath) => {
+ *   const replaced = fullFilePath
+ *     .replace("src/app/", "")
+ *     .replace("src/common/", "");
+ *   // We have to give webpack a little bit to hook onto, so we remove
+ *   // the module entrypoint and include that directly as a string to `require`
+ *   if (fullFilePath.startsWith("src/app")) {
+ *     return require("app/" + replaced);
+ *   }
+ *   if (fullFilePath.startsWith("src/common")) {
+ *     return require("common/" + replaced);
+ *   }
+ *   return;
+ * };
+ * ```
+ */
+export type RequireFileCallback = (
   fullFilePath: string
-): StoryFileCy | undefined => {
-  const replaced = fullFilePath
-    .replace("src/app/", "")
-    .replace("src/common/", "");
-  // We have to give webpack a little bit to hook onto, so we remove
-  // the module entrypoint and include that directly as a string to `require`
-  if (fullFilePath.startsWith("src/app")) {
-    return require("app/" + replaced);
-  }
-  if (fullFilePath.startsWith("src/common")) {
-    return require("common/" + replaced);
-  }
-  return;
-};
-*/
+) => StoryFileCy | undefined;
 
 /**
  * Execute all tests as part of one large cypress describe block.
@@ -56,10 +62,9 @@ export const mountTest = (
   skipFiles?: string[],
   /**
    * Transform the full file path into the imported module. This can be tricky
-   * b/c webpack needs some manual text to hook in properly. See `defaultRequireFileCallback`
+   * b/c webpack needs some manual text to hook in properly. See `RequireFileCallback`
    */
-  requireFileCallback = (fullFilePath: string): StoryFileCy | undefined =>
-    require(fullFilePath),
+  requireFileCallback: RequireFileCallback = require,
   /** Text passed to cypress's describe block */
   description = "mount all storybook files"
 ) => {

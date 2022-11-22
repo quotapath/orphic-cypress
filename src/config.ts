@@ -44,5 +44,13 @@ export const useIsolatedComponentFiles =
  * Default is `true` for all values.
  */
 export type CyTestConfig = {
-  format?: { cyTest?: boolean; object?: boolean; function?: boolean };
+  /** top level key */
+  format?: {
+    /** disable .cyTest format */
+    cyTest?: boolean;
+    /** disable .cy object format */
+    object?: boolean;
+    /** disable .cy function format */
+    function?: boolean;
+  };
 };
