@@ -2,6 +2,7 @@
  * @module story-code
  */
 import type { LocationsMap } from "@storybook/source-loader";
+import type { StoryContext } from "@storybook/types";
 
 const regex = {
   /** Any comment syntax (really, with any number of stars) with story-code at start */
@@ -54,6 +55,22 @@ const removeSkips = (codeLines: string[]) => {
 };
 
 /**
+ * Story context augmented by storysource addon
+ */
+export type StoryContextStorySource = StoryContext & {
+  /** parameters extension */
+  parameters: {
+    /** what's added by storysource */
+    storySource: {
+      /** full file as a single string */
+      source: string;
+      /** start/end locations of stories in above source */
+      locationsMap: LocationsMap;
+    };
+  };
+};
+
+/**
  * Add comment directives that will enable transforming the story source code
  * into the code snippet for the story.
  *
@@ -101,14 +118,7 @@ const removeSkips = (codeLines: string[]) => {
  */
 export const transformSource = (
   snippet: string,
-  storyContext: {
-    parameters: {
-      storySource: { source: string; locationsMap: LocationsMap };
-    };
-    id: string;
-    originalStoryFn: { name: string };
-    name: string;
-  }
+  storyContext: StoryContextStorySource
 ): string => {
   try {
     const { source, locationsMap } = storyContext.parameters.storySource;

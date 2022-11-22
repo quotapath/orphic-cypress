@@ -9,6 +9,7 @@ module.exports = {
   entryPointStrategy: "expand",
   hideGenerator: true,
   excludeExternals: true,
+  excludePrivate: true,
   name: "Cypress Storybook Component Tests",
   mergeModulesMergeMode: "module",
   // including these with module merge would just mean adding a bunch of 're-exports' lines
@@ -16,6 +17,12 @@ module.exports = {
   navigationLinks: {
     Storybook: "https://quotapath.github.io/orphic-cypress/storybook/",
     Github: "https://github.com/quotapath/orphic-cypress",
+  },
+  validation: {
+    invalidLink: true,
+    // make sure everything is documented
+    notDocumented: true,
+    notExported: true,
   },
   treatWarningsAsErrors: true,
   ...(isHtml

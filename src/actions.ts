@@ -70,7 +70,10 @@ const stubArgTypeActions = (
     return acc;
   }, seed ?? {});
 
-// Internal only type
+/**
+ * Object of either component obj of function
+ * @private
+ */
 export type Stories = {
   [name: string]: ComponentStoryCy<any> | ComponentStoryObjCy<any>;
 };

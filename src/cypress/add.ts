@@ -47,12 +47,27 @@ export const addCommands = <T extends Record<string, any>>(commands: T) => {
   }
 };
 
-export type TaskFn = (() => any) | ((arg: any) => any);
-// map as promise returning versions of the tasks
+/**
+ * Raw task function where the argument is either empty or the arg to pass to the task
+ */
+export type TaskFn = (arg?: any) => any;
+/** Task promise without arg */
+export type TaskPromise<
+  T extends { [event: string]: TaskFn },
+  Key extends keyof T
+> = () => Promise<ReturnType<T[Key]>>;
+/** Task promise with arg */
+export type TaskPromiseWithArg<
+  T extends { [event: string]: TaskFn },
+  Key extends keyof T
+> = (arg: Parameters<T[Key]>[0]) => Promise<ReturnType<T[Key]>>;
+/**
+ * Map as promise returning versions of the tasks
+ */
 export type Tasks<T extends { [event: string]: TaskFn }> = {
   [Key in keyof T]: Parameters<T[Key]>[0] extends undefined
-    ? () => Promise<ReturnType<T[Key]>>
-    : (arg: Parameters<T[Key]>[0]) => Promise<ReturnType<T[Key]>>;
+    ? TaskPromise<T, Key>
+    : TaskPromiseWithArg<T, Key>;
 };
 
 /**

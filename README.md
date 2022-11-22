@@ -8,19 +8,22 @@
 
 # Cypress Storybook Component Tests
 
-[![Storybook](https://raw.githubusercontent.com/storybookjs/brand/main/badge/badge-storybook.svg)](https://quotapath.github.io/orphic-cypress/storybook/) [![CI](https://github.com/quotapath/orphic-cypress/actions/workflows/ci.yml/badge.svg)](https://github.com/quotapath/orphic-cypress/actions/workflows/ci.yml)
+[![Storybook](https://raw.githubusercontent.com/storybookjs/brand/main/badge/badge-storybook.svg)](https://quotapath.github.io/orphic-cypress/storybook/)
+<a href="https://quotapath.github.io/orphic-cypress/"><img height="18" src="https://user-images.githubusercontent.com/9889378/203390045-ba98e185-2701-42d7-9c26-a9dae3446ece.png"></a>
+[![CI](https://github.com/quotapath/orphic-cypress/actions/workflows/ci.yml/badge.svg)](https://github.com/quotapath/orphic-cypress/actions/workflows/ci.yml)
 
 A set of utilities, typescript transformers, and general examples on how to cover storybook stories with cypress component tests.
 In short, this is a little overengineering, a little black magic, and a lot of documentation on making these kinds of tests as easy and concise as possible.
 
 ## Features
 
-* An automatic cypress component test executor for storybook stories to test that stories render without any additional files or changes
-* [A series of file syntaxes](#additional-syntaxes) to support `.play` like functionality inside of story files for extremely terse testing
-* [Automatic action stubs and spies](#stubbing-actions) with first level cypress support
-* [A typescript transform](#isolated-component-files-transformer) that turns your `stories.tsx` files into cypress executable files with just a bit of black magic, making for pleasent headed cypress runs and better debuggability
-* Tools for turning [storybook addon mock api calls into cypress intercepts](#intercepting-api-requests)
 * [A comprehensive set of examples](https://quotapath.github.io/orphic-cypress/storybook/) for using cypress to test storybook with or without tools given here, including some surprising finds [like how to use composeStories with mdx files](https://quotapath.github.io/orphic-cypress/storybook/?path=/docs/mdx-file-with-external-tests)
+* An automatic cypress component test executor for plain old storybook stories
+* [A series of file syntaxes](#additional-syntaxes) to support `.play` like functionality in story files
+* [Automatic action stubs and spies](#stubbing-actions) with first level cypress support
+* [A typescript transform](#isolated-component-files-transformer) that turns your `stories.tsx` files into cypress test files with just a bit of black magic
+* Tools for turning [storybook addon mock api calls into cypress intercepts](#intercepting-api-requests)
+* [Some storysource snippet utils](https://quotapath.github.io/orphic-cypress/functions/story_code.transformSource.html) to show sections of the source file as story code snippet
 
 See extended module documentation in [github pages](https://quotapath.github.io/orphic-cypress/) and numerous examples at a [hosted storybook](https://quotapath.github.io/orphic-cypress/storybook/)
 
@@ -256,14 +259,25 @@ These could be written in the storybook file with some type updates, or alongsid
 
 ---
 
-#### Mocha or other headless execution of storybook interactive tests:
+#### Jest, or other, headless execution of storybook interactive tests:
 
-TODO: Add in a realistic example
+You could execute the `.play` property in jest tests directly, and could likely write out an instrumented mocha/chai or whatever framework to support the same kind of execution.
+
+Here's storybook's own example from [testing-react docs](https://storybook.js.org/addons/@storybook/testing-react)
 
 ```ts
-```
+const { InputFieldFilled } = composeStories(stories);
 
-Use composeStories from above and then execute the .play
+test('renders with play function', async () => {
+  const { container } = render(<InputFieldFilled />);
+
+  // pass container as canvasElement and play an interaction that fills the input
+  await InputFieldFilled.play({ canvasElement: container });
+
+  const input = screen.getByRole('textbox') as HTMLInputElement;
+  expect(input.value).toEqual('Hello world!');
+});
+```
 
 * Pros:
   * back to tests being visible in storybook through interaction testing addon
@@ -276,6 +290,23 @@ Use composeStories from above and then execute the .play
 
 
 <br/>
+
+# Whats in a name?
+
+When it comes to javascript naming, we find ourselves in a realm of mythology and powerful symbolism.
+From the Greek cannon, we have the likes of Apollo and Ajax, from more recent invented myths we have Falcor, Mithril, and Zod.
+The list goes on, and well it should, myths share with programming a deep understanding of the power of language and symbols.
+Even in javascript testing we have Sinon, named for the Greek warrior who lied to the Trojans to convince them that the giant wooden horse at their gates was only a gift, and was totally not filled to the brim with his comrades. What a brilliant name for a mocking library.
+So you'd think that Cypress would join in on this tradition, the cypress being an ancient tree known throughout human culture. There is a wealth of deep symbolism there. Van Gogh claimed they looked like Egyptian obelisks and painted them with an intense fiery energy literally leaping out of the frame.
+
+But no, if we dig around a bit, we find that [cypress was named because](https://docs.cypress.io/faq/questions/company-faq#Why-the-name-Cypress)
+> We believe that tests should always pass -- in other words, should always be green. A cypress is an evergreen tree. So, Cypress!
+
+Lame. So utterly lame. So we're naming this after the [Orphic Tablets](https://repository.brynmawr.edu/cgi/viewcontent.cgi?article=1095&context=classics_pubs) which were found in the tombs of the Greeks which contained instructions on the afterlife, wherein a white cypress stands as a guidepost in that dark underworld. Fitting for tests which execute in a different realm.
+
+> You will find in the halls of Hades a spring on the left, and standing by it, a glowing white cypress tree
+
+It's a literary, _storybook_, name. Why name a repo which is mostly examples? Just for fun.
 
 # Prior Art
 
