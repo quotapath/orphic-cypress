@@ -14,9 +14,8 @@ module.exports = {
   // including these with module merge would just mean adding a bunch of 're-exports' lines
   exclude: ["**/*/index.ts", "src/storybook/**/{index,page}.ts{,x}"],
   navigationLinks: {
-    Storybook:
-      "https://quotapath.github.io/cypress-storybook-component-tests/storybook/",
-    Github: "https://github.com/quotapath/cypress-storybook-component-tests",
+    Storybook: "https://quotapath.github.io/orphic-cypress/storybook/",
+    Github: "https://github.com/quotapath/orphic-cypress",
   },
   treatWarningsAsErrors: true,
   ...(isHtml

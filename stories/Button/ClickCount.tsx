@@ -29,7 +29,7 @@ export const ClickCount = ({
         setClickCount(clickCount + 1);
       } else {
         onClick2?.(clickCount2);
-        setClickCount2(clickCount + 1);
+        setClickCount2(clickCount2 + 1);
       }
     };
 

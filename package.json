@@ -1,5 +1,5 @@
 {
-  "name": "cypress-storybook-component-tests",
+  "name": "orphic-cypress",
   "version": "1.0.0",
   "description": "Set of utilities and typescript transformers to cover storybook stories with cypress component tests",
   "main": "dist/index.js",
@@ -18,7 +18,7 @@
     "typecheck": "tsc --noEmit",
     "storybook": "start-storybook -p 6006",
     "storybook:build": "build-storybook -o docs/storybook/",
-    "docs": "typedoc && npm run storybook:build && cp -r assets docs",
+    "docs": "typedoc && npm run storybook:build",
     "typedoc": "typedoc"
   },
   "files": [
@@ -27,7 +27,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/quotapath/cypress-storybook-component-tests.git"
+    "url": "git+https://github.com/quotapath/orphic-cypress.git"
   },
   "keywords": [
     "cypress",
@@ -38,9 +38,9 @@
   "author": "quotapath",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/quotapath/cypress-storybook-component-tests/issues"
+    "url": "https://github.com/quotapath/orphic-cypress/issues"
   },
-  "homepage": "https://github.com/quotapath/cypress-storybook-component-tests#readme",
+  "homepage": "https://github.com/quotapath/orphic-cypress#readme",
   "devDependencies": {
     "@babel/core": "^7.20.2",
     "@storybook/addon-actions": "^6.5.13",

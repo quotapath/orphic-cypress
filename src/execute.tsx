@@ -21,36 +21,6 @@ class CyTestConfigError extends Error {
 }
 
 /**
- * A composeStories that carries over other keys as well as those from
- * @storybook/testing-react's version. The only important one is `argTypes`
- * which should come along in the built-in version.
- *
- * If you are using storybook's version _and_ calling `stubStoryActions`
- * manually, you'll want to do
- * ```ts
- * const { SomeComponent } = composeStories(stories);
- * stubStoryActions(SomeComponent, stories)
- * ```
- */
-export const tComposeStories: typeof composeStories = (
-  storiesImport,
-  globalConfig
-) => {
-  const composed = composeStories(storiesImport, globalConfig);
-  for (const key in composed) {
-    const typedKey = key as keyof typeof composed;
-    // TODO: something could be done on the types here
-    // @ts-ignore
-    composed[typedKey].cy = storiesImport[typedKey].cy;
-    // @ts-ignore
-    composed[typedKey].cyTest = storiesImport[typedKey].cyTest;
-    // @ts-ignore
-    composed[typedKey].argTypes = storiesImport[typedKey].argTypes;
-  }
-  return composed;
-};
-
-/**
  * Execute standard cypress tests against a set of storybook components.
  * If the storybook story or object is normal, then it will perform a simple
  * 'mount' and expect no errors to throw. If the story or object has a `cy`
