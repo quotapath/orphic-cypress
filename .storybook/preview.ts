@@ -21,7 +21,15 @@ export const parameters = {
   },
   options: {
     storySort: {
-      order: ["*", "SkippingAndSelecting", ["Overview"]],
+      order: [
+        "Overview",
+        "FileFormats",
+        "StubActions",
+        ["Overview"],
+        "SkippingAndSelecting",
+        ["Overview"],
+        "MDX",
+      ],
     },
   },
 };

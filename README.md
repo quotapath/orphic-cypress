@@ -1,20 +1,14 @@
 <div align="center">
-  <object
-    data="https://quotapath.github.io/cypress-storybook-component-tests/assets/van-gogh-road-with-cypress-and-star.jpeg"
-    type="image/jpeg"
+  <img
+    src="https://user-images.githubusercontent.com/9889378/203303857-c5e4682d-afda-4956-bd3b-d54630a7041c.jpeg"
+    alt="Van Gogh's Painting of 'Road with Cypress and Star'"
     width="400px"
-  >
-    <img
-      src="assets/van-gogh-road-with-cypress-and-star.jpeg"
-      alt="Van Gogh's Painting of 'Road with Cypress and Star'"
-      width="400px"
-    />
-  </object>
+  />
 </div>
 
 # Cypress Storybook Component Tests
 
-[![Storybook](https://raw.githubusercontent.com/storybookjs/brand/main/badge/badge-storybook.svg)](https://quotapath.github.io/cypress-storybook-component-tests/storybook/) [![CI](https://github.com/quotapath/cypress-storybook-component-tests/actions/workflows/ci.yml/badge.svg)](https://github.com/quotapath/cypress-storybook-component-tests/actions/workflows/ci.yml)
+[![Storybook](https://raw.githubusercontent.com/storybookjs/brand/main/badge/badge-storybook.svg)](https://quotapath.github.io/orphic-cypress/storybook/) [![CI](https://github.com/quotapath/orphic-cypress/actions/workflows/ci.yml/badge.svg)](https://github.com/quotapath/orphic-cypress/actions/workflows/ci.yml)
 
 A set of utilities, typescript transformers, and general examples on how to cover storybook stories with cypress component tests.
 In short, this is a little overengineering, a little black magic, and a lot of documentation on making these kinds of tests as easy and concise as possible.
@@ -26,9 +20,9 @@ In short, this is a little overengineering, a little black magic, and a lot of d
 * [Automatic action stubs and spies](#stubbing-actions) with first level cypress support
 * [A typescript transform](#isolated-component-files-transformer) that turns your `stories.tsx` files into cypress executable files with just a bit of black magic, making for pleasent headed cypress runs and better debuggability
 * Tools for turning [storybook addon mock api calls into cypress intercepts](#intercepting-api-requests)
-* [A comprehensive set of examples](https://quotapath.github.io/cypress-storybook-component-tests/storybook/) for using cypress to test storybook with or without tools given here, including some surprising finds [like how to use composeStories with mdx files](https://quotapath.github.io/cypress-storybook-component-tests/storybook/?path=/docs/mdx-file-with-external-tests)
+* [A comprehensive set of examples](https://quotapath.github.io/orphic-cypress/storybook/) for using cypress to test storybook with or without tools given here, including some surprising finds [like how to use composeStories with mdx files](https://quotapath.github.io/orphic-cypress/storybook/?path=/docs/mdx-file-with-external-tests)
 
-See extended module documentation in [github pages](https://quotapath.github.io/cypress-storybook-component-tests/) and numerous examples at a [hosted storybook](https://quotapath.github.io/cypress-storybook-component-tests/storybook/)
+See extended module documentation in [github pages](https://quotapath.github.io/orphic-cypress/) and numerous examples at a [hosted storybook](https://quotapath.github.io/orphic-cypress/storybook/)
 
 <br/>
 
@@ -83,7 +77,7 @@ CompWithLabel.cy = () =>
 
 # Additional Syntaxes
 
-There are 3 available syntaxes for in-file use. See [storybook](https://quotapath.github.io/cypress-storybook-component-tests/storybook/?path=/docs/fileformats-storybookfiles) for comprehensive examples.
+There are 3 available syntaxes for in-file use. See [storybook](https://quotapath.github.io/orphic-cypress/storybook/?path=/docs/fileformats-storybookfiles) for comprehensive examples.
 
 ## `function` syntax
 
@@ -134,7 +128,7 @@ This executes within it's own `describe` block and is useful for providing compo
 
 ## Opting out
 
-You can opt out of allowing any or all of these syntaxes via cypress configuration. See [config module documentation](https://quotapath.github.io/cypress-storybook-component-tests/types/config.CyTestConfig.html) for more details.
+You can opt out of allowing any or all of these syntaxes via cypress configuration. See [config module documentation](https://quotapath.github.io/orphic-cypress/types/config.CyTestConfig.html) for more details.
 
 <br/>
 
@@ -142,7 +136,11 @@ You can opt out of allowing any or all of these syntaxes via cypress configurati
 
 By default, `composeStories` will not stub your actions. This package introduces `stubStoryActions` to do this automatically when running in the cypress test mode. See [its documentation](md-docs/modules/actions.md#stubstoryactions) for manual use.
 
-TODO: screenshots including the stub
+See [storybook](https://quotapath.github.io/orphic-cypress/storybook/?path=/docs/stubactions) for example uses with various file types and configurations, and [module docs](https://quotapath.github.io/orphic-cypress/functions/actions.stubStoryActions.html) for more details
+
+Cypress component test stubs are really slick and the test runner provides a great, interactive interface for debugging
+
+https://user-images.githubusercontent.com/9889378/203308863-105eac48-a70a-4c21-a439-dead63ef0aed.mp4
 
 <br/>
 

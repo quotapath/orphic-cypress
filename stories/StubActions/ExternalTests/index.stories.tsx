@@ -4,7 +4,7 @@ import { ClickCount } from "../../Button";
 
 export default {
   component: ClickCount,
-  cySkip: true as const,
+  cySkip: true,
   // when using an external file, the argTypesRegex doesn't get brought in from main 'parameters'
   // so you either have to add this, or manually provide the global preview to `composeStories`
   // parameters: {
@@ -14,15 +14,15 @@ export default {
   // },
 };
 
-export const CallExplicitArgtypeActionStub: ComponentStoryCy<
-  typeof ClickCount
-> = (args) => <ClickCount {...args} />;
-CallExplicitArgtypeActionStub.argTypes = {
+export const ArgtypeActionStub: ComponentStoryCy<typeof ClickCount> = (
+  args
+) => <ClickCount {...args} />;
+ArgtypeActionStub.argTypes = {
   onClick: { action: "myClickStub" },
 };
 // story-code @end @include-start
 
-export const CallImplicitArgtypeActionStubViaRegex: ComponentStoryObjCy<
+export const ImplicitArgtypeActionStubViaRegex: ComponentStoryObjCy<
   typeof ClickCount
 > = {
   args: { label: "Call via Regex" },

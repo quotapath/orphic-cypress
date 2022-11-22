@@ -3,7 +3,7 @@
  */
 import * as ts from "typescript";
 
-/** becomes `import { executeCyTests } from "cypress-storybook-component-tests"` */
+/** becomes `import { executeCyTests } from "orphic-cypress"` */
 const createImportStatement = (
   factory: ts.NodeFactory,
   opts: ts.CompilerOptions,
@@ -80,7 +80,7 @@ export const transformIsolatedComponentFiles =
      * Location for `executeCyTests`. Defaults to this module, but you could import it elsewhere
      * and change via pre/post call, or rewrite entirely and point to it from here
      */
-    executeCyTestsLocation = "cypress-storybook-component-tests"
+    executeCyTestsLocation = "orphic-cypress"
   ): ts.TransformerFactory<ts.SourceFile> =>
   (context) =>
   (source) => {

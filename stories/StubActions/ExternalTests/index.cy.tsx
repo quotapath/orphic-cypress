@@ -4,8 +4,10 @@ import { stubStoryActions } from "src";
 import * as stories from "./index.stories";
 import * as sbPreview from "../../../.storybook/preview";
 
-const { CallExplicitArgtypeActionStub, CallImplicitArgtypeActionStubViaRegex } =
-  composeStories(stories, sbPreview);
+const { ArgtypeActionStub, ImplicitArgtypeActionStubViaRegex } = composeStories(
+  stories,
+  sbPreview
+);
 
 // With the caveat of argTypesRegex not carrying over from the main parameters
 // all of the nuance expressed in ./BeforeEach.stories.tsx and
@@ -15,11 +17,8 @@ describe("ExternalTests", () => {
   describe("with argType explicitly provided", () => {
     describe("direct approach", () => {
       it("should call the proper stubs", function () {
-        const actions = stubStoryActions(
-          CallExplicitArgtypeActionStub,
-          stories
-        );
-        cy.mount(<CallExplicitArgtypeActionStub {...actions} />);
+        const actions = stubStoryActions(ArgtypeActionStub, stories);
+        cy.mount(<ArgtypeActionStub {...actions} />);
 
         cy.dataCy("count").should("contain", 0);
         // can expect directly on actions
@@ -40,11 +39,11 @@ describe("ExternalTests", () => {
 
     describe("in before each", () => {
       beforeEach(() => {
-        stubStoryActions(CallExplicitArgtypeActionStub, stories);
+        stubStoryActions(ArgtypeActionStub, stories);
       });
 
       it("should stub tests when argtype is explicitly provided", function () {
-        cy.mount(<CallExplicitArgtypeActionStub {...this.actions} />);
+        cy.mount(<ArgtypeActionStub {...this.actions} />);
 
         cy.dataCy("count").should("contain", 0);
         // can expect directly on actions
@@ -62,10 +61,10 @@ describe("ExternalTests", () => {
     describe("direct approach", () => {
       it("should call the proper stubs", function () {
         const actions = stubStoryActions(
-          CallImplicitArgtypeActionStubViaRegex,
+          ImplicitArgtypeActionStubViaRegex,
           stories
         );
-        cy.mount(<CallImplicitArgtypeActionStubViaRegex {...actions} />);
+        cy.mount(<ImplicitArgtypeActionStubViaRegex {...actions} />);
 
         cy.dataCy("count").should("contain", 0);
         // can expect directly on actions
@@ -82,11 +81,11 @@ describe("ExternalTests", () => {
 
     describe("in before each", () => {
       beforeEach(() => {
-        stubStoryActions(CallImplicitArgtypeActionStubViaRegex, stories);
+        stubStoryActions(ImplicitArgtypeActionStubViaRegex, stories);
       });
 
       it("should stub tests when argtype is explicitly provided", function () {
-        cy.mount(<CallImplicitArgtypeActionStubViaRegex {...this.actions} />);
+        cy.mount(<ImplicitArgtypeActionStubViaRegex {...this.actions} />);
         cy.dataCy("button").click();
         cy.get("@actions").its("onClick").should("be.calledOnceWith", 0);
         cy.get("@argTypesRegex.onClick").should("be.calledOnceWith", 0);

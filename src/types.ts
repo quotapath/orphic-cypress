@@ -17,9 +17,9 @@ export type WithCy<T> = {
    */
   cyTest?: (comp: T) => void;
   /** use it.only for the test(s) for this component */
-  cyOnly?: true;
+  cyOnly?: boolean;
   /** use it.skip for the test(s) for this component */
-  cySkip?: true;
+  cySkip?: boolean;
 };
 
 /**
@@ -42,9 +42,9 @@ export type StoryFileCyExtension = {
   /** Add a function to execute within cypress. Can contain setup `beforeEach` etc */
   cy?: () => void;
   /** Add cySkip to default export to use `describe.skip` for these story tests */
-  cySkip?: true;
+  cySkip?: boolean;
   /** Add cyOnly to default export to use `describe.only` for these story tests */
-  cyOnly?: true;
+  cyOnly?: boolean;
   /**
    * You could specify this as a way of not skipping, but completely ignoring some/all
    * stories.
@@ -56,9 +56,9 @@ export type StoryFileCyExtension = {
    * components in CSF. You'll want to have have default export `includeStories: []`
    * but then will need to specify this (unless using an external test file) in
    * order for `composeStories` to pick up the stories properly
-   * see [DocsInMDX story](/cypress-storybook-component-tests/storybook/?path=/docs/docs-in-mdx)
+   * see [DocsInMDX story](/orphic-cypress/storybook/?path=/docs/docs-in-mdx)
    */
-  cyIncludeStories?: true | string[];
+  cyIncludeStories?: boolean | string[];
 };
 
 /** Adds to default export of storybook files. Likely not too necessary externally */
