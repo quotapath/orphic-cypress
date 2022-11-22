@@ -32,12 +32,13 @@ In short, this is a little overengineering, a little black magic, and a lot of d
   <h2>Features</h2>
 </a>
 <ul>
-<li>An automatic cypress component test executor for storybook stories to test that stories render without any additional files or changes</li>
-<li><a href="#additional-syntaxes">A series of file syntaxes</a> to support <code>.play</code> like functionality inside of story files for extremely terse testing</li>
-<li><a href="#stubbing-actions">Automatic action stubs and spies</a> with first level cypress support</li>
-<li><a href="#isolated-component-files-transformer">A typescript transform</a> that turns your <code>stories.tsx</code> files into cypress executable files with just a bit of black magic, making for pleasent headed cypress runs and better debuggability</li>
-<li>Tools for turning <a href="#intercepting-api-requests">storybook addon mock api calls into cypress intercepts</a></li>
 <li><a href="https://quotapath.github.io/orphic-cypress/storybook/">A comprehensive set of examples</a> for using cypress to test storybook with or without tools given here, including some surprising finds <a href="https://quotapath.github.io/orphic-cypress/storybook/?path=/docs/mdx-file-with-external-tests">like how to use composeStories with mdx files</a></li>
+<li>An automatic cypress component test executor for plain old storybook stories</li>
+<li><a href="#additional-syntaxes">A series of file syntaxes</a> to support <code>.play</code> like functionality in story files</li>
+<li><a href="#stubbing-actions">Automatic action stubs and spies</a> with first level cypress support</li>
+<li><a href="#isolated-component-files-transformer">A typescript transform</a> that turns your <code>stories.tsx</code> files into cypress test files with just a bit of black magic</li>
+<li>Tools for turning <a href="#intercepting-api-requests">storybook addon mock api calls into cypress intercepts</a></li>
+<li><a href="https://quotapath.github.io/orphic-cypress/functions/story_code.transformSource.html">Some storysource snippet utils</a> to show sections of the source file as story code snippet</li>
 </ul>
 <p>See extended module documentation in <a href="https://quotapath.github.io/orphic-cypress/">github pages</a> and numerous examples at a <a href="https://quotapath.github.io/orphic-cypress/storybook/">hosted storybook</a></p>
 <br/>
@@ -248,6 +249,25 @@ In short, this is a little overengineering, a little black magic, and a lot of d
 </ul>
 <br/>
 
+
+<a href="#whats-in-a-name" id="whats-in-a-name" style="color: inherit; text-decoration: none;">
+  <h1>Whats in a name?</h1>
+</a>
+<p>When it comes to javascript naming, we find ourselves in a realm of mythology and powerful symbolism.
+From the Greek cannon, we have the likes of Apollo and Ajax, from more recent invented myths we have Falcor, Mithril, and Zod.
+The list goes on, and well it should, myths share with programming a deep understanding of the power of language and symbols.
+Even in javascript testing we have Sinon, named for the Greek warrior who lied to the Trojans to convince them that the giant wooden horse at their gates was only a gift, and was totally not filled to the brim with his comrades. What a brilliant name for a mocking library.
+So you&#39;d think that Cypress would join in on this tradition, the cypress being an ancient tree known throughout human culture. There is a wealth of deep symbolism there. Van Gogh claimed they looked like Egyptian obelisks and painted them with an intense fiery energy literally leaping out of the frame.</p>
+<p>But no, if we dig around a bit, we find that <a href="https://docs.cypress.io/faq/questions/company-faq#Why-the-name-Cypress">cypress was named because</a></p>
+<blockquote>
+<p>We believe that tests should always pass -- in other words, should always be green. A cypress is an evergreen tree. So, Cypress!</p>
+</blockquote>
+<p>Lame. So utterly lame. So we&#39;re naming this after the <a href="https://repository.brynmawr.edu/cgi/viewcontent.cgi?article=1095&amp;context=classics_pubs">Orphic Tablets</a> which were found in the tombs of the Greeks which contained instructions on the afterlife, wherein a white cypress stands as a guidepost in the underworld. Fitting for tests which execute in a different realm.</p>
+<blockquote>
+<p>You will find in the halls of Hades a spring on the left, and standing by it,
+a glowing white cypress tree</p>
+</blockquote>
+<p>Its a literary <em>storybook</em> name. Why name a repo which is mostly examples? Just for fun.</p>
 
 <a href="#prior-art" id="prior-art" style="color: inherit; text-decoration: none;">
   <h1>Prior Art</h1>
