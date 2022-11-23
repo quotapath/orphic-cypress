@@ -20,18 +20,19 @@ const regex = {
  * Create named capture groups for @skip-end etc. A match but no groups
  * means its a normal `@skip` line with no suffix
  */
-const getSkipRegex = () => {
+const skipRegex = (() => {
   const skipParts = ["end", "start", "next"] as const;
   const skipJoin = skipParts.map((name) => `(?<${name}>-${name})`).join("|");
   return new RegExp(`${regex.init}@skip(${skipJoin})?`, "gm");
-};
-const skipRegex = getSkipRegex();
+})();
 
 /**
  * Remove lines with @skip, after @skip-next or between @skip-start and
  * @skip-end, all starting with `// story-code `
+ *
+ * @private
  */
-const removeSkips = (codeLines: string[]) => {
+export const removeSkips = (codeLines: string[]) => {
   const skip = { next: false, block: false };
   const lines = [];
 
@@ -70,6 +71,16 @@ export type StoryContextStorySource = StoryContext & {
   };
 };
 
+/** Options available for story-code's `transformSource` */
+export type TransformSourceOptions = {
+  /**
+   * storysource doesn't handle ComponentStoryObj syntax well, failing to provide a
+   * location. Passing in `true` here will mean the code block in the story docs
+   * will attempt to include the object itself, overcomming that issue.
+   */
+  includeObjects?: boolean;
+};
+
 /**
  * Add comment directives that will enable transforming the story source code
  * into the code snippet for the story.
@@ -90,7 +101,6 @@ export type StoryContextStorySource = StoryContext & {
  * whereas here we're showing how to build stories.
  *
  * TODO: ideas include-render, include-template, include-region
- * opt-in for object story support
  *
  * All comments start with `// story-code` or with `/*` or `/**` style
  * single line comments. So `// story-code @end SomeComponent @include-default`
@@ -100,13 +110,40 @@ export type StoryContextStorySource = StoryContext & {
  * * `@end`: end the previous story's code block. Note, this is works across
  *   stories such that any story which does not specify its end which begins
  *   before this use will end at this point. Use named end's if you need specificity
+ *   ```ts
+ *   const SomeStory: ComponentStory<typeof Comp> = (args) => <Comp {...args} />;
+ *   SomeStory.args = { prop: 1 };
+ *   // story-code @end
+ *   ```
  * * `@end SomeComponent`: same as above, but only mark the end for the given component
+ *   ```ts
+ *   const SomeStory: ComponentStory<typeof Comp> = (args) => <Comp {...args} />;
+ *   const OtherStory: ComponentStory<typeof Comp> = (args) => <Comp {...args} />;
+ *   OtherStory.args = { prop: 1 };
+ *   // story-code @end OtherStory
+ *   ```
  * * `@include-default`: include the default code export. Can occur in an `@end` line
  *   or on the line following a natural or designated end.
+ *   ```ts
+ *   const SomeStory: ComponentStory<typeof Comp> = (args) => <Comp {...args} />;
+ *   SomeStory.args = { prop: 1 };
+ *   // story-code @end @include-default
+ *   ```
  * * `@include-start`: include from the top of the file through to the default code export.
  *   Can occur in an `@end` line or on the line following a natural or designated end.
- * * `@skip`: Skip the current line, e.g. `const something = 1; // story-code @skip`
+ *   ```ts
+ *   const SomeStory: ComponentStory<typeof Comp> = (args) => <Comp {...args} />;
+ *   // story-code @include-start
+ *   ```
+ * * `@skip`: Skip the current line
+ *   ```ts
+ *   const somethingToIgnore = 1; // story-code @skip
+ *   ```
  * * `@skip-next`: Skip the next line
+ *   ```ts
+ *   // story-code @skip-next
+ *   const somethingToIgnore = 1;
+ *   ```
  * * `@skip-start` and `@skip-end`: Skip a block of text, e.g.
  *   ```ts
  *   // story-code @skip-start
@@ -116,85 +153,98 @@ export type StoryContextStorySource = StoryContext & {
  *   ```
  *   There's nothing enforcing that you have to have a @skip-end if you have a @skip-start
  */
-export const transformSource = (
-  snippet: string,
-  storyContext: StoryContextStorySource
-): string => {
-  try {
-    const { source, locationsMap } = storyContext.parameters.storySource;
-    let componentName = storyContext.originalStoryFn.name;
-    const locationKey = storyContext.id.split("--")[1];
-    let location = locationsMap[locationKey];
-    const allLines = source.split("\n");
+export const transformSource =
+  (opts: TransformSourceOptions = {}) =>
+  /** Inner function which can be assigned to docs.transformSource */
+  (snippet: string, storyContext: StoryContextStorySource): string => {
+    try {
+      const {
+        parameters: {
+          storySource: { source, locationsMap },
+        },
+        originalStoryFn,
+        id,
+        name,
+      } = storyContext;
+      let componentName = originalStoryFn.name;
 
-    if (!location) {
-      componentName = storyContext.name.replace(/ /g, "");
-      // Naive attempt to fix object syntax source
-      const startIndex = allLines.findIndex((line) =>
-        new RegExp(`export const ${componentName}`).test(line)
-      );
-      const endIndex = allLines
-        .slice(startIndex)
-        .findIndex((line) => /^};/.test(line));
-      location = {
-        startLoc: { col: 0, line: startIndex },
-        endLoc: { col: 0, line: endIndex + startIndex + 1 },
-      } as any;
-    }
+      const locationKey = id.split("--")[1];
+      let location = locationsMap[locationKey];
+      const allLines = source.split("\n");
 
-    const linesFromStart = allLines.slice(location.startLoc.line - 1);
-    const endLine = linesFromStart.findIndex((line) =>
-      new RegExp(`${regex.init}@end(\\s+)?($|@|${componentName})`).test(line)
-    );
-    const endLoc =
-      endLine > 0 ? endLine : location.endLoc.line - location.startLoc.line + 1;
+      if (!location && opts.includeObjects) {
+        componentName = name.replace(/ /g, "");
+        // Naive attempt to fix object syntax source
+        const startIndex = allLines.findIndex((line) =>
+          new RegExp(`export const ${componentName}`).test(line)
+        );
+        const endIndex = allLines
+          .slice(startIndex)
+          .findIndex((line) => /^};/.test(line));
+        location = {
+          startLoc: { col: 0, line: startIndex },
+          endLoc: { col: 0, line: endIndex + startIndex + 1 },
+        } as any;
+      }
 
-    const includeDefault =
-      new RegExp(regex.includeDefault).test(linesFromStart[endLine]) ||
-      new RegExp(`${regex.init}${regex.includeDefault}`).test(
-        linesFromStart[endLoc]
+      const {
+        startLoc: { line: startLine },
+        endLoc: { line: endLine },
+      } = location;
+      const linesFromStart = allLines.slice(startLine - 1);
+      const endLineComment = linesFromStart.findIndex((line) =>
+        new RegExp(`${regex.init}@end(\\s+)?($|@|${componentName})`).test(line)
       );
-    const includeStart =
-      new RegExp(regex.includeStart).test(linesFromStart[endLine]) ||
-      new RegExp(`${regex.init}${regex.includeStart}`).test(
-        linesFromStart[endLoc]
-      );
+      const endLoc =
+        endLineComment > 0 ? endLineComment : endLine - startLine + 1;
 
-    let defaultLines: string[] = [];
-    if (includeDefault || includeStart) {
-      // This is pretty naive
-      const defaultStartIndex = allLines.findIndex((line) =>
-        /export default {/.test(line)
-      );
-      if (defaultStartIndex !== -1) {
-        const linesFromDefaultStart = includeStart
-          ? allLines
-          : allLines.slice(defaultStartIndex);
-        if (allLines[defaultStartIndex]?.includes("};")) {
-          defaultLines = [
-            ...linesFromDefaultStart.slice(0, defaultStartIndex + 1),
-            "",
-          ];
-        } else {
-          const endDefaultLine = linesFromDefaultStart.findIndex((line) =>
-            /^};$/.test(line)
-          );
-          if (endDefaultLine > 0) {
-            defaultLines = linesFromDefaultStart.slice(0, endDefaultLine + 1);
-            if (defaultLines.at(-1) !== "") {
-              defaultLines = [...defaultLines, ""];
+      const includeDefault =
+        new RegExp(regex.includeDefault).test(linesFromStart[endLineComment]) ||
+        new RegExp(`${regex.init}${regex.includeDefault}`).test(
+          linesFromStart[endLoc]
+        );
+      const includeStart =
+        new RegExp(regex.includeStart).test(linesFromStart[endLineComment]) ||
+        new RegExp(`${regex.init}${regex.includeStart}`).test(
+          linesFromStart[endLoc]
+        );
+
+      let defaultLines: string[] = [];
+
+      if (includeDefault || includeStart) {
+        // This is pretty naive
+        const defaultStartIndex = allLines.findIndex((line) =>
+          /export default {/.test(line)
+        );
+        if (defaultStartIndex !== -1) {
+          const linesFromDefaultStart = includeStart
+            ? allLines
+            : allLines.slice(defaultStartIndex);
+          if (allLines[defaultStartIndex]?.includes("};")) {
+            defaultLines = [...linesFromDefaultStart.slice(0, 1), ""];
+          } else {
+            const endDefaultLine = linesFromDefaultStart.findIndex((line) =>
+              /^};$/.test(line)
+            );
+            if (endDefaultLine > 0) {
+              defaultLines = linesFromDefaultStart.slice(0, endDefaultLine + 1);
+              if (defaultLines.at(-1) !== "") {
+                defaultLines = [...defaultLines, ""];
+              }
             }
           }
         }
       }
-    }
 
-    return removeSkips([
-      ...defaultLines,
-      ...linesFromStart.slice(0, endLoc),
-    ]).join("\n");
-  } catch (e) {
-    console.log(e);
-    return snippet;
-  }
-};
+      return removeSkips([
+        ...defaultLines,
+        ...linesFromStart.slice(0, endLoc),
+      ]).join("\n");
+    } catch (e) {
+      console.warn(
+        "Something went wrong while getting the story source for code snippet",
+        e
+      );
+      return snippet;
+    }
+  };

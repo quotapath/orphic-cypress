@@ -35,7 +35,7 @@ export default defineConfig({
       webpackConfig,
     },
     ...(useIsolatedComponentFiles && {
-      specPattern: ["stories/**/*.stories.ts{,x}", "stories/**/*.cy.ts{,x}"],
+      specPattern: ["**/*.stories.ts{,x}", "**/*.cy.ts{,x}"],
       excludeSpecPattern: ["**/*/mount.cy.ts{,x}"],
     }),
     setupNodeEvents: (on, config) => {

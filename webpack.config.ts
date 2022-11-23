@@ -35,7 +35,7 @@ module.exports = {
     allowedHosts: "all",
     open: false,
     host: "0.0.0.0",
-    hot: false,
+    hot: true,
     port,
     historyApiFallback: true,
     client: {

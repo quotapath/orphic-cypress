@@ -11,7 +11,6 @@ StubActions.argTypes = {
   onClick: { action: "onClickStub" },
   onClick2: { action: "onClick2Stub" },
 };
-StubActions.cyOnly = true;
 StubActions.cy = () => {
   cy.dataCy("count").should("contain", 0);
   cy.dataCy("button").click();
