@@ -6,7 +6,7 @@ export const parameters = {
   docs: {
     page: DocsPage,
     source: { state: "open" },
-    transformSource,
+    transformSource: transformSource({ includeObjects: true }),
     theme: themes.dark,
   },
   viewMode: "docs",

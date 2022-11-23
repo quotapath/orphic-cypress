@@ -10,7 +10,7 @@
     "test:isolated": "CYPRESS_USE_ISOLATED_CT_FILES=true cypress run --component",
     "test:isolated:headed": "CYPRESS_USE_ISOLATED_CT_FILES=true cypress open --project . --component",
     "prebuild": "rm -rf ./dist",
-    "build": "tsc --module commonjs --esModuleInterop true",
+    "build": "tsc -p tsconfig.build.json",
     "lint": "eslint \"**/*.{t,j}s{,x}\"",
     "lint:fix": "npm run lint -- --fix",
     "lint:check": "npm run lint && prettier --check .",

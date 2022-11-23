@@ -7,3 +7,5 @@ cypress/screenshots/
 docs/
 # mac crap
 .DS_Store
+# no javascript to be found here
+*.js

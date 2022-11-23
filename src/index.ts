@@ -1,3 +1,4 @@
+export type { WrappedActions } from "./actions";
 export { stubStoryActions } from "./actions";
 export * from "./config";
 export * from "./intercept";
