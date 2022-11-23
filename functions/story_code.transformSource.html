@@ -18,7 +18,7 @@
 <h1>Function transformSource</h1></div>
 <section class="tsd-panel">
 <ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
-<li class="tsd-signature tsd-anchor-link" id="transformSource">transform<wbr/>Source<span class="tsd-signature-symbol">(</span>snippet<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, storyContext<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">{ </span><br/><span>    </span>id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span><br/><span>    </span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span><br/><span>    </span>originalStoryFn<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">{ </span><br/><span>        </span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span><br/><span>    </span><span class="tsd-signature-symbol">}</span><span class="tsd-signature-symbol">; </span><br/><span>    </span>parameters<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">{ </span><br/><span>        </span>storySource<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">{ </span><br/><span>            </span>locationsMap<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">LocationsMap</span><span class="tsd-signature-symbol">; </span><br/><span>            </span>source<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span><br/><span>        </span><span class="tsd-signature-symbol">}</span><span class="tsd-signature-symbol">; </span><br/><span>    </span><span class="tsd-signature-symbol">}</span><span class="tsd-signature-symbol">; </span><br/><span class="tsd-signature-symbol">}</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><a href="#transformSource" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" id="icon-anchor-a"></path><path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" id="icon-anchor-b"></path><path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" id="icon-anchor-c"></path></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="transformSource">transform<wbr/>Source<span class="tsd-signature-symbol">(</span>opts<span class="tsd-signature-symbol">?: </span><a href="../types/story_code.TransformSourceOptions.html" class="tsd-signature-type" data-tsd-kind="Type alias">TransformSourceOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">(</span>snippet<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, storyContext<span class="tsd-signature-symbol">: </span><a href="../types/story_code.StoryContextStorySource.html" class="tsd-signature-type" data-tsd-kind="Type alias">StoryContextStorySource</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><a href="#transformSource" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" id="icon-anchor-a"></path><path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" id="icon-anchor-b"></path><path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" id="icon-anchor-c"></path></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Add comment directives that will enable transforming the story source code
 into the code snippet for the story.</p>
@@ -35,8 +35,7 @@ to better parse story objects.</p>
 <p>TODO: Some of this might be suitable contribution to storysource, but
 the goals there often different, e.g. to show how to use a component
 whereas here we&#39;re showing how to build stories.</p>
-<p>TODO: ideas include-render, include-template, include-region
-opt-in for object story support</p>
+<p>TODO: ideas include-render, include-template, include-region</p>
 <p>All comments start with <code>// story-code</code> or with <code>/*</code> or <code>/**</code> style
 single line comments. So <code>// story-code @end SomeComponent @include-default</code>
 for example.</p>
@@ -47,14 +46,26 @@ for example.</p>
 <ul>
 <li><code>@end</code>: end the previous story&#39;s code block. Note, this is works across
 stories such that any story which does not specify its end which begins
-before this use will end at this point. Use named end&#39;s if you need specificity</li>
-<li><code>@end SomeComponent</code>: same as above, but only mark the end for the given component</li>
+before this use will end at this point. Use named end&#39;s if you need specificity<pre><code class="language-ts"><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-6">SomeStory</span><span class="hl-1">: </span><span class="hl-7">ComponentStory</span><span class="hl-1">&lt;</span><span class="hl-4">typeof</span><span class="hl-1"> </span><span class="hl-2">Comp</span><span class="hl-1">&gt; = (</span><span class="hl-2">args</span><span class="hl-1">) </span><span class="hl-4">=&gt;</span><span class="hl-1"> &lt;</span><span class="hl-7">Comp</span><span class="hl-1"> {...</span><span class="hl-7">args</span><span class="hl-1">} /&gt;;</span><br/><span class="hl-2">SomeStory</span><span class="hl-1">.</span><span class="hl-2">args</span><span class="hl-1"> = { </span><span class="hl-2">prop:</span><span class="hl-1"> </span><span class="hl-9">1</span><span class="hl-1"> };</span><br/><span class="hl-8">// story-code @end</span>
+</code></pre>
+</li>
+<li><code>@end SomeComponent</code>: same as above, but only mark the end for the given component<pre><code class="language-ts"><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-6">SomeStory</span><span class="hl-1">: </span><span class="hl-7">ComponentStory</span><span class="hl-1">&lt;</span><span class="hl-4">typeof</span><span class="hl-1"> </span><span class="hl-2">Comp</span><span class="hl-1">&gt; = (</span><span class="hl-2">args</span><span class="hl-1">) </span><span class="hl-4">=&gt;</span><span class="hl-1"> &lt;</span><span class="hl-7">Comp</span><span class="hl-1"> {...</span><span class="hl-7">args</span><span class="hl-1">} /&gt;;</span><br/><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-6">OtherStory</span><span class="hl-1">: </span><span class="hl-7">ComponentStory</span><span class="hl-1">&lt;</span><span class="hl-4">typeof</span><span class="hl-1"> </span><span class="hl-2">Comp</span><span class="hl-1">&gt; = (</span><span class="hl-2">args</span><span class="hl-1">) </span><span class="hl-4">=&gt;</span><span class="hl-1"> &lt;</span><span class="hl-7">Comp</span><span class="hl-1"> {...</span><span class="hl-7">args</span><span class="hl-1">} /&gt;;</span><br/><span class="hl-2">OtherStory</span><span class="hl-1">.</span><span class="hl-2">args</span><span class="hl-1"> = { </span><span class="hl-2">prop:</span><span class="hl-1"> </span><span class="hl-9">1</span><span class="hl-1"> };</span><br/><span class="hl-8">// story-code @end OtherStory</span>
+</code></pre>
+</li>
 <li><code>@include-default</code>: include the default code export. Can occur in an <code>@end</code> line
-or on the line following a natural or designated end.</li>
+or on the line following a natural or designated end.<pre><code class="language-ts"><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-6">SomeStory</span><span class="hl-1">: </span><span class="hl-7">ComponentStory</span><span class="hl-1">&lt;</span><span class="hl-4">typeof</span><span class="hl-1"> </span><span class="hl-2">Comp</span><span class="hl-1">&gt; = (</span><span class="hl-2">args</span><span class="hl-1">) </span><span class="hl-4">=&gt;</span><span class="hl-1"> &lt;</span><span class="hl-7">Comp</span><span class="hl-1"> {...</span><span class="hl-7">args</span><span class="hl-1">} /&gt;;</span><br/><span class="hl-2">SomeStory</span><span class="hl-1">.</span><span class="hl-2">args</span><span class="hl-1"> = { </span><span class="hl-2">prop:</span><span class="hl-1"> </span><span class="hl-9">1</span><span class="hl-1"> };</span><br/><span class="hl-8">// story-code @end @include-default</span>
+</code></pre>
+</li>
 <li><code>@include-start</code>: include from the top of the file through to the default code export.
-Can occur in an <code>@end</code> line or on the line following a natural or designated end.</li>
-<li><code>@skip</code>: Skip the current line, e.g. <code>const something = 1; // story-code @skip</code></li>
-<li><code>@skip-next</code>: Skip the next line</li>
+Can occur in an <code>@end</code> line or on the line following a natural or designated end.<pre><code class="language-ts"><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-6">SomeStory</span><span class="hl-1">: </span><span class="hl-7">ComponentStory</span><span class="hl-1">&lt;</span><span class="hl-4">typeof</span><span class="hl-1"> </span><span class="hl-2">Comp</span><span class="hl-1">&gt; = (</span><span class="hl-2">args</span><span class="hl-1">) </span><span class="hl-4">=&gt;</span><span class="hl-1"> &lt;</span><span class="hl-7">Comp</span><span class="hl-1"> {...</span><span class="hl-7">args</span><span class="hl-1">} /&gt;;</span><br/><span class="hl-8">// story-code @include-start</span>
+</code></pre>
+</li>
+<li><code>@skip</code>: Skip the current line<pre><code class="language-ts"><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-5">somethingToIgnore</span><span class="hl-1"> = </span><span class="hl-9">1</span><span class="hl-1">; </span><span class="hl-8">// story-code @skip</span>
+</code></pre>
+</li>
+<li><code>@skip-next</code>: Skip the next line<pre><code class="language-ts"><span class="hl-8">// story-code @skip-next</span><br/><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-5">somethingToIgnore</span><span class="hl-1"> = </span><span class="hl-9">1</span><span class="hl-1">;</span>
+</code></pre>
+</li>
 <li><code>@skip-start</code> and <code>@skip-end</code>: Skip a block of text, e.g.<pre><code class="language-ts"><span class="hl-8">// story-code @skip-start</span><br/><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-5">hideThis</span><span class="hl-1"> = </span><span class="hl-9">1</span><span class="hl-1">;</span><br/><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-5">andThis</span><span class="hl-1"> = </span><span class="hl-9">2</span><span class="hl-1">;</span><br/><span class="hl-8">// story-code @skip-end</span>
 </code></pre>
 There&#39;s nothing enforcing that you have to have a @skip-end if you have a @skip-start</li>
@@ -64,32 +75,25 @@ There&#39;s nothing enforcing that you have to have a @skip-end if you have a @s
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
+<h5>opts: <a href="../types/story_code.TransformSourceOptions.html" class="tsd-signature-type" data-tsd-kind="Type alias">TransformSourceOptions</a><span class="tsd-signature-symbol"> = {}</span></h5></li></ul></div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">(</span>snippet<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, storyContext<span class="tsd-signature-symbol">: </span><a href="../types/story_code.StoryContextStorySource.html" class="tsd-signature-type" data-tsd-kind="Type alias">StoryContextStorySource</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span></h4>
+<ul class="tsd-parameters">
+<li class="tsd-parameter-signature">
+<ul class="tsd-signatures tsd-kind-type-literal">
+<li class="tsd-signature" id="transformSource.__type.__type-1"><span class="tsd-signature-symbol">(</span>snippet<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, storyContext<span class="tsd-signature-symbol">: </span><a href="../types/story_code.StoryContextStorySource.html" class="tsd-signature-type" data-tsd-kind="Type alias">StoryContextStorySource</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Inner function which can be assigned to docs.transformSource</p>
+</div>
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li>
 <h5>snippet: <span class="tsd-signature-type">string</span></h5></li>
 <li>
-<h5>storyContext: <span class="tsd-signature-symbol">{ </span><br/><span>    </span>id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span><br/><span>    </span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span><br/><span>    </span>originalStoryFn<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">{ </span><br/><span>        </span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span><br/><span>    </span><span class="tsd-signature-symbol">}</span><span class="tsd-signature-symbol">; </span><br/><span>    </span>parameters<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">{ </span><br/><span>        </span>storySource<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">{ </span><br/><span>            </span>locationsMap<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">LocationsMap</span><span class="tsd-signature-symbol">; </span><br/><span>            </span>source<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span><br/><span>        </span><span class="tsd-signature-symbol">}</span><span class="tsd-signature-symbol">; </span><br/><span>    </span><span class="tsd-signature-symbol">}</span><span class="tsd-signature-symbol">; </span><br/><span class="tsd-signature-symbol">}</span></h5>
-<ul class="tsd-parameters">
-<li class="tsd-parameter">
-<h5>id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5></li>
-<li class="tsd-parameter">
-<h5>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5></li>
-<li class="tsd-parameter">
-<h5>original<wbr/>Story<wbr/>Fn<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">{ </span><br/><span>    </span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span><br/><span class="tsd-signature-symbol">}</span></h5>
-<ul class="tsd-parameters">
-<li class="tsd-parameter">
-<h5>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5></li></ul></li>
-<li class="tsd-parameter">
-<h5>parameters<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">{ </span><br/><span>    </span>storySource<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">{ </span><br/><span>        </span>locationsMap<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">LocationsMap</span><span class="tsd-signature-symbol">; </span><br/><span>        </span>source<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span><br/><span>    </span><span class="tsd-signature-symbol">}</span><span class="tsd-signature-symbol">; </span><br/><span class="tsd-signature-symbol">}</span></h5>
-<ul class="tsd-parameters">
-<li class="tsd-parameter">
-<h5>story<wbr/>Source<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">{ </span><br/><span>    </span>locationsMap<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">LocationsMap</span><span class="tsd-signature-symbol">; </span><br/><span>    </span>source<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span><br/><span class="tsd-signature-symbol">}</span></h5>
-<ul class="tsd-parameters">
-<li class="tsd-parameter">
-<h5>locations<wbr/>Map<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">LocationsMap</span></h5></li>
-<li class="tsd-parameter">
-<h5>source<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5></li></ul></li></ul></li></ul></li></ul></div>
-<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4><aside class="tsd-sources">
+<h5>storyContext: <a href="../types/story_code.StoryContextStorySource.html" class="tsd-signature-type" data-tsd-kind="Type alias">StoryContextStorySource</a></h5></li></ul></div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4></li></ul></li></ul><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/quotapath/orphic-cypress/blob/dad3407/src/storybook/story-code.ts#L102">storybook/story-code.ts:102</a></li></ul></aside></li></ul></section></div>
+<li>Defined in <a href="https://github.com/quotapath/orphic-cypress/blob/83507bd/src/storybook/story-code.ts#L157">storybook/story-code.ts:157</a></li></ul></aside></li></ul></section></div>
 <div class="col-4 col-menu menu-sticky-wrap menu-highlight">
 <div class="tsd-navigation settings">
 <details class="tsd-index-accordion"><summary class="tsd-accordion-summary">
@@ -99,7 +103,6 @@ There&#39;s nothing enforcing that you have to have a @skip-end if you have a @s
 <h4 class="uppercase">Member Visibility</h4><form>
 <ul id="tsd-filter-options">
 <li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-protected" name="protected"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Protected</span></label></li>
-<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-private" name="private"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Private</span></label></li>
 <li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-inherited" name="inherited" checked/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Inherited</span></label></li></ul></form></div>
 <div class="tsd-theme-toggle">
 <h4 class="uppercase">Theme</h4><select id="theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div>
@@ -117,9 +120,12 @@ There&#39;s nothing enforcing that you have to have a @skip-end if you have a @s
 <li class="tsd-kind-module"><a href="../modules/intercept.html">intercept</a></li>
 <li class="tsd-kind-module"><a href="../modules/mount.html">mount</a></li>
 <li class="current tsd-kind-module"><a href="../modules/story_code.html">story-<wbr/>code</a></li>
+<li class="tsd-kind-module"><a href="../modules/storybook_story_code_cy.html">storybook/story-<wbr/>code.cy</a></li>
 <li class="tsd-kind-module"><a href="../modules/transformers.html">transformers</a></li>
 <li class="tsd-kind-module"><a href="../modules/types.html">types</a></li></ul></li></ul></div></details></nav>
 <nav class="tsd-navigation secondary menu-sticky">
 <ul>
+<li class="tsd-kind-type-alias tsd-parent-kind-module"><a href="../types/story_code.StoryContextStorySource.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-4194304-path"></rect><path d="M11.31 16V8.224H8.91V7.24H14.79V8.224H12.39V16H11.31Z" fill="var(--color-text)" id="icon-4194304-text"></path></svg>Story<wbr/>Context<wbr/>Story<wbr/>Source</a></li>
+<li class="tsd-kind-type-alias tsd-parent-kind-module"><a href="../types/story_code.TransformSourceOptions.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4194304-path"></use><use href="#icon-4194304-text"></use></svg>Transform<wbr/>Source<wbr/>Options</a></li>
 <li class="current tsd-kind-function tsd-parent-kind-module"><a href="story_code.transformSource.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-function)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-64-path"></rect><path d="M9.39 16V7.24H14.55V8.224H10.446V11.128H14.238V12.112H10.47V16H9.39Z" fill="var(--color-text)" id="icon-64-text"></path></svg>transform<wbr/>Source</a></li></ul></nav></div></div>
 <div class="overlay"></div><script src="../assets/main.js"></script></body></html>
