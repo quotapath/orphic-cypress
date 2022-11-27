@@ -21,7 +21,7 @@ In short, this is a little overengineering, a little black magic, and a lot of d
 * [Automatic action stubs and spies](#stubbing-actions) with first level cypress support
 * [A typescript transform](#isolated-component-files-transformer) that turns your `stories.tsx` files into cypress test files with just a bit of black magic
 * Tools for turning [storybook addon mock api calls into cypress intercepts](#intercepting-api-requests)
-* [Some storysource snippet utils](https://quotapath.github.io/orphic-cypress/functions/story_code.transformSource.html) to show sections of the source file as story code snippet
+* General storybook doc utils for building [snippets from storysource](https://quotapath.github.io/orphic-cypress/functions/storybook_story_code.transformSource.html) or to [segment an mdx file](https://quotapath.github.io/orphic-cypress/functions/storybook_segment_mdx.segmentMDX.html) to use in multiple doc locations.
 
 See extended module documentation in [github pages](https://quotapath.github.io/orphic-cypress/) and numerous examples at a [hosted storybook](https://quotapath.github.io/orphic-cypress/storybook/)
 
@@ -153,7 +153,13 @@ TODO
 
 # Intercepting API Requests
 
-TODO
+Mocking requests can be done in essentially the same way as any cypress test, via `cy.intercept`, but having some utils at hand is always nice.
+
+We've used [storybook-addon-mock](https://github.com/nutboltu/storybook-addon-mock/) for our own storybook, although tempted by mock service workers, because it was dead simple to set up and worked out of the box. It also offers a nice and clean `mockData` story parameter which we can hook off of. So orphic-cypress exports [mockToCyIntercept](https://quotapath.github.io/orphic-cypress/functions/intercept.mockToCyIntercept.html) which transforms the specified mock objects to intercepts. That's called on `executeCyTests` and so is automatically invoked on either isolated or non-isolated test runs, but must be manually called for external files.
+
+See [storybook files](https://quotapath.github.io/orphic-cypress/storybook/?path=/docs/mockrequests-overview--page) for example uses.
+
+![intercept api requests in cypress](https://user-images.githubusercontent.com/9889378/204159804-a2df1b09-7efe-4a93-8f57-a631f53401ac.png)
 
 <br/>
 

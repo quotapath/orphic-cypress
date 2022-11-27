@@ -1,4 +1,4 @@
-import { removeSkips, transformSource } from "./";
+import { removeSkips, transformSource } from "./story-code";
 
 describe("story-code", () => {
   describe("removeSkips", () => {

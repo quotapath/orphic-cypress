@@ -1,6 +1,7 @@
 import React from "react";
 import type { ComponentStoryCy } from "src";
 import { Button } from "../Button";
+import mdxObj from "./mdx";
 
 export default {
   component: Button,
@@ -18,11 +19,7 @@ NotSkippedFunction.cy = () =>
 NotSkippedFunction.parameters = {
   docs: {
     description: {
-      story: `
-\`cyIncludeStories\` allows similar functionality to includeStories on the default export.
-It can be used to ensure that only some stories are tested while the others don't
-register with cypress at all, where [.cySkip](/docs/skippingandselecting-fullyskipped--skipped)
-will designate them as 'pending'.`,
+      story: mdxObj["ignoring-via-cyincludestories"]?.md,
     },
   },
 };
