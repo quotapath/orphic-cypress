@@ -8,7 +8,8 @@ export type ComplexButtonProps = ButtonProps & {
   onClick2?: (prevClickCount2: number) => void;
 };
 
-const leftPad = { style: { paddingLeft: "10px" } };
+const white = { style: { color: "white" } };
+const leftPad = { style: { paddingLeft: "10px", ...white.style } };
 
 /**
  * Two buttons which show individual click counts
@@ -35,7 +36,9 @@ export const ClickCount = ({
 
   return (
     <>
-      <span data-cy="count">Count is {clickCount}</span>
+      <span data-cy="count" {...white}>
+        Count is {clickCount}
+      </span>
       <span {...leftPad}>
         <Button onClick={handleClick()} {...rest} />
       </span>

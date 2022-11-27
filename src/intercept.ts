@@ -17,11 +17,13 @@ export const mockToCyIntercept = (
     status: number;
     /** Response to send upon mocked request */
     response: unknown;
+    /** Optionally alias intercept as a given name rather than full url */
+    alias?: string;
   }>
 ) =>
-  mockData.forEach(({ response, status, url, method }) => {
+  mockData.forEach(({ response, status, url, method, alias }) => {
     cy.intercept(method as Method, url, {
       body: response,
       statusCode: status,
-    }).as(url);
+    }).as(alias ?? url);
   });

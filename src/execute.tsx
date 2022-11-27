@@ -49,14 +49,7 @@ export const executeCyTests = <T extends StoryFileCy>(
     // adding `cy` property to default is a way to add hooks like `beforeEach`
     // for all tests in the file. I guess you could even write a test here.
     if (stories.default.cy) stories.default.cy();
-    const mockData = stories.default.parameters?.mockData;
     const config: CyTestConfig = Cypress.env("cyTest");
-
-    if (mockData) {
-      beforeEach(() => {
-        mockToCyIntercept(mockData);
-      });
-    }
 
     if (stories.default.cyIncludeStories) {
       if (stories.default.cyIncludeStories === true) {
@@ -79,6 +72,11 @@ export const executeCyTests = <T extends StoryFileCy>(
             throw new CyTestConfigError("cyTest", stories.default.title);
           }
           stubStoryActions(Comp, filteredStories);
+          const mockData = [
+            ...(stories.default.parameters?.mockData || []),
+            ...(Comp.parameters?.mockData || []),
+          ];
+          if (mockData.length > 0) mockToCyIntercept(mockData);
         });
         // cy test format where a function can then contain 'it's and 'before' etc
         // actions will be available at `cy.get("@actions")` or `this.actions`
