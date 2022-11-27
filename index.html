@@ -38,7 +38,7 @@ In short, this is a little overengineering, a little black magic, and a lot of d
 <li><a href="#stubbing-actions">Automatic action stubs and spies</a> with first level cypress support</li>
 <li><a href="#isolated-component-files-transformer">A typescript transform</a> that turns your <code>stories.tsx</code> files into cypress test files with just a bit of black magic</li>
 <li>Tools for turning <a href="#intercepting-api-requests">storybook addon mock api calls into cypress intercepts</a></li>
-<li><a href="https://quotapath.github.io/orphic-cypress/functions/story_code.transformSource.html">Some storysource snippet utils</a> to show sections of the source file as story code snippet</li>
+<li>General storybook doc utils for building <a href="https://quotapath.github.io/orphic-cypress/functions/storybook_story_code.transformSource.html">snippets from storysource</a> or to <a href="https://quotapath.github.io/orphic-cypress/functions/storybook_segment_mdx.segmentMDX.html">segment an mdx file</a> to use in multiple doc locations.</li>
 </ul>
 <p>See extended module documentation in <a href="https://quotapath.github.io/orphic-cypress/">github pages</a> and numerous examples at a <a href="https://quotapath.github.io/orphic-cypress/storybook/">hosted storybook</a></p>
 <br/>
@@ -123,7 +123,10 @@ In short, this is a little overengineering, a little black magic, and a lot of d
 <a href="#intercepting-api-requests" id="intercepting-api-requests" style="color: inherit; text-decoration: none;">
   <h1>Intercepting API Requests</h1>
 </a>
-<p>TODO</p>
+<p>Mocking requests can be done in essentially the same way as any cypress test, via <code>cy.intercept</code>, but having some utils at hand is always nice.</p>
+<p>We&#39;ve used <a href="https://github.com/nutboltu/storybook-addon-mock/">storybook-addon-mock</a> for our own storybook, although tempted by mock service workers, because it was dead simple to set up and worked out of the box. It also offers a nice and clean <code>mockData</code> story parameter which we can hook off of. So orphic-cypress exports <a href="https://quotapath.github.io/orphic-cypress/functions/intercept.mockToCyIntercept.html">mockToCyIntercept</a> which transforms the specified mock objects to intercepts. That&#39;s called on <code>executeCyTests</code> and so is automatically invoked on either isolated or non-isolated test runs, but must be manually called for external files.</p>
+<p>See <a href="https://quotapath.github.io/orphic-cypress/storybook/?path=/docs/mockrequests-overview--page">storybook files</a> for example uses.</p>
+<p><img src="https://user-images.githubusercontent.com/9889378/204159804-a2df1b09-7efe-4a93-8f57-a631f53401ac.png" alt="intercept api requests in cypress"></p>
 <br/>
 
 
