@@ -1,0 +1,22 @@
+import { Meta } from "@storybook/addon-docs";
+
+<Meta title="MockRequests/Overview" />
+
+# Mock Requests
+
+Mocking requests can be done in essentially the same way as any cypress test, via `cy.intercept`.
+
+We've used [storybook-addon-mock](https://github.com/nutboltu/storybook-addon-mock/) locally, although tempted by mock service workers, because it was dead simple to set up and worked out of the box. It also offers a nice and clean `mockData` story parameter which we can hook off of. So orphic-cypress exports [mockToCyIntercept](https://quotapath.github.io/orphic-cypress/functions/intercept.mockToCyIntercept.html) which transforms this object to intercepts. That's called on `executeCyTests` and so is automatically invoked on either isolated or non-isolated test runs, but must be manually called for external files.
+
+See storybook files in this dir for reference.
+
+## Further afield
+
+If you really wanted the storybook mock itself to work, you could pull in `decorators` e.g.
+
+```ts
+import { decorators } from "storybook-addon-mock/dist/cjs/preset/preview";
+SomeStory.decorators = decorators;
+```
+
+though I haven't quite found out how you'd make expectations against those mocked requests.
