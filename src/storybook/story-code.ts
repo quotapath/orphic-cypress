@@ -1,6 +1,3 @@
-/**
- * @module story-code
- */
 import type { LocationsMap } from "@storybook/source-loader";
 import type { StoryContext } from "@storybook/types";
 

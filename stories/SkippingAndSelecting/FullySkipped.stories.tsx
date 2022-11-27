@@ -1,8 +1,7 @@
 import React from "react";
 import type { ComponentStoryCy } from "src";
 import { Button } from "../Button";
-// @ts-ignore
-import mdx from "./FullySkipped.mdx";
+import mdxObj from "./mdx";
 
 // eslint-disable-next-line storybook/story-exports
 export default {
@@ -11,7 +10,7 @@ export default {
   // story-code @skip-start
   parameters: {
     docs: {
-      page: mdx,
+      page: mdxObj["fully-skipped"],
     },
   },
   // story-code @skip-end
