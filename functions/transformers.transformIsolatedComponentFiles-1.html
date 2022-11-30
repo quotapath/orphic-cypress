@@ -18,7 +18,7 @@
 <h1>Function transformIsolatedComponentFiles</h1></div>
 <section class="tsd-panel">
 <ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
-<li class="tsd-signature tsd-anchor-link" id="transformIsolatedComponentFiles">transform<wbr/>Isolated<wbr/>Component<wbr/>Files<span class="tsd-signature-symbol">(</span>executeCyTestsLocation<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span>, debug<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TransformerFactory</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">SourceFile</span><span class="tsd-signature-symbol">&gt;</span><a href="#transformIsolatedComponentFiles" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" id="icon-anchor-a"></path><path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" id="icon-anchor-b"></path><path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" id="icon-anchor-c"></path></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="transformIsolatedComponentFiles">transform<wbr/>Isolated<wbr/>Component<wbr/>Files<span class="tsd-signature-symbol">(</span>executeCyTestsLocation<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span>, storyPattern<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">RegExp</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TransformerFactory</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">SourceFile</span><span class="tsd-signature-symbol">&gt;</span><a href="#transformIsolatedComponentFiles" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" id="icon-anchor-a"></path><path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" id="icon-anchor-b"></path><path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" id="icon-anchor-c"></path></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Transform a typescript stories file by adding <code>executeCyTests</code> to the bottom
 with all exports explicitly passed in and the default recreated to be passed
@@ -37,12 +37,12 @@ in as &#39;default&#39; prop.</p>
 and change via pre/post call, or rewrite entirely and point to it from here</p>
 </div></li>
 <li>
-<h5>debug: <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> = false</span></h5>
-<div class="tsd-comment tsd-typography"><p>turn on some extra logging</p>
+<h5>storyPattern: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">RegExp</span><span class="tsd-signature-symbol"> = ...</span></h5>
+<div class="tsd-comment tsd-typography"><p>story filename pattern</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">TransformerFactory</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">SourceFile</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/quotapath/orphic-cypress/blob/13164f6/src/transformers/isolated-component-files.ts#L80">transformers/isolated-component-files.ts:80</a></li></ul></aside></li></ul></section></div>
+<li>Defined in <a href="https://github.com/quotapath/orphic-cypress/blob/1fb38f4/src/transformers/isolated-component-files.ts#L80">transformers/isolated-component-files.ts:80</a></li></ul></aside></li></ul></section></div>
 <div class="col-4 col-menu menu-sticky-wrap menu-highlight">
 <div class="tsd-navigation settings">
 <details class="tsd-index-accordion"><summary class="tsd-accordion-summary">
