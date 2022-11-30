@@ -1,7 +1,7 @@
 import type Sinon from "cypress/types/sinon";
 import React from "react";
 import type { ComponentStoryCy, ComponentStoryObjCy } from "src";
-import { ClickCount } from "../Button";
+import { ClickCount } from "stories";
 
 // With both of these, you'd probably just be passing in normal functions,
 // but here we're spying for the sake of meta-test assertions.

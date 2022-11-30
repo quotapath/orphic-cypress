@@ -1,0 +1,12 @@
+import { Canvas, Meta, Story, DocsContext } from "@storybook/addon-docs";
+import { Button, Title } from "stories";
+
+<Meta component={Button} id="mdx-mdxautomatictestfileformats-standard-csf" />
+
+<Title />
+
+Simply check if the component renders okay without extra cypress assertions
+
+<Story name="StandardCSFButAutomaticallyRenderTested" args={{ label: "CSF" }}>
+  {(args) => <Button {...args} />}
+</Story>

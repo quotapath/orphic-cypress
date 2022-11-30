@@ -73,6 +73,8 @@ const createImportStatement = (
  *   ],
  * }
  * ```
+ *
+ * TODO: docs for mdx
  */
 export const transformIsolatedComponentFiles =
   (
@@ -80,10 +82,13 @@ export const transformIsolatedComponentFiles =
      * Location for `executeCyTests`. Defaults to this module, but you could import it elsewhere
      * and change via pre/post call, or rewrite entirely and point to it from here
      */
-    executeCyTestsLocation = "orphic-cypress"
+    executeCyTestsLocation = "orphic-cypress",
+    /** story filename pattern */
+    storyPattern: string | RegExp = /\.stories|story\./
   ): ts.TransformerFactory<ts.SourceFile> =>
   (context) =>
   (source) => {
+    // TODO: ignore __page files which are docs only
     const exports = (
       source as any as {
         symbol: {
@@ -92,11 +97,14 @@ export const transformIsolatedComponentFiles =
       }
     ).symbol?.exports;
     const defaultExport = exports?.get("default")?.declarations?.[0];
-    if (
-      !source?.fileName?.includes(".stories.ts") ||
-      !exports ||
-      !defaultExport
-    ) {
+
+    const matches =
+      source?.fileName &&
+      (storyPattern instanceof RegExp
+        ? storyPattern.test(source.fileName)
+        : source.fileName.includes(storyPattern));
+    // docs only stories will have a ___page which intentionally throws an error
+    if (!matches || !exports || exports.has("___page") || !defaultExport) {
       return source;
     }
 

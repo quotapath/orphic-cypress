@@ -1,6 +1,6 @@
 import * as React from "react";
 import type { ComponentStoryCy, ComponentStoryObjCy } from "src";
-import { Button } from "../Button";
+import { Button } from "stories";
 
 export const WillFetch: ComponentStoryCy<typeof Button> = (args) => {
   const [label, setLabel] = React.useState("loading");

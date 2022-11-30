@@ -1,21 +1,17 @@
 import { Meta, Story } from "@storybook/addon-docs";
-import { ClickCount } from "../../Button";
+import { ClickCount } from "stories";
 
-<Meta
-  title="MDX/MDXFileWithExternalTests"
-  component={ClickCount}
-  id="mdx-file-with-external-tests"
-/>
+<Meta component={ClickCount} id="mdx-file-with-external-tests" />
 
 # Defining Stories in MDX
 
-You can define stories in MDX format! I really didn't think this'd work, but if you mimic storybook's own webpack rules for .mdx files, then they acte exactly like CSF files.
+You can define stories in MDX format! I really didn't think this'd work, but if you mimic storybook's own webpack rules for .mdx files, then they act exactly like CSF files.
 
 ```ts
 import { Meta, Story } from '@storybook/addon-docs';
 import { ClickCount } from '../../Button';
 
-<Meta title="MDX/MDXFileWithExternalTests" component={ClickCount} />
+<Meta id="mdx-file-with-external-tests" component={ClickCount} />
 
 # Whatever Markdown
 

@@ -107,7 +107,7 @@ describe("story-code", () => {
     });
   });
 
-  describe("transformSource", () => {
+  describe.only("transformSource", () => {
     const basicTest = (source: string, startLine: number, endLine: number) =>
       transformSource()("<SomeComponent prop={1} />", {
         id: "somedir-nested--some-story",
@@ -124,6 +124,7 @@ describe("story-code", () => {
           },
         },
       } as any);
+
     it("should gather start and end locations as provided by storysource addon", () => {
       const result = basicTest(
         `import type { ComponentStory } from "@storybook/react";
@@ -208,6 +209,18 @@ OtherStory.args = { prop2: 2 };`,
 export const SomeStory: ComponentStory<typeof SomeStory> = (args) => (
  <SomeComponent {...args} />
 );`;
+      expect(result).to.equal(expected);
+    });
+
+    // TODO: objects
+
+    it("should return the snippet if anything goes wrong", () => {
+      const result = basicTest(
+        "import type { ComponentStory } from '@storybook/react'",
+        900,
+        1100
+      );
+      const expected = "<SomeComponent prop={1} />";
       expect(result).to.equal(expected);
     });
   });

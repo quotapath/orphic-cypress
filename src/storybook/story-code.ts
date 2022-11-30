@@ -78,6 +78,52 @@ export type TransformSourceOptions = {
   includeObjects?: boolean;
 };
 
+const getDataFromStoryObject = (
+  name: string,
+  allLines: string[]
+): [string, any] => {
+  const componentName = name.replace(/ /g, "");
+  // Naive attempt to fix object syntax source
+  const startIndex = allLines.findIndex((line) =>
+    new RegExp(`export const ${componentName}`).test(line)
+  );
+  const endIndex = allLines
+    .slice(startIndex)
+    .findIndex((line) => /^};/.test(line));
+  return [
+    componentName,
+    {
+      startLoc: { col: 0, line: startIndex },
+      endLoc: { col: 0, line: endIndex + startIndex + 1 },
+    },
+  ];
+};
+
+/** Some super simple validation on the location lines */
+const validateLocation = (
+  allLines: string[],
+  startLine: number,
+  endLine: number
+) => {
+  if (allLines.length < startLine) {
+    throw new Error(
+      `Start line of ${startLine} exceeds file length of ${allLines.length}`
+    );
+  }
+  if (allLines.length < endLine) {
+    throw new Error(
+      `End line of ${endLine} exceeds file length of ${allLines.length}`
+    );
+  }
+};
+
+/** check the comment line and end line for a given directive */
+const checkForDirective =
+  (linesFromStart: string[], endLineComment: number, endLoc: number) =>
+  (re: keyof typeof regex): boolean =>
+    new RegExp(regex[re]).test(linesFromStart[endLineComment]) ||
+    new RegExp(`${regex.init}${regex[re]}`).test(linesFromStart[endLoc]);
+
 /**
  * Add comment directives that will enable transforming the story source code
  * into the code snippet for the story.
@@ -170,24 +216,16 @@ export const transformSource =
       const allLines = source.split("\n");
 
       if (!location && opts.includeObjects) {
-        componentName = name.replace(/ /g, "");
-        // Naive attempt to fix object syntax source
-        const startIndex = allLines.findIndex((line) =>
-          new RegExp(`export const ${componentName}`).test(line)
-        );
-        const endIndex = allLines
-          .slice(startIndex)
-          .findIndex((line) => /^};/.test(line));
-        location = {
-          startLoc: { col: 0, line: startIndex },
-          endLoc: { col: 0, line: endIndex + startIndex + 1 },
-        } as any;
+        [componentName, location] = getDataFromStoryObject(name, allLines);
       }
 
       const {
         startLoc: { line: startLine },
         endLoc: { line: endLine },
       } = location;
+
+      validateLocation(allLines, startLine, endLine);
+
       const linesFromStart = allLines.slice(startLine - 1);
       const endLineComment = linesFromStart.findIndex((line) =>
         new RegExp(`${regex.init}@end(\\s+)?($|@|${componentName})`).test(line)
@@ -195,16 +233,9 @@ export const transformSource =
       const endLoc =
         endLineComment > 0 ? endLineComment : endLine - startLine + 1;
 
-      const includeDefault =
-        new RegExp(regex.includeDefault).test(linesFromStart[endLineComment]) ||
-        new RegExp(`${regex.init}${regex.includeDefault}`).test(
-          linesFromStart[endLoc]
-        );
-      const includeStart =
-        new RegExp(regex.includeStart).test(linesFromStart[endLineComment]) ||
-        new RegExp(`${regex.init}${regex.includeStart}`).test(
-          linesFromStart[endLoc]
-        );
+      const [includeDefault, includeStart] = (
+        ["includeDefault", "includeStart"] as const
+      ).map(checkForDirective(linesFromStart, endLineComment, endLoc));
 
       let defaultLines: string[] = [];
 

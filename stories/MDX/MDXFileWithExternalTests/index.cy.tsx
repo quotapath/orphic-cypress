@@ -1,9 +1,9 @@
 import { composeStories } from "@storybook/react";
+import * as sbPreview from "preview";
 import React from "react";
 import { stubStoryActions } from "src";
 // @ts-ignore
 import * as stories from "./index.stories.mdx";
-import * as sbPreview from "../../../.storybook/preview";
 
 const { mdxFileWithExternalTests: MDXFileWithExternalTests } = composeStories(
   stories,

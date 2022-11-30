@@ -1,6 +1,7 @@
+import { ComponentStory } from "@storybook/react";
 import React from "react";
 import type { ComponentStoryCy, ComponentStoryObjCy } from "src";
-import { Button } from "../Button";
+import { Button } from "stories";
 
 export default {
   component: Button,
@@ -130,3 +131,21 @@ story format. Together, they can make for some truly small but powerful tests.`,
   },
   // story-code @skip-end
 };
+
+export const ParametersWithCyTests: ComponentStory<typeof Button> = (args) => (
+  <Button label="Parameters" {...args} />
+);
+ParametersWithCyTests.parameters = {
+  // cyTest, cySkip, cyOnly also available here
+  cy: () => cy.dataCy("button").should("contain", "Parameters"),
+  docs: {
+    description: {
+      story: `
+Anything defined against the story or the default export can also be put in
+'parameters' which may be more canonical but adds a decent amount of characters
+to the definitions. NOTE: you can use storybook's own ComponentStory or
+ComponentStoryObj for types, but it'll leave parameters completely untyped.`,
+    },
+  },
+};
+// story-code @end

@@ -83,17 +83,24 @@ export const mountTest = (
 };
 
 /**
- * Recursively look for files in a provided directory that include `.stories.ts`.
- * Could be done easily with the `glob` library, but this is simple enough to
- * keep locally maintained. See `setStorybookFiles` for use innside `setupNodeEvents`
+ * Recursively look for files in a provided directory that include a pattern, `.stories.ts`
+ * by default. Could be done easily with the `glob` library, but this is simple enough to
+ * keep locally maintained. See `setStorybookFiles` for use inside `setupNodeEvents`
  */
-export const getStorybookFiles = (dir: string): string[] =>
+export const getStorybookFiles = (
+  dir: string,
+  storyPattern: string | RegExp = /\.stories|story\./
+): string[] =>
   fs.readdirSync(dir).flatMap((file) => {
     const absolute = path.join(dir, file);
     if (fs.statSync(absolute).isDirectory()) {
       return getStorybookFiles(absolute);
     }
-    return absolute.includes(".stories.ts") ? [absolute] : [];
+    const matches =
+      storyPattern instanceof RegExp
+        ? storyPattern.test(absolute)
+        : absolute.includes(storyPattern);
+    return matches ? [absolute] : [];
   });
 
 /**
