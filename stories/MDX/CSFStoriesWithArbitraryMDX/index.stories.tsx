@@ -2,7 +2,7 @@ import type { ComponentStory } from "@storybook/react";
 import * as React from "react";
 // @ts-ignore
 import mdx from "./index.mdx";
-import { Button } from "../../Button";
+import { Button } from "stories";
 
 export default { component: Button };
 

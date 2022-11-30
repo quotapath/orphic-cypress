@@ -17,7 +17,6 @@ module.exports = {
     // but its also the only way to get module docs from that index file
     // "**/*/index.ts",
     "src/index.ts",
-    "src/storybook/**/page.tsx",
     "**/*.cy.*",
   ],
   navigationLinks: {

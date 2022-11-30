@@ -18,7 +18,9 @@
     "skipLibCheck": true,
     "declaration": true,
     "paths": {
-      "src": ["./src/"]
+      "src": ["./src/"],
+      "stories": ["./stories/"],
+      "preview": ["./.storybook/preview"]
     }
   }
 }

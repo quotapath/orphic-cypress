@@ -15,13 +15,13 @@ In short, this is a little overengineering, a little black magic, and a lot of d
 
 ## Features
 
-* [A comprehensive set of examples](https://quotapath.github.io/orphic-cypress/storybook/) for using cypress to test storybook with or without tools given here, including some surprising finds [like how to use composeStories with mdx files](https://quotapath.github.io/orphic-cypress/storybook/?path=/docs/mdx-file-with-external-tests)
-* An automatic cypress component test executor for plain old storybook stories
-* [A series of file syntaxes](#additional-syntaxes) to support `.play` like functionality in story files
-* [Automatic action stubs and spies](#stubbing-actions) with first level cypress support
-* [A typescript transform](#isolated-component-files-transformer) that turns your `stories.tsx` files into cypress test files with just a bit of black magic
-* Tools for turning [storybook addon mock api calls into cypress intercepts](#intercepting-api-requests)
-* General storybook doc utils for building [snippets from storysource](https://quotapath.github.io/orphic-cypress/functions/storybook_story_code.transformSource.html) or to [segment an mdx file](https://quotapath.github.io/orphic-cypress/functions/storybook_segment_mdx.segmentMDX.html) to use in multiple doc locations.
+- [A comprehensive set of examples](https://quotapath.github.io/orphic-cypress/storybook/) for using cypress to test storybook with or without tools given here, including some surprising finds [like how to use composeStories with mdx files](https://quotapath.github.io/orphic-cypress/storybook/?path=/docs/mdx-file-with-external-tests)
+- An automatic cypress component test executor for plain old storybook stories
+- [A series of file syntaxes](#additional-syntaxes) to support `.play` like functionality in story files
+- [Automatic action stubs and spies](#stubbing-actions) with first level cypress support
+- [A typescript transform](#isolated-component-files-transformer) that turns your `stories.tsx` files into cypress test files with just a bit of black magic
+- Tools for turning [storybook addon mock api calls into cypress intercepts](#intercepting-api-requests)
+- General storybook doc utils for building [snippets from storysource](https://quotapath.github.io/orphic-cypress/functions/storybook_story_code.transformSource.html) or to [segment an mdx file](https://quotapath.github.io/orphic-cypress/functions/storybook_segment_mdx.segmentMDX.html) to use in multiple doc locations.
 
 See extended module documentation in [github pages](https://quotapath.github.io/orphic-cypress/) and numerous examples at a [hosted storybook](https://quotapath.github.io/orphic-cypress/storybook/)
 
@@ -68,6 +68,7 @@ describe("SomeComponent", () => {
 But, that could conceivably be seen as a lot of boilerplate, especially when compared to the `play` syntax of storybook's interactive tests. You'd have to drop something like this into every directory containing a storybook story and perform the `should render ok` test to make sure your stories aren't breaking. And we haven't even gotten into things like stubbing actions or mocking API calls which would be duplicative of storybook setup.
 
 Instead we could write some simple utilities so that we can keep the files in the `*.stories.tsx`:
+
 ```ts
 const CompWithLabel = () => <Something label="test" />; // was already here
 CompWithLabel.cy = () =>
@@ -100,7 +101,9 @@ CompWithLabel.cy = {
 
   "should show an expanded label when clicked": () => {
     cy.get(".typography").click();
-    cy.get(".expanded-label").should("be.visible").and("contain", "more details here");
+    cy.get(".expanded-label")
+      .should("be.visible")
+      .and("contain", "more details here");
   },
 };
 ```
@@ -110,6 +113,7 @@ Each of these is executed in it's own isolated `it` function.
 ## `cyTest` syntax
 
 allows the most control but backs off of some of the automatic setup that takes place
+
 ```ts
 CompWithLabel.cyTest = (Story) => {
   it("should contain the 'test' label", () => {
@@ -120,7 +124,9 @@ CompWithLabel.cyTest = (Story) => {
   it("should show an expanded label when clicked", () => {
     cy.mount(<Story additionalArgs="more details" />);
     cy.get(".typography").click();
-    cy.get(".expanded-label").should("be.visible").and("contain", "more details here");
+    cy.get(".expanded-label")
+      .should("be.visible")
+      .and("contain", "more details here");
   });
 };
 ```
@@ -167,10 +173,11 @@ See [storybook files](https://quotapath.github.io/orphic-cypress/storybook/?path
 
 ## What are component tests?
 
-Component tests are near to unit tests in that they are low-level tests that cover small units of logic, but they also cover React (or other) components specifically and so have some concept of rendering that component in isolation to test against. This is highly preferable to end-to-end testing in that you can test in isolation from the rest of an application without a large amount of setup or database seeding, which means these tests will execute much faster. A lot has been said about component tests, so I won't go into too much detail on what they are or their value, but here's some further reading: 
-* [Cypress: Writing Your First Component Test](https://docs.cypress.io/guides/component-testing/writing-your-first-component-test)
-* [React: Testing Overview](https://reactjs.org/docs/testing.html)
-* [Storybook: Interaction Testing](https://storybook.js.org/docs/react/writing-tests/interaction-testing)
+Component tests are near to unit tests in that they are low-level tests that cover small units of logic, but they also cover React (or other) components specifically and so have some concept of rendering that component in isolation to test against. This is highly preferable to end-to-end testing in that you can test in isolation from the rest of an application without a large amount of setup or database seeding, which means these tests will execute much faster. A lot has been said about component tests, so I won't go into too much detail on what they are or their value, but here's some further reading:
+
+- [Cypress: Writing Your First Component Test](https://docs.cypress.io/guides/component-testing/writing-your-first-component-test)
+- [React: Testing Overview](https://reactjs.org/docs/testing.html)
+- [Storybook: Interaction Testing](https://storybook.js.org/docs/react/writing-tests/interaction-testing)
 
 Lets take a simple example: we have a component that shows some copy if the user is not permissioned, but shows some copy and does a bit of logic if they do have access. Here's some pseudo-code of what you'd expect to see as tests:
 
@@ -192,15 +199,18 @@ Storybook stories make fantastic jumping off points for testing because they're 
 ---
 
 ### Nice-to-haves for component tests
-* They execute quickly
-* They're as easy as possible to set up with minimal boilerplate
-* Optional headed execution so that you can visually see whats happening and debug in a real browser
-* When executing headlessly in CI for instance, screenshots on errors make for similarly easy debugging as local headed execution
+
+- They execute quickly
+- They're as easy as possible to set up with minimal boilerplate
+- Optional headed execution so that you can visually see whats happening and debug in a real browser
+- When executing headlessly in CI for instance, screenshots on errors make for similarly easy debugging as local headed execution
 
 ---
 
 ### Comparison of Existing Solutions
+
 #### Storybook interactive tests
+
 This is the standard that we're working against here. They'll look like this when using the story function syntax
 
 ```ts
@@ -214,39 +224,41 @@ SomeStory.play = async ({ canvasElement }) => {
 };
 ```
 
-* Pros:
-  * They’re built into storybook so you get to show interactive stories right there
-  * We’ve already written some. Pretty smooth experience
-  * `actions` are automatically supplied and are stubs for easy testing
-* Cons:
-  * It requires new knowledge. Jest and testing-library instead of cypress and chai, alongside some specifics to storybook execution
-  * It’s a true pain to set up in CI. They have their own test runner in playwrite, but I couldn’t get it working with a quick pass in circleci. I built a custom cypress executor, but that broke when we moved to nginx.
+- Pros:
+  - They’re built into storybook so you get to show interactive stories right there
+  - We’ve already written some. Pretty smooth experience
+  - `actions` are automatically supplied and are stubs for easy testing
+- Cons:
+  - It requires new knowledge. Jest and testing-library instead of cypress and chai, alongside some specifics to storybook execution
+  - It’s a true pain to set up in CI. They have their own test runner in playwrite, but I couldn’t get it working with a quick pass in circleci. I built a custom cypress executor, but that broke when we moved to nginx.
 
 ---
 
 #### Cypress execution of builtin interactive tests by visiting the story's url or iframe
+
 TODO
 
 ---
 
 #### Cypress component tests directly without storybook
+
 They look like this (example pulled from cypress docs):
 
 ```ts
 import { Stepper } from "./";
 
-it('stepper should default to 0', () => {
-  cy.mount(<Stepper />)
-  cy.get(counterSelector).should('have.text', '0')
-})
+it("stepper should default to 0", () => {
+  cy.mount(<Stepper />);
+  cy.get(counterSelector).should("have.text", "0");
+});
 ```
 
-* Pros:
-  * We already all know cypress and its tooling
-  * It's slick
-* Cons:
-  * distinct from storybook (though see below) and so we lose that interconnectedness
-  * still technically in beta, though its pretty sophisticated and clear they’re following through with it
+- Pros:
+  - We already all know cypress and its tooling
+  - It's slick
+- Cons:
+  - distinct from storybook (though see below) and so we lose that interconnectedness
+  - still technically in beta, though its pretty sophisticated and clear they’re following through with it
 
 ---
 
@@ -254,12 +266,12 @@ it('stepper should default to 0', () => {
 
 These could be written in the storybook file with some type updates, or alongside in a new file. See [Using this package](#using-this-package) above for an example of what this'll look like.
 
-* Pros:
-  * We already know and love cypress
-  * Uses stories as test cases, which reduces duplication and increases usefulness/documentative natures of both test and story
-* Cons:
-  * Still wont appear in storybook so you’d still have to pull up a separate process to see the interactive story/test
-  * currently only works with typescript or javascript story files, not mdx
+- Pros:
+  - We already know and love cypress
+  - Uses stories as test cases, which reduces duplication and increases usefulness/documentative natures of both test and story
+- Cons:
+  - Still wont appear in storybook so you’d still have to pull up a separate process to see the interactive story/test
+  - currently only works with typescript or javascript story files, not mdx
 
 ---
 
@@ -272,26 +284,25 @@ Here's storybook's own example from [testing-react docs](https://storybook.js.or
 ```ts
 const { InputFieldFilled } = composeStories(stories);
 
-test('renders with play function', async () => {
+test("renders with play function", async () => {
   const { container } = render(<InputFieldFilled />);
 
   // pass container as canvasElement and play an interaction that fills the input
   await InputFieldFilled.play({ canvasElement: container });
 
-  const input = screen.getByRole('textbox') as HTMLInputElement;
-  expect(input.value).toEqual('Hello world!');
+  const input = screen.getByRole("textbox") as HTMLInputElement;
+  expect(input.value).toEqual("Hello world!");
 });
 ```
 
-* Pros:
-  * back to tests being visible in storybook through interaction testing addon
-  * simpler headless CI execution than storybook's playwrite executor
-* Cons:
-  * only works with .tsx, not .mdx
-  * we’d have to build out some infrastructure to support automatic discovery and execution
-  * headless, so won’t get screens of component on error, but could still interact in storybook
-  * back to having to know jest + testing-library
-
+- Pros:
+  - back to tests being visible in storybook through interaction testing addon
+  - simpler headless CI execution than storybook's playwrite executor
+- Cons:
+  - only works with .tsx, not .mdx
+  - we’d have to build out some infrastructure to support automatic discovery and execution
+  - headless, so won’t get screens of component on error, but could still interact in storybook
+  - back to having to know jest + testing-library
 
 <br/>
 
@@ -304,6 +315,7 @@ Even in javascript testing we have Sinon, named for the Greek warrior who lied t
 So you'd think that Cypress would join in on this tradition, the cypress being an ancient tree known throughout human culture. There is a wealth of deep symbolism there. Van Gogh claimed they looked like Egyptian obelisks and painted them with an intense fiery energy literally leaping out of the frame.
 
 But no, if we dig around a bit, we find that [cypress was named because](https://docs.cypress.io/faq/questions/company-faq#Why-the-name-Cypress)
+
 > We believe that tests should always pass -- in other words, should always be green. A cypress is an evergreen tree. So, Cypress!
 
 Lame. So utterly lame. So we're naming this after the [Orphic Tablets](https://repository.brynmawr.edu/cgi/viewcontent.cgi?article=1095&context=classics_pubs) which were found in the tombs of the Greeks which contained instructions on the afterlife, wherein a white cypress stands as a guidepost in that dark underworld. Fitting for tests which execute in a different realm.

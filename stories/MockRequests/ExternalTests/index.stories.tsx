@@ -1,6 +1,6 @@
 import * as React from "react";
 import type { ComponentStoryCy } from "src";
-import { Button } from "../../Button";
+import { Button } from "stories";
 
 export default { component: Button, cyIncludeStories: [] };
 

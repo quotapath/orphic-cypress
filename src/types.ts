@@ -33,12 +33,21 @@ export type WithCy<T> = {
 };
 
 /**
+ * All cy properties can also be assigned through `parameters`, which
+ * is perhaps more canonical but messier
+ */
+export type CyParameters<T> = {
+  /** normal story.parameters with extended cy properties */
+  parameters?: WithCy<T>;
+};
+
+/**
  * Drop this in where you would normally see ComponentStory type to add
  * cypress controls to storybook stories in the story format.
  */
 export type ComponentStoryCy<
   T extends keyof JSX.IntrinsicElements | JSXElementConstructor<any>
-> = ComponentStory<T> & WithCy<T>;
+> = ComponentStory<T> & WithCy<T> & CyParameters<T>;
 
 /**
  * Drop this in where you would normally see ComponentStoryObj type to add
@@ -46,7 +55,7 @@ export type ComponentStoryCy<
  */
 export type ComponentStoryObjCy<
   T extends keyof JSX.IntrinsicElements | JSXElementConstructor<any>
-> = ComponentStoryObj<T> & WithCy<T>;
+> = ComponentStoryObj<T> & WithCy<T> & CyParameters<T>;
 
 /** Extensions to the default export from storybook files */
 export type StoryFileCyExtension = {

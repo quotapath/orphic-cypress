@@ -1,6 +1,6 @@
 import React from "react";
 import type { ComponentStoryCy, ComponentStoryObjCy } from "src";
-import { ClickCount } from "../Button";
+import { ClickCount } from "stories";
 
 export default { component: ClickCount };
 

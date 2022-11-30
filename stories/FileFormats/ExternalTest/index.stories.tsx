@@ -1,6 +1,6 @@
 import type { ComponentStory } from "@storybook/react";
 import * as React from "react";
-import { Button } from "../../Button";
+import { Button } from "stories";
 
 // eslint-disable-next-line storybook/story-exports
 export default {

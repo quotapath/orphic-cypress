@@ -5,24 +5,32 @@ import { setStorybookFiles, useIsolatedComponentFiles } from "./src";
 import webpackConfig from "./webpack.config";
 
 webpackConfig.plugins.push(new ReactDocgenTypescriptPlugin());
-// Only required to support arbitary mdx imports in csf
+
+const mdUse = (skipCsf: boolean) => [
+  {
+    loader: "babel-loader",
+    options: {
+      babelrc: false,
+      configFile: false,
+      presets: ["@babel/preset-env", "@babel/preset-react"],
+    },
+  },
+  {
+    loader: require.resolve("@storybook/mdx1-csf/loader"),
+    options: { skipCsf },
+  },
+];
+
+const tsLoaderUse = webpackConfig.module.rules[0].use[0];
+
+// Required to support arbitary mdx imports in csf and mdx test files
 webpackConfig.module.rules.push({
   test: /\.mdx$/,
-  use: [
-    {
-      loader: "babel-loader",
-      options: {
-        babelrc: false,
-        configFile: false,
-        sourceType: "unambiguous",
-        presets: ["@babel/preset-env", "@babel/preset-react"],
-      },
-    },
-    {
-      loader: require.resolve("@storybook/mdx1-csf/loader"),
-      options: { skipCsf: false },
-    },
-  ],
+  use: [tsLoaderUse, ...mdUse(false)],
+});
+webpackConfig.module.rules.push({
+  test: /\.md$/,
+  use: mdUse(true),
 });
 
 export default defineConfig({
@@ -35,8 +43,12 @@ export default defineConfig({
       webpackConfig,
     },
     ...(useIsolatedComponentFiles && {
-      specPattern: ["**/*.stories.ts{,x}", "**/*.cy.ts{,x}"],
-      excludeSpecPattern: ["**/*/mount.cy.ts{,x}"],
+      specPattern: [
+        "**/*.stories.ts{,x}",
+        "**/*.cy.ts{,x}",
+        "**/*.stories.mdx",
+      ],
+      excludeSpecPattern: ["**/*/mount.cy.ts{,x}", "**/*/Overview.*"],
     }),
     setupNodeEvents: (on, config) => {
       config.env.storyLocation = "./stories/";

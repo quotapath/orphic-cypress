@@ -1,6 +1,3 @@
-/**
- * @module storybook
- */
 import {
   Anchor,
   Subheading,
@@ -9,9 +6,12 @@ import {
   DocsContext,
   DocsStoryProps,
   Story,
-  Title,
+  Title as SBTitle,
 } from "@storybook/addon-docs";
+import { themes } from "@storybook/theming";
+import { startCase } from "lodash";
 import React, { useContext } from "react";
+import { transformSource } from "../src/storybook/story-code";
 
 export const CustomDocsStory: React.FC<DocsStoryProps> = ({
   id,
@@ -65,8 +65,50 @@ export const CustomStories = () => {
  */
 export const DocsPage: React.FC = ({ children }) => (
   <>
-    <Title />
+    <SBTitle />
     <CustomStories />
     {children}
   </>
 );
+
+export const Title = ({ name, pad }: { name?: string; pad?: boolean }) => {
+  const context = React.useContext(DocsContext);
+  return (
+    <>
+      {pad && <br />}
+      <SBTitle>{startCase(name || context.name)}</SBTitle>
+    </>
+  );
+};
+
+export const parameters = {
+  docs: {
+    page: DocsPage,
+    source: { state: "open" },
+    transformSource: transformSource({ includeObjects: true }),
+    theme: themes.dark,
+  },
+  viewMode: "docs",
+  actions: { argTypesRegex: "^on[A-Z].*" },
+  controls: {
+    matchers: {
+      color: /(background|color)$/i,
+      date: /Date$/,
+    },
+    expanded: true,
+    hideNoControlsWarning: true,
+  },
+  options: {
+    storySort: {
+      order: [
+        "Overview",
+        "FileFormats",
+        "StubActions",
+        ["Overview"],
+        "SkippingAndSelecting",
+        ["Overview"],
+        "MDX",
+      ],
+    },
+  },
+};

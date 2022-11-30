@@ -33,32 +33,30 @@ export const executeCyTests = <T extends StoryFileCy>(
   stories: T,
   describeText?: string
 ) => {
-  // don't compose exports that aren't capitalized, which is a naive way to
-  // test if they are reasonably stories or not.
-  const filteredStories = Object.entries(stories).reduce(
-    (acc, [k, v]) =>
-      k === "default" || k[0] === k[0].toUpperCase() ? { ...acc, [k]: v } : acc,
-    {} as typeof stories
-  );
-  const describeFn = stories.default.cyOnly
-    ? describe.only
-    : stories.default.cySkip
-    ? describe.skip
-    : describe;
+  const describeFn =
+    stories.default.cyOnly || stories.default.parameters?.cyOnly
+      ? describe.only
+      : stories.default.cySkip || stories.default.parameters?.cySkip
+      ? describe.skip
+      : describe;
   describeFn(describeText || stories.default.title || "CyTest", () => {
     // adding `cy` property to default is a way to add hooks like `beforeEach`
     // for all tests in the file. I guess you could even write a test here.
-    if (stories.default.cy) stories.default.cy();
+    const defaultCy = stories.default.cy || stories.default.parameters?.cy;
+    if (defaultCy) defaultCy();
     const config: CyTestConfig = Cypress.env("cyTest");
 
-    if (stories.default.cyIncludeStories) {
-      if (stories.default.cyIncludeStories === true) {
+    const cyIncludeStories =
+      stories.default.cyIncludeStories ||
+      stories.default.parameters?.cyIncludeStories;
+    if (cyIncludeStories) {
+      if (cyIncludeStories === true) {
         delete stories.default.includeStories;
       } else {
-        stories.default.includeStories = stories.default.cyIncludeStories;
+        stories.default.includeStories = cyIncludeStories;
       }
     }
-    const composed = composeStories(filteredStories);
+    const composed = composeStories(stories);
     const composedEntries = Object.entries(composed) as [
       [name: string, Comp: any]
     ];
@@ -66,12 +64,14 @@ export const executeCyTests = <T extends StoryFileCy>(
       if (typeof Comp !== "function") return;
 
       describe(storyNameFromExport(name), () => {
-        const story = (filteredStories as any as Stories)[name];
+        const story = (stories as any as Stories)[name];
+        const parameters = story.parameters || {};
+        const cyTest = story.cyTest || parameters.cyTest;
         beforeEach(() => {
-          if (story.cyTest && config?.format?.cyTest === false) {
+          if (cyTest && config?.format?.cyTest === false) {
             throw new CyTestConfigError("cyTest", stories.default.title);
           }
-          stubStoryActions(Comp, filteredStories);
+          stubStoryActions(Comp, stories);
           const mockData = [
             ...(stories.default.parameters?.mockData || []),
             ...(Comp.parameters?.mockData || []),
@@ -81,11 +81,16 @@ export const executeCyTests = <T extends StoryFileCy>(
         // cy test format where a function can then contain 'it's and 'before' etc
         // actions will be available at `cy.get("@actions")` or `this.actions`
         // and you can skip/only in the test
-        if (story.cyTest) return story.cyTest(Comp);
+        if (cyTest) return cyTest(Comp);
         // cy object format for a more streamlined test that does the mount for you
-        const itFn = story.cyOnly ? it.only : story.cySkip ? it.skip : it;
-        if (story.cy) {
-          const storyCy = story.cy;
+        const itFn =
+          story.cyOnly || parameters.cyOnly
+            ? it.only
+            : story.cySkip || parameters.cySkip
+            ? it.skip
+            : it;
+        const storyCy = story.cy || parameters.cy;
+        if (storyCy) {
           // cy is a function directly
           if (typeof storyCy === "function") {
             return itFn("should satisfy a cy test expectation", function () {
@@ -108,10 +113,13 @@ export const executeCyTests = <T extends StoryFileCy>(
             });
           });
         }
-        // no test defined, just check that it renders ok
-        itFn(`${name} should render ok`, function () {
-          cy.mount(<Comp {...this.actions} />);
-        });
+        // mdx files with no stories are docs only and will intentionally throw an error if rendered
+        if (name !== "__page") {
+          // no test defined, just check that it renders ok
+          itFn(`${name} should render ok`, function () {
+            cy.mount(<Comp {...this.actions} />);
+          });
+        }
       });
     });
   });

@@ -1,0 +1,86 @@
+import { Meta, Story } from "@storybook/addon-docs";
+import { Button } from "stories";
+
+<Meta component={Button} id="mdx-mdxautomatictestfileformats-storybookfiles" />
+
+.cy is the simplest format, expecting just a function which executes in cypress
+
+<Story
+  name="StoryFunctionWithCyFunction"
+  parameters={{
+    cy: () => cy.dataCy("button").should("contain", "Story function"),
+  }}
+>
+  {(args) => <Button {...args} label="Story function" />}
+</Story>
+
+.cy also allows an object syntax where the text keys become the input for cypress`it`'s
+and the bodies execute within their own tests.
+
+```tsx
+export const StoryFunctionWithCyObject: ComponentStoryCy<typeof Button> = (
+  args
+) => <Button {...args} label="Story object" />;
+
+StoryFunctionWithCyObject.cy = {
+  "should contain 'Story object' label": () =>
+    cy.dataCy("button").should("contain", "Story object"),
+
+  "should not be disabled by default": () =>
+    cy.dataCy("button").should("not.be.disabled"),
+};
+```
+
+becomes
+
+```tsx
+describe("Story Function With Cy Object", () => {
+  it("should contain 'Story object' label", () =>
+    cy.dataCy("button").should("contain", "Story object"));
+
+  it("should not be disabled by default", () =>
+    cy.dataCy("button").should("not.be.disabled"));
+});
+```
+
+<Story
+  name="StoryFunctionWithCyObject"
+  parameters={{
+    cy: {
+      "should contain Story object label": () =>
+        cy.dataCy("button").should("contain", "Story object"),
+      "should not be disabled by default": () =>
+        cy.dataCy("button").should("not.be.disabled"),
+    },
+  }}
+>
+  {(args) => <Button {...args} label="Story object" />}
+</Story>
+
+.cyTest offers the most control and is the most verbose.It allows executing test hooks like beforeEach, calling it.skip, or passing new arguments to the story at each test, but requires manually calling cy.mount on the component that comes in as an argument.
+
+<Story
+  name="StoryFunctionWithCyTest"
+  parameters={{
+    cyTest: (Story) => {
+      it("should contain Story test label", () => {
+        cy.mount(<Story />);
+        cy.dataCy("button").should("contain", "Story test");
+      });
+      // very weird, but an empty line would break this!
+      it("should accept a disabled prop", () => {
+        cy.mount(<Story disabled />);
+        cy.dataCy("button").should("be.disabled");
+      });
+      it.skip("should skip a test", () => {
+        cy.mount(<Story />);
+        cy.dataCy("button").should(
+          "contain",
+          "This test would fail if not skipped"
+        );
+      });
+    },
+  }}
+>
+  {(args) => <Button label="Story test" {...args} />}
+</Story>

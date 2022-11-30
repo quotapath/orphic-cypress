@@ -11,6 +11,7 @@ const port = process.env.PORT || 3001;
 module.exports = {
   resolve: {
     alias: {
+      preview: path.resolve(__dirname, ".storybook", "preview"),
       src: path.resolve(__dirname, "src"),
       stories: path.resolve(__dirname, "stories"),
       modulesDirectories: ["node_modules"],
