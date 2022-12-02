@@ -8,7 +8,7 @@
 
 # Orphic Cypress
 
-[![Storybook](https://raw.githubusercontent.com/storybookjs/brand/main/badge/badge-storybook.svg)](https://quotapath.github.io/orphic-cypress/storybook/) <a href="https://quotapath.github.io/orphic-cypress/"><img height="20" src="https://user-images.githubusercontent.com/9889378/203390045-ba98e185-2701-42d7-9c26-a9dae3446ece.png" /></a> [![CI](https://github.com/quotapath/orphic-cypress/actions/workflows/ci.yml/badge.svg)](https://github.com/quotapath/orphic-cypress/actions/workflows/ci.yml)
+[![Storybook](https://raw.githubusercontent.com/storybookjs/brand/main/badge/badge-storybook.svg)](https://quotapath.github.io/orphic-cypress/storybook/) <a href="https://quotapath.github.io/orphic-cypress/"><img height="20" src="https://user-images.githubusercontent.com/9889378/203390045-ba98e185-2701-42d7-9c26-a9dae3446ece.png" /></a> [![CI](https://github.com/quotapath/orphic-cypress/actions/workflows/ci.yml/badge.svg)](https://github.com/quotapath/orphic-cypress/actions/workflows/ci.yml) [![test coverage](https://quotapath.github.io/orphic-cypress/test-coverage.svg)](https://quotapath.github.io/orphic-cypress/lcov-report)
 
 A set of utilities, typescript transformers, and general examples on how to cover storybook stories with cypress component tests.
 In short, this is a little overengineering, a little black magic, and a lot of documentation on making these kinds of tests as easy and concise as possible.

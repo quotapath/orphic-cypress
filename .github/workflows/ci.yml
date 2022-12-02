@@ -14,7 +14,7 @@ jobs:
           - name: "Typecheck"
             cmd: "npm run typecheck"
           - name: "Test"
-            cmd: "./node_modules/cypress/bin/cypress install && npm run test && cp coverage/cobertura-coverage.xml coverage.xml"
+            cmd: "./node_modules/cypress/bin/cypress install && npm run test && cp coverage/coverage-summary.json coverage-summary.json && mv coverage/lcov-report lcov-report"
           - name: "Test Isolated"
             cmd: "./node_modules/cypress/bin/cypress install && npm run test:isolated"
     steps:
@@ -38,11 +38,22 @@ jobs:
       - name: ${{ matrix.name }}
         run: ${{ matrix.cmd }}
 
+      - name: get coverage badge
+        if: ${{ matrix.name == 'Test' }}
+        run: |
+          curl $(
+            cat coverage/coverage-summary.json \
+            | python3 -c  "import sys, json; pct = round(json.load(sys.stdin)['total']['lines']['pct']); color = 'success' if pct > 80 else 'yellow' if pct > 60 else 'critical'; print(f'https://img.shields.io/badge/test%20coverage-{pct}-{color}')"
+          ) > test-coverage.svg
+
       - name: upload coverage
+        if: ${{ matrix.name == 'Test' }}
         uses: actions/upload-artifact@v3
         with:
-          name: coverage.xml
-          path: coverage.xml
+          name: test-coverage
+          path: |
+            test-coverage.svg
+            lcov-report
           retention-days: 1
 
   build_docs:
@@ -66,29 +77,17 @@ jobs:
         if: steps.node-cache.outputs.cache-hit != 'true'
         run: npm ci
 
+      - name: Create the docs directory locally in CI
+        run: npm run docs
+
+      # TODO: bound to be an easier way to get
       - name: Download coverage
         uses: actions/download-artifact@v3
         with:
-          name: coverage.xml
+          name: test-coverage
 
-      - name: Code Coverage Report
-        uses: irongut/CodeCoverageSummary@v1.3.0
-        with:
-          filename: coverage.xml
-          badge: true
-          fail_below_min: false
-          format: markdown
-          hide_branch_rate: false
-          hide_complexity: false
-          indicators: true
-          output: both
-          thresholds: "60 80"
-
-      - name: Add coverage to docs
-        run: cat code-coverage-results.md >> README.md
-
-      - name: Create the docs directory locally in CI
-        run: npm run docs
+      - name: mv badge
+        run: mv test-coverage.svg lcov-report docs
 
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@4.1.4

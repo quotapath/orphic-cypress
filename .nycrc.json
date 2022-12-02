@@ -1,6 +1,6 @@
 {
   "all": true,
-  "reporter": ["cobertura"],
+  "reporter": ["lcov", "json-summary"],
   "exclude": [
     "*storybook/**/*",
     "dist",
