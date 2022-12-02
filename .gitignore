@@ -3,6 +3,8 @@ node_modules
 dist/
 cypress/videos/
 cypress/screenshots/
+.nyc_output
+coverage
 # docs, built with github action
 docs/
 # mac crap

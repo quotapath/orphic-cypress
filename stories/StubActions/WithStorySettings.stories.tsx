@@ -101,7 +101,9 @@ export const MockIfProvidedViaArgsRegardlessOfDocgen: ComponentStoryObjCy<
 > = {
   args: {
     // @ts-ignore
-    onSomethingElse: () => 1,
+    onSomethingElse:
+      /* istanbul ignore next */ // story-code @skip
+      () => 1,
   },
   cy: () => {
     // these won't be called, but asserting not called proves they were stubbed and are stubs/spies

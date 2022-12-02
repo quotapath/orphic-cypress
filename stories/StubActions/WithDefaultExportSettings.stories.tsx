@@ -6,8 +6,13 @@ import { ClickCount } from "stories";
 // With both of these, you'd probably just be passing in normal functions,
 // but here we're spying for the sake of meta-test assertions.
 const hasCypress = Boolean((global as any).Cypress);
-const onClickSpy = hasCypress ? Cypress.sinon.spy(() => 1) : () => 1;
-const onClickSpy2 = hasCypress ? Cypress.sinon.spy(() => 1) : () => 1;
+const dumbFunction = () => 1;
+const [onClickSpy, onClickSpy2] = [...Array(2).keys()].map(() =>
+  hasCypress
+    ? Cypress.sinon.spy(dumbFunction)
+    : /* istanbul ignore next */ // story-code @skip
+      dumbFunction
+);
 
 export default {
   component: ClickCount,

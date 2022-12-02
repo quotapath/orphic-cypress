@@ -24,6 +24,9 @@ module.exports = {
     "@typescript-eslint/ban-ts-comment": "off",
     // not good practice overall, but lots of generics in this lib
     "@typescript-eslint/no-explicit-any": "off",
+    // normally would have this, but this project being largely tests, I'm okay with a little type cheating
+    // especially when in this case optional chaining leads to unnecessary branches in the eyes of coverage
+    "@typescript-eslint/no-non-null-assertion": "off",
     "@typescript-eslint/semi": ["error", "always"],
     quotes: ["error", "double"],
   },

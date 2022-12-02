@@ -45,6 +45,9 @@ module.exports = {
   },
   mode: "development",
   module: {
+    // hide warnings for 'Critical dependency: require function is used in a way
+    // in which dependencies cannot be statically extracted', at least in packages
+    exprContextCritical: false,
     rules: [
       {
         test: /\.[jt]sx?$/,
