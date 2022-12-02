@@ -22,6 +22,14 @@ const mdUse = (skipCsf: boolean) => [
 ];
 
 const tsLoaderUse = webpackConfig.module.rules[0].use[0];
+webpackConfig.module.rules[0].use.unshift({
+  loader: "babel-loader",
+  options: {
+    plugins: ["istanbul"],
+    babelrc: false,
+    configFile: false,
+  },
+});
 
 // Required to support arbitary mdx imports in csf and mdx test files
 webpackConfig.module.rules.push({
@@ -52,6 +60,8 @@ export default defineConfig({
     }),
     setupNodeEvents: (on, config) => {
       config.env.storyLocation = "./stories/";
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      require("@bahmutov/cypress-code-coverage/plugin")(on, config);
       return setStorybookFiles(on, config);
     },
     experimentalSingleTabRunMode: true,

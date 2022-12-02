@@ -1,0 +1,12 @@
+{
+  "all": true,
+  "reporter": ["cobertura"],
+  "exclude": [
+    "*storybook/**/*",
+    "dist",
+    "coverage",
+    "docs/**/*",
+    "typedoc.js",
+    "*.config.ts"
+  ]
+}

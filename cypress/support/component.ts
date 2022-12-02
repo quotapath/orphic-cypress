@@ -1,5 +1,6 @@
 import { setGlobalConfig } from "@storybook/testing-react";
 import { mount } from "cypress/react";
+import "@bahmutov/cypress-code-coverage/support";
 
 import * as commands from "./commands";
 import { addCommands } from "../../src/cypress";
