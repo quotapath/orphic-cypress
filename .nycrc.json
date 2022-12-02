@@ -7,6 +7,8 @@
     "coverage",
     "docs/**/*",
     "typedoc.js",
-    "*.config.ts"
+    "*.config.ts",
+    "**/declarations/**/*",
+    "**/transformers/__mock__/**/*"
   ]
 }

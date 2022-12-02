@@ -18,6 +18,7 @@ module.exports = {
     // "**/*/index.ts",
     "src/index.ts",
     "**/*.cy.*",
+    "src/declarations/*",
   ],
   navigationLinks: {
     Storybook: "https://quotapath.github.io/orphic-cypress/storybook/",

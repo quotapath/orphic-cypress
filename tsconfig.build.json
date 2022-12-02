@@ -1,9 +1,15 @@
 {
   "extends": "./tsconfig.json",
-  "exclude": ["**/*.cy.ts*"],
+  "exclude": [
+    "cypress",
+    "stories",
+    "cypress.config.ts",
+    "webpack.config.ts",
+    "**/*.cy.ts*",
+    "**/__mock__/"
+  ],
   "compilerOptions": {
     "module": "commonjs",
-    "esModuleInterop": true,
-    "outDir": "dist"
+    "types": ["cypress"]
   }
 }

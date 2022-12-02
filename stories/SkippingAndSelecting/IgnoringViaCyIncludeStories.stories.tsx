@@ -19,6 +19,7 @@ NotSkippedFunction.cy = () =>
 NotSkippedFunction.parameters = {
   docs: {
     description: {
+      /* istanbul ignore else */ // story-code @skip
       story: mdxObj["ignoring-via-cyincludestories"]?.md,
     },
   },

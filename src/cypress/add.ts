@@ -87,6 +87,17 @@ export type Tasks<T extends { [event: string]: TaskFn }> = {
  * type Commands = typeof commands & Tasks<typeof tasks>;
  * declare global { // ...
  * ```
+ * Then also add tasks in cypress.config.ts
+ * ```ts
+ * import * as tasks from "./cypress/support/tasks";
+ *
+ * export default defineConfig({
+ *   // ... other config
+ *   setupNodeEvents: (on, config) => {
+ *     on("task", tasks);
+ *   },
+ * });
+ * ```
  * afterwards, tasks will be available as commands that return well-typed promises
  * ```ts
  * cy.getUUID().then(uuid => ...)`

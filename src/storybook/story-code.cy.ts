@@ -1,4 +1,10 @@
-import { removeSkips, transformSource } from "./story-code";
+import { dedent } from "ts-dedent";
+
+import {
+  removeSkips,
+  transformSource,
+  TransformSourceOptions,
+} from "./story-code";
 
 describe("story-code", () => {
   describe("removeSkips", () => {
@@ -107,7 +113,7 @@ describe("story-code", () => {
     });
   });
 
-  describe.only("transformSource", () => {
+  describe("transformSource", () => {
     const basicTest = (source: string, startLine: number, endLine: number) =>
       transformSource()("<SomeComponent prop={1} />", {
         id: "somedir-nested--some-story",
@@ -127,92 +133,206 @@ describe("story-code", () => {
 
     it("should gather start and end locations as provided by storysource addon", () => {
       const result = basicTest(
-        `import type { ComponentStory } from "@storybook/react";
-import { SomeComponent } from "./";
+        dedent`
+          import type { ComponentStory } from "@storybook/react";
+          import { SomeComponent } from "./";
 
-export default { component: SomeComponent };
+          export default { component: SomeComponent };
 
-export const SomeStory: ComponentStory<typeof SomeStory> = (args) => (
- <SomeComponent {...args} />
-);
-SomeStory.args = { prop: 1 };
+          export const SomeStory: ComponentStory<typeof SomeStory> = (args) => (
+           <SomeComponent {...args} />
+          );
+          SomeStory.args = { prop: 1 };
 
-export const OtherStory: ComponentStory<typeof SomeStory> = (args) => (
- <SomeComponent {...args} prop={1} />
-);
-OtherStory.args = { prop2: 2 };`,
+          export const OtherStory: ComponentStory<typeof SomeStory> = (args) => (
+           <SomeComponent {...args} prop={1} />
+          );
+          OtherStory.args = { prop2: 2 };
+        `,
         6,
         8
       );
-      const expected = `export const SomeStory: ComponentStory<typeof SomeStory> = (args) => (
- <SomeComponent {...args} />
-);`;
+      const expected = dedent`
+        export const SomeStory: ComponentStory<typeof SomeStory> = (args) => (
+         <SomeComponent {...args} />
+        );
+      `;
       expect(result).to.equal(expected);
     });
 
     it("should include default line as a single line", () => {
       const result = basicTest(
-        `import type { ComponentStory } from "@storybook/react";
-import { SomeComponent } from "./";
+        dedent`
+          import type { ComponentStory } from "@storybook/react";
+          import { SomeComponent } from "./";
 
-export default { component: SomeComponent };
+          export default { component: SomeComponent };
 
-export const SomeStory: ComponentStory<typeof SomeStory> = (args) => (
- <SomeComponent {...args} />
-);
-// story-code @include-default
-SomeStory.args = { prop: 1 };
+          export const SomeStory: ComponentStory<typeof SomeStory> = (args) => (
+           <SomeComponent {...args} />
+          );
+          // story-code @include-default
+          SomeStory.args = { prop: 1 };
 
-export const OtherStory: ComponentStory<typeof SomeStory> = (args) => (
- <SomeComponent {...args} prop={1} />
-);
-OtherStory.args = { prop2: 2 };`,
+          export const OtherStory: ComponentStory<typeof SomeStory> = (args) => (
+           <SomeComponent {...args} prop={1} />
+          );
+          OtherStory.args = { prop2: 2 };
+        `,
         6,
         8
       );
-      const expected = `export default { component: SomeComponent };
+      const expected = dedent`
+        export default { component: SomeComponent };
 
-export const SomeStory: ComponentStory<typeof SomeStory> = (args) => (
- <SomeComponent {...args} />
-);`;
+        export const SomeStory: ComponentStory<typeof SomeStory> = (args) => (
+         <SomeComponent {...args} />
+        );
+      `;
       expect(result).to.equal(expected);
     });
 
-    it("should gather include default lines", () => {
+    it("should gather and include default lines", () => {
       const result = basicTest(
-        `import type { ComponentStory } from "@storybook/react";
-import { SomeComponent } from "./";
+        dedent`
+          import type { ComponentStory } from "@storybook/react";
+          import { SomeComponent } from "./";
 
-export default {
-  component: SomeComponent,
-  title: "SomeDir/Nested",
-};
+          export default {
+            component: SomeComponent,
+            title: "SomeDir/Nested",
+          };
 
-export const SomeStory: ComponentStory<typeof SomeStory> = (args) => (
- <SomeComponent {...args} />
-);
-// story-code @include-default
-SomeStory.args = { prop: 1 };
+          export const SomeStory: ComponentStory<typeof SomeStory> = (args) => (
+           <SomeComponent {...args} />
+          );
+          // story-code @include-default
+          SomeStory.args = { prop: 1 };
 
-export const OtherStory: ComponentStory<typeof SomeStory> = (args) => (
- <SomeComponent {...args} prop={1} />
-);
-OtherStory.args = { prop2: 2 };`,
+          export const OtherStory: ComponentStory<typeof SomeStory> = (args) => (
+           <SomeComponent {...args} prop={1} />
+          );
+          OtherStory.args = { prop2: 2 };
+        `,
         9,
         11
       );
-      const expected = `export default {
-  component: SomeComponent,
-  title: "SomeDir/Nested",
-};
+      const expected = dedent`
+        export default {
+          component: SomeComponent,
+          title: "SomeDir/Nested",
+        };
 
-export const SomeStory: ComponentStory<typeof SomeStory> = (args) => (
- <SomeComponent {...args} />
-);`;
+        export const SomeStory: ComponentStory<typeof SomeStory> = (args) => (
+         <SomeComponent {...args} />
+        );
+      `;
       expect(result).to.equal(expected);
     });
 
-    // TODO: objects
+    it("should gather and include start lines", () => {
+      const result = basicTest(
+        dedent`
+          import type { ComponentStory } from "@storybook/react";
+          import { SomeComponent } from "./";
+
+          const somethingElseImportant = 1;
+
+          export default {
+            component: SomeComponent,
+            title: "SomeDir/Nested",
+          };
+
+          export const SomeStory: ComponentStory<typeof SomeStory> = (args) => (
+           <SomeComponent {...args} />
+          );
+          // story-code @include-start
+          SomeStory.args = { prop: 1 };
+
+          export const OtherStory: ComponentStory<typeof SomeStory> = (args) => (
+           <SomeComponent {...args} prop={1} />
+          );
+          OtherStory.args = { prop2: 2 };
+        `,
+        11,
+        13
+      );
+      const expected = dedent`
+        import type { ComponentStory } from "@storybook/react";
+        import { SomeComponent } from "./";
+
+        const somethingElseImportant = 1;
+
+        export default {
+          component: SomeComponent,
+          title: "SomeDir/Nested",
+        };
+
+        export const SomeStory: ComponentStory<typeof SomeStory> = (args) => (
+         <SomeComponent {...args} />
+        );
+      `;
+      expect(result).to.equal(expected);
+    });
+
+    describe("object file syntax", () => {
+      const source = dedent`
+        import type { ComponentStory, ComponentStoryObj } from "@storybook/react";
+        import { SomeComponent } from "./";
+
+        export default {
+          component: SomeComponent,
+          title: "SomeDir/Nested",
+        };
+
+        export const SomeStory: ComponentStory<typeof SomeStory> = (args) => (
+         <SomeComponent {...args} />
+        );
+        // story-code @include-start
+        SomeStory.args = { prop: 1 };
+
+        export const OtherStoryObj: ComponentStoryObj<typeof SomeStory> = {
+         <SomeComponent {...args} prop={1} />
+        };
+        OtherStoryObj.args = { prop2: 2 };
+        // story-code @end
+      `;
+      const objTest = (opts: TransformSourceOptions) =>
+        transformSource(opts)("<OtherStoryObj prop={1} />", {
+          id: "somedir-nested--other-story-obj",
+          originalStoryFn: { name: null },
+          name: "Other Story Obj",
+          parameters: {
+            storySource: {
+              source,
+              locationsMap: {
+                // note: missing other-story-obj
+                "some-story": { startLoc: { line: 9 }, endLoc: { line: 15 } },
+              },
+            },
+          },
+        } as any);
+
+      it("should get location information from objects despite storysource not generating it", () => {
+        const expected = dedent`\n
+          export const OtherStoryObj: ComponentStoryObj<typeof SomeStory> = {
+           <SomeComponent {...args} prop={1} />
+          };
+          OtherStoryObj.args = { prop2: 2 };
+        `;
+        expect(objTest({ includeObjects: true })).to.equal(expected);
+      });
+
+      it("should get the snippet for objects if includeObjects is not true", () => {
+        const expected = dedent`\n
+          export const OtherStoryObj: ComponentStoryObj<typeof SomeStory> = {
+           <SomeComponent {...args} prop={1} />
+          };
+          OtherStoryObj.args = { prop2: 2 };
+        `;
+        expect(objTest({})).to.equal("<OtherStoryObj prop={1} />");
+      });
+    });
 
     it("should return the snippet if anything goes wrong", () => {
       const result = basicTest(

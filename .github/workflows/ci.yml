@@ -10,13 +10,20 @@ jobs:
       matrix:
         include:
           - name: "Lint"
-            cmd: "npm run lint:check"
+            cmd: npm run lint:check
           - name: "Typecheck"
-            cmd: "npm run typecheck"
+            cmd: npm run typecheck
           - name: "Test"
-            cmd: "./node_modules/cypress/bin/cypress install && npm run test && cp coverage/coverage-summary.json coverage-summary.json && mv coverage/lcov-report lcov-report"
+            cmd: |
+              npm run cache-clear \
+              && ./node_modules/cypress/bin/cypress install \
+              && npm run test \
+              && cp coverage/coverage-summary.json coverage-summary.json \
+              && mv coverage/lcov-report lcov-report
           - name: "Test Isolated"
-            cmd: "./node_modules/cypress/bin/cypress install && npm run test:isolated"
+            cmd: npm run cache-clear \
+              && ./node_modules/cypress/bin/cypress install \
+              && npm run test:isolated
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v3
@@ -41,10 +48,8 @@ jobs:
       - name: get coverage badge
         if: ${{ matrix.name == 'Test' }}
         run: |
-          curl $(
-            cat coverage/coverage-summary.json \
-            | python3 -c  "import sys, json; pct = round(json.load(sys.stdin)['total']['lines']['pct']); color = 'success' if pct > 80 else 'yellow' if pct > 60 else 'critical'; print(f'https://img.shields.io/badge/test%20coverage-{pct}-{color}')"
-          ) > test-coverage.svg
+          shield_url=$(cat coverage/coverage-summary.json | python3 .github/scripts/get_coverage_url.py)
+          curl $shield_url > test-coverage.svg
 
       - name: upload coverage
         if: ${{ matrix.name == 'Test' }}
@@ -80,14 +85,11 @@ jobs:
       - name: Create the docs directory locally in CI
         run: npm run docs
 
-      # TODO: bound to be an easier way to get
       - name: Download coverage
         uses: actions/download-artifact@v3
         with:
           name: test-coverage
-
-      - name: mv badge
-        run: mv test-coverage.svg lcov-report docs
+          path: docs
 
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@4.1.4

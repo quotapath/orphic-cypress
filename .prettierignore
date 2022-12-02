@@ -1,2 +1,5 @@
 dist/
 docs/
+__mock__
+coverage
+.nyc_output

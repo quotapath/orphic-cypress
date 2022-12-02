@@ -47,6 +47,12 @@ const createImportStatement = (
   );
 };
 
+type Source = ts.SourceFile & {
+  symbol: {
+    exports: Map<string, { declarations: ts.ExportAssignment[] }>;
+  };
+};
+
 /**
  * Transform a typescript stories file by adding `executeCyTests` to the bottom
  * with all exports explicitly passed in and the default recreated to be passed
@@ -88,18 +94,11 @@ export const transformIsolatedComponentFiles =
   ): ts.TransformerFactory<ts.SourceFile> =>
   (context) =>
   (source) => {
-    // TODO: ignore __page files which are docs only
-    const exports = (
-      source as any as {
-        symbol: {
-          exports: Map<string, { declarations: ts.ExportAssignment[] }>;
-        };
-      }
-    ).symbol?.exports;
-    const defaultExport = exports?.get("default")?.declarations?.[0];
+    const exports = (source as Source).symbol?.exports ?? new Map();
+    const defaultExport = exports.get("default")?.declarations?.[0];
 
     const matches =
-      source?.fileName &&
+      source.fileName &&
       (storyPattern instanceof RegExp
         ? storyPattern.test(source.fileName)
         : source.fileName.includes(storyPattern));
@@ -108,29 +107,26 @@ export const transformIsolatedComponentFiles =
       return source;
     }
 
-    const { factory } = context;
-    const opts = context.getCompilerOptions();
+    const exportKeys = [...exports.keys()].filter((name) => name !== "default");
+    if (!exportKeys.length) return source;
 
-    const newImport = createImportStatement(
-      factory,
-      opts,
-      executeCyTestsLocation
-    );
+    const { factory: f, getCompilerOptions } = context;
+    const opts = getCompilerOptions();
 
-    const newExportObject = factory.createObjectLiteralExpression([
-      factory.createPropertyAssignment("default", defaultExport.expression),
-      ...[...exports.keys()]
-        .filter((name) => name !== "default")
-        .map((name) => factory.createShorthandPropertyAssignment(name)),
+    const newImport = createImportStatement(f, opts, executeCyTestsLocation);
+
+    const newExportObject = f.createObjectLiteralExpression([
+      f.createPropertyAssignment("default", defaultExport.expression),
+      ...exportKeys.map((k) => f.createShorthandPropertyAssignment(k)),
     ]);
 
     /** becomes `executeCyCall({ default: {<default export obj>}, OtherStory, <...> })` */
-    const executeCyCall = factory.createCallExpression(
-      factory.createIdentifier("executeCyTests"),
+    const executeCyCall = f.createCallExpression(
+      f.createIdentifier("executeCyTests"),
       [],
       [newExportObject]
     ) as any as ts.Statement;
 
     const allStatements = [newImport, ...source.statements, executeCyCall];
-    return factory.updateSourceFile(source, allStatements);
+    return f.updateSourceFile(source, allStatements);
   };

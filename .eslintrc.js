@@ -17,7 +17,7 @@ module.exports = {
     sourceType: "module",
   },
   plugins: ["react", "@typescript-eslint"],
-  ignorePatterns: ["dist", "docs"],
+  ignorePatterns: ["dist", "docs", "__mock__"],
   rules: {
     "linebreak-style": ["error", "unix"],
     "storybook/use-storybook-expect": "off",
@@ -28,6 +28,6 @@ module.exports = {
     // especially when in this case optional chaining leads to unnecessary branches in the eyes of coverage
     "@typescript-eslint/no-non-null-assertion": "off",
     "@typescript-eslint/semi": ["error", "always"],
-    quotes: ["error", "double"],
+    quotes: ["error", "double", { avoidEscape: true }],
   },
 };
