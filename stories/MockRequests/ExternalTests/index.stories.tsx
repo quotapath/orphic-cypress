@@ -10,8 +10,7 @@ export const WillFetch: ComponentStoryCy<typeof Button> = (args) => {
     fetch("/api/label")
       .then((result) => {
         if (result.ok) return result.json();
-        if (result.status === 404) throw new Error("Not Found!");
-        throw new Error("Not ok!");
+        throw new Error("Not Found!");
       })
       .then((result) => setLabel(result.data))
       .catch((error) => setLabel(error.toString()));

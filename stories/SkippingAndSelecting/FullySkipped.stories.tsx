@@ -16,10 +16,12 @@ export default {
   // story-code @skip-end
 };
 
+/* istanbul ignore next */ // story-code @skip
 export const Skipped: ComponentStoryCy<typeof Button> = (args) => (
   <Button {...args} label="Story function" />
 );
 
+/* istanbul ignore next */ // story-code @skip
 Skipped.cy = () =>
   cy.dataCy("button").should("contain", "Would fail if not skipped");
 // story-code @end @include-default
@@ -27,5 +29,7 @@ Skipped.cy = () =>
 export const Another = {
   ...Skipped,
   args: { label: "Another" },
-  cy: () => cy.dataCy("button").should("contain", "Would fail if not skipped"),
+  cy:
+    /* istanbul ignore next */ // story-code @skip
+    () => cy.dataCy("button").should("contain", "Would fail if not skipped"),
 };

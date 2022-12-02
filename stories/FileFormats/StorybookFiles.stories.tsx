@@ -95,6 +95,7 @@ StoryFunctionWithCyTest.cyTest = (Story) => {
     cy.dataCy("button").should("be.disabled");
   });
 
+  /* istanbul ignore next */ // story-code @skip
   it.skip("should skip a test", () => {
     cy.mount(<Story />);
     cy.dataCy("button").should(

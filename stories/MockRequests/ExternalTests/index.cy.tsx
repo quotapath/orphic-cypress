@@ -18,17 +18,17 @@ describe("ExternalTests", () => {
     );
     cy.mount(<WillFetch />);
     cy.wait("@manual").then((interception) => {
-      expect(interception?.response?.body).to.deep.equal({ data: "Manual" });
+      expect(interception.response!.body).to.deep.equal({ data: "Manual" });
     });
     cy.dataCy("button").should("contain", "Manual");
   });
 
   it("should be okay after calling mockToCyIntercept util with component's mockData", () => {
     // could also happen in a beforeEach etc
-    mockToCyIntercept(WillFetch.parameters?.mockData);
+    mockToCyIntercept(WillFetch.parameters!.mockData);
     cy.mount(<WillFetch />);
     cy.wait("@/api/label").then((interception) => {
-      expect(interception?.response?.body).to.deep.equal({ data: "Loaded" });
+      expect(interception.response!.body).to.deep.equal({ data: "Loaded" });
     });
     cy.dataCy("button").should("contain", "Loaded");
   });
