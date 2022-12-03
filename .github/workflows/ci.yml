@@ -14,7 +14,7 @@ jobs:
           - name: "Typecheck"
             cmd: npm run typecheck
           - name: "Test"
-            cmd: ./node_modules/cypress/bin/cypress install && npm run test
+            cmd: ./node_modules/cypress/bin/cypress install && npm run test && cp .nyc_output/out.json coverage
           - name: "Test Isolated"
             cmd: ./node_modules/cypress/bin/cypress install && npm run test:isolated
     steps:
@@ -43,9 +43,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: test-coverage-${{matrix.name}}
-          path: |
-            coverage
-            .nyc_output
+          path: coverage
           retention-days: 1
 
   merge_coverage:
@@ -72,14 +70,10 @@ jobs:
       - name: Merge coverage
         run: |
           npm i -g nyc
-          ls coverage
-          cp -r coverage/coverage-test/.nyc_output .nyc_output
-          cp -r coverage/coverage-test/coverage/ coverage/coverage-test
-          rm -rf coverage/coverage-test/coverage/
-          cp -r coverage/coverage-test-isolated/coverage/ coverage/coverage-test-isolated
-          rm -rf coverage/coverage-test-isolated/coverage/
-          ls
-          mv coverage/
+          mkdir .nyc_output
+          mv coverage/coverage-test/out.json .nyc_output
+          ls -a
+          ls .nyc_output
           nyc merge ./coverage
           nyc report --report-dir coverage-merged --report=json-summary --report=lcov
 
