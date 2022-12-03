@@ -14,16 +14,9 @@ jobs:
           - name: "Typecheck"
             cmd: npm run typecheck
           - name: "Test"
-            cmd: |
-              npm run cache-clear \
-              && ./node_modules/cypress/bin/cypress install \
-              && npm run test \
-              && cp coverage/coverage-summary.json coverage-summary.json \
-              && mv coverage/lcov-report lcov-report
+            cmd: ./node_modules/cypress/bin/cypress install && npm run test
           - name: "Test Isolated"
-            cmd: npm run cache-clear \
-              && ./node_modules/cypress/bin/cypress install \
-              && npm run test:isolated
+            cmd: ./node_modules/cypress/bin/cypress install && npm run test:isolated
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v3
@@ -45,25 +38,68 @@ jobs:
       - name: ${{ matrix.name }}
         run: ${{ matrix.cmd }}
 
-      - name: get coverage badge
-        if: ${{ matrix.name == 'Test' }}
-        run: |
-          shield_url=$(cat coverage/coverage-summary.json | python3 .github/scripts/get_coverage_url.py)
-          curl $shield_url > test-coverage.svg
-
       - name: upload coverage
-        if: ${{ matrix.name == 'Test' }}
+        if: ${{ matrix.name == 'Test' || matrix.name == 'Test Isolated' }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-coverage-${{matrix.name}}
+          path: |
+            coverage
+            .nyc_output
+          retention-days: 1
+
+  merge_coverage:
+    needs: ["ci_checks"]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v3
+
+      - name: Download coverage
+        uses: actions/download-artifact@v3
+        with:
+          name: test-coverage-Test
+          path: coverage/coverage-test
+
+      - name: Download coverage isolated
+        uses: actions/download-artifact@v3
+        with:
+          name: test-coverage-Test Isolated
+          path: coverage/coverage-test-isolated
+
+      # at the time of this writing, 'Test Isolated' only gathers .2% more coverage for branches,
+      # while having less coverage for others. Still, worthwhile experiment in merging runs
+      - name: Merge coverage
+        run: |
+          npm i -g nyc
+          ls coverage
+          cp -r coverage/coverage-test/.nyc_output .nyc_output
+          cp -r coverage/coverage-test/coverage/ coverage/coverage-test
+          rm -rf coverage/coverage-test/coverage/
+          cp -r coverage/coverage-test-isolated/coverage/ coverage/coverage-test-isolated
+          rm -rf coverage/coverage-test-isolated/coverage/
+          ls
+          mv coverage/
+          nyc merge ./coverage
+          nyc report --report-dir coverage-merged --report=json-summary --report=lcov
+
+      - name: Get coverage badge
+        run: |
+          shields_io_url=$(cat coverage-merged/coverage-summary.json | python3 .github/scripts/get_coverage_url.py)
+          curl $shields_io_url > test-coverage.svg
+
+      - name: Upload coverage
         uses: actions/upload-artifact@v3
         with:
           name: test-coverage
           path: |
             test-coverage.svg
-            lcov-report
+            coverage-merged/lcov-report
           retention-days: 1
 
   build_docs:
     runs-on: ubuntu-latest
-    needs: ["ci_checks"]
+    needs: ["merge_coverage"]
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v3

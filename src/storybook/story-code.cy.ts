@@ -324,12 +324,6 @@ describe("story-code", () => {
       });
 
       it("should get the snippet for objects if includeObjects is not true", () => {
-        const expected = dedent`\n
-          export const OtherStoryObj: ComponentStoryObj<typeof SomeStory> = {
-           <SomeComponent {...args} prop={1} />
-          };
-          OtherStoryObj.args = { prop2: 2 };
-        `;
         expect(objTest({})).to.equal("<OtherStoryObj prop={1} />");
       });
     });
