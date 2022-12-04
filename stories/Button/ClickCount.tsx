@@ -35,7 +35,7 @@ export const ClickCount = ({
     };
 
   return (
-    <>
+    <div data-cy="click-container">
       <span data-cy="count" {...white}>
         Count is {clickCount}
       </span>
@@ -48,6 +48,6 @@ export const ClickCount = ({
       <span {...leftPad}>
         <Button dataCy={"button-2"} onClick={handleClick(false)} {...rest} />
       </span>
-    </>
+    </div>
   );
 };

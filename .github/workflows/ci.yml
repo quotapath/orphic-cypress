@@ -14,6 +14,7 @@ jobs:
           - name: "Typecheck"
             cmd: npm run typecheck
           - name: "Test"
+            # after test, tuck .nyc_output's out.json into coverage for easy storage
             cmd: ./node_modules/cypress/bin/cypress install && npm run test && cp .nyc_output/out.json coverage
           - name: "Test Isolated"
             cmd: ./node_modules/cypress/bin/cypress install && npm run test:isolated
@@ -70,11 +71,10 @@ jobs:
       - name: Merge coverage
         run: |
           npm i -g nyc
-          mkdir .nyc_output
-          mv coverage/coverage-test/out.json .nyc_output
-          ls -a
-          ls .nyc_output
-          nyc merge ./coverage
+          # untuck the out.json from the coverage artifact. As far as I can tell, arbitrarily
+          # picking which out.json becomes the basis for coverage is fine
+          mkdir .nyc_output && mv coverage/coverage-test/out.json .nyc_output
+          nyc merge coverage
           nyc report --report-dir coverage-merged --report=json-summary --report=lcov
 
       - name: Get coverage badge
@@ -82,13 +82,16 @@ jobs:
           shields_io_url=$(cat coverage-merged/coverage-summary.json | python3 .github/scripts/get_coverage_url.py)
           curl $shields_io_url > test-coverage.svg
 
+      - name: Unnest lcov report
+        run: mv coverage-merged/lcov-report .
+
       - name: Upload coverage
         uses: actions/upload-artifact@v3
         with:
           name: test-coverage
           path: |
             test-coverage.svg
-            coverage-merged/lcov-report
+            lcov-report
           retention-days: 1
 
   build_docs:

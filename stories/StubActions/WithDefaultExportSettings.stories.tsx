@@ -29,7 +29,12 @@ export const StubActionsDefinedOnDefaultExport: ComponentStoryObjCy<
   typeof ClickCount
 > = {
   cy: () => {
-    cy.dataCy("count").should("contain", 0);
+    // just arbitrarily using the nesting data-cy here, no particular need
+    cy.dataCy("click-container").dataCy("count").should("contain", 0);
+    // arbitrarily trying the unlikely approach to dataCy
+    cy.dataCy("click-container").then(($clickContainer) =>
+      cy.dataCy($clickContainer, "count").should("contain", 0)
+    );
     cy.dataCy("button").click();
 
     // name on actions is `onClick`
