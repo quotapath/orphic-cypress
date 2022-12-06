@@ -33,7 +33,6 @@ export type HeaderKeyedMDXSegment = { [id: string]: MDXSegment };
 
 /**
  * quick and dirty fifo
- * @private
  */
 export class Fifo<T, U> {
   _cache: Map<T, U> = new Map();
