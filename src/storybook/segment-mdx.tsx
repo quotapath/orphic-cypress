@@ -33,14 +33,10 @@ export type HeaderKeyedMDXSegment = { [id: string]: MDXSegment };
 
 /**
  * quick and dirty fifo
+ * @private
  */
 export class Fifo<T, U> {
-  _cache: Map<T, U> = new Map();
-  limit: number;
-
-  constructor(limit = 50) {
-    this.limit = limit;
-  }
+  constructor(private limit = 50, private _cache = new Map<T, U>()) {}
 
   get(key: T) {
     return this._cache.get(key);
