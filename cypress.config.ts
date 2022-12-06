@@ -1,5 +1,8 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 import { defineConfig } from "cypress";
 import ReactDocgenTypescriptPlugin from "react-docgen-typescript-plugin";
+
+import * as tasks from "./cypress/support/tasks";
 import { setStorybookFiles, useIsolatedComponentFiles } from "./src";
 // @ts-ignore
 import webpackConfig from "./webpack.config";
@@ -43,7 +46,6 @@ webpackConfig.module.rules.push({
 
 export default defineConfig({
   videoUploadOnPasses: false,
-
   component: {
     devServer: {
       framework: "react",
@@ -60,8 +62,8 @@ export default defineConfig({
     }),
     setupNodeEvents: (on, config) => {
       config.env.storyLocation = "./stories/";
-      // eslint-disable-next-line @typescript-eslint/no-var-requires
       require("@bahmutov/cypress-code-coverage/plugin")(on, config);
+      on("task", tasks);
       return setStorybookFiles(on, config);
     },
     experimentalSingleTabRunMode: true,

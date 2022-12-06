@@ -10,6 +10,7 @@
     "*.config.ts",
     "**/declarations/**/*",
     "**/transformers/__mock__/**/*",
-    "cypress/e2e/**/*"
+    "cypress/e2e/**/*",
+    "src/mount.ts"
   ]
 }

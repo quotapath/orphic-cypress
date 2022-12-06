@@ -8,6 +8,7 @@ import type { CyTestConfig } from "./config";
 import { mockToCyIntercept } from "./intercept";
 import type { StoryFileCy } from "./types";
 
+/* istanbul ignore next */
 class CyTestConfigError extends Error {
   constructor(format: "cyTest" | "object" | "function", storyTitle?: string) {
     super(
@@ -61,6 +62,7 @@ export const executeCyTests = <T extends StoryFileCy>(
       [name: string, Comp: any]
     ];
     composedEntries.forEach(([name, Comp]) => {
+      /* istanbul ignore next */
       if (typeof Comp !== "function") return;
 
       describe(storyNameFromExport(name), () => {
@@ -68,6 +70,7 @@ export const executeCyTests = <T extends StoryFileCy>(
         const parameters = story.parameters || {};
         const cyTest = story.cyTest || parameters.cyTest;
         beforeEach(() => {
+          /* istanbul ignore next */
           if (cyTest && config?.format?.cyTest === false) {
             throw new CyTestConfigError("cyTest", stories.default.title);
           }
@@ -95,6 +98,7 @@ export const executeCyTests = <T extends StoryFileCy>(
           // cy is a function directly
           if (typeof storyCy === "function") {
             return itFn("should satisfy a cy test expectation", function () {
+              /* istanbul ignore next */
               if (config?.format?.function === false) {
                 throw new CyTestConfigError("function", stories.default.title);
               }
@@ -106,6 +110,7 @@ export const executeCyTests = <T extends StoryFileCy>(
           // functions as values
           return Object.entries(storyCy).forEach(([desc, cyTest]) => {
             itFn(desc, function () {
+              /* istanbul ignore next */
               if (config?.format?.object === false) {
                 throw new CyTestConfigError("object", stories.default.title);
               }

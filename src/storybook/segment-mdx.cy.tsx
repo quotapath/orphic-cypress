@@ -1,6 +1,6 @@
 import { Fifo, safeKebabCase, segmentMDX } from "./segment-mdx";
 // @ts-ignore
-import ToSegment from "./__mock__/to-segment.mdx";
+import ToSegment from "./__mock__/to-segment.md";
 // @ts-ignore
 import WithFileAndAlternateHeaders from "./__mock__/with-file-and-alternating-headers.md";
 
@@ -50,6 +50,7 @@ describe("segment-mdx", () => {
 
   describe("segmentMDX", () => {
     describe("ToSegment mock", () => {
+      // note: should be an mdx file but something about the setup makes that weird
       const result = segmentMDX(ToSegment as any, true);
       const keys = ["file", "fully-skipped", "ignoring-via-cyincludestories"];
 
@@ -170,6 +171,13 @@ describe("segment-mdx", () => {
 
     it("should return an empty object if mdx is not a function", () => {
       expect(segmentMDX("test" as any)).to.deep.equal({});
+    });
+
+    it("should maintain a cache", () => {
+      const key = ["test"] as any; // just proving key is shallow equal
+      const r1 = segmentMDX(key);
+      expect(r1).to.deep.equal({});
+      expect(segmentMDX(key)).to.equal(r1);
     });
   });
 });

@@ -36,7 +36,14 @@ export type HeaderKeyedMDXSegment = { [id: string]: MDXSegment };
  * @private
  */
 export class Fifo<T, U> {
-  constructor(private limit = 50, private _cache = new Map<T, U>()) {}
+  limit: number;
+  _cache: Map<T, U>;
+
+  // TODO: babel was getting upset with `private` keyword
+  constructor(limit = 50, _cache = new Map<T, U>()) {
+    this.limit = limit;
+    this._cache = _cache;
+  }
 
   get(key: T) {
     return this._cache.get(key);
@@ -149,10 +156,10 @@ export const segmentMDX = (
   /** force skipping the cache */
   force?: boolean
 ): HeaderKeyedMDXSegment => {
-  if (typeof mdx !== "function") return {};
-
   const fromCache = !force && cache.get(mdx);
   if (fromCache) return fromCache;
+
+  if (typeof mdx !== "function") return cache.set(mdx, {});
 
   const rendered = mdx({});
 
@@ -177,14 +184,14 @@ export const segmentMDX = (
       }
     }
   });
-  const result = Object.fromEntries(
-    Object.entries(collection).map(([k, v]): [string, MDXSegment] => [
-      k,
-      Object.assign(() => v.full, v),
-    ])
+
+  return cache.set(
+    mdx,
+    Object.fromEntries(
+      Object.entries(collection).map(([k, v]): [string, MDXSegment] => [
+        k,
+        Object.assign(() => v.full, v),
+      ])
+    )
   );
-
-  cache.set(mdx, result);
-
-  return result;
 };
