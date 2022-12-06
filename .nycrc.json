@@ -2,13 +2,14 @@
   "all": true,
   "reporter": ["lcov", "json-summary"],
   "exclude": [
-    "*storybook/**/*",
+    "coverage/**",
+    ".storybook/**/*",
     "dist",
-    "coverage",
     "docs/**/*",
     "typedoc.js",
     "*.config.ts",
     "**/declarations/**/*",
-    "**/transformers/__mock__/**/*"
+    "**/transformers/__mock__/**/*",
+    "cypress/e2e/**/*"
   ]
 }

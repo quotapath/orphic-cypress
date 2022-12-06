@@ -131,27 +131,26 @@ describe("story-code", () => {
         },
       } as any);
 
+    const basicFile = (include?: "default" | "start") => dedent`
+        import type { ComponentStory } from "@storybook/react";
+        import { SomeComponent } from "./";
+
+        export default { component: SomeComponent };
+
+        export const SomeStory: ComponentStory<typeof SomeStory> = (args) => (
+         <SomeComponent {...args} />
+        );
+        // ${include ? "story-code @include-" + include : "not-a-directive"}
+        SomeStory.args = { prop: 1 };
+
+        export const OtherStory: ComponentStory<typeof SomeStory> = (args) => (
+         <SomeComponent {...args} prop={1} />
+        );
+        OtherStory.args = { prop2: 2 };
+      `;
+
     it("should gather start and end locations as provided by storysource addon", () => {
-      const result = basicTest(
-        dedent`
-          import type { ComponentStory } from "@storybook/react";
-          import { SomeComponent } from "./";
-
-          export default { component: SomeComponent };
-
-          export const SomeStory: ComponentStory<typeof SomeStory> = (args) => (
-           <SomeComponent {...args} />
-          );
-          SomeStory.args = { prop: 1 };
-
-          export const OtherStory: ComponentStory<typeof SomeStory> = (args) => (
-           <SomeComponent {...args} prop={1} />
-          );
-          OtherStory.args = { prop2: 2 };
-        `,
-        6,
-        8
-      );
+      const result = basicTest(basicFile(), 6, 8);
       const expected = dedent`
         export const SomeStory: ComponentStory<typeof SomeStory> = (args) => (
          <SomeComponent {...args} />
@@ -161,27 +160,7 @@ describe("story-code", () => {
     });
 
     it("should include default line as a single line", () => {
-      const result = basicTest(
-        dedent`
-          import type { ComponentStory } from "@storybook/react";
-          import { SomeComponent } from "./";
-
-          export default { component: SomeComponent };
-
-          export const SomeStory: ComponentStory<typeof SomeStory> = (args) => (
-           <SomeComponent {...args} />
-          );
-          // story-code @include-default
-          SomeStory.args = { prop: 1 };
-
-          export const OtherStory: ComponentStory<typeof SomeStory> = (args) => (
-           <SomeComponent {...args} prop={1} />
-          );
-          OtherStory.args = { prop2: 2 };
-        `,
-        6,
-        8
-      );
+      const result = basicTest(basicFile("default"), 6, 8);
       const expected = dedent`
         export default { component: SomeComponent };
 
@@ -275,6 +254,18 @@ describe("story-code", () => {
       expect(result).to.equal(expected);
     });
 
+    it("should return the snippet if anything goes wrong", () => {
+      const expected = "<SomeComponent prop={1} />";
+      expect(basicTest(basicFile(), 1, 1000)).to.equal(
+        expected,
+        "end line too high"
+      );
+      expect(basicTest(basicFile(), 1000, 1001)).to.equal(
+        expected,
+        "start line too high"
+      );
+    });
+
     describe("object file syntax", () => {
       const source = dedent`
         import type { ComponentStory, ComponentStoryObj } from "@storybook/react";
@@ -326,16 +317,6 @@ describe("story-code", () => {
       it("should get the snippet for objects if includeObjects is not true", () => {
         expect(objTest({})).to.equal("<OtherStoryObj prop={1} />");
       });
-    });
-
-    it("should return the snippet if anything goes wrong", () => {
-      const result = basicTest(
-        "import type { ComponentStory } from '@storybook/react'",
-        900,
-        1100
-      );
-      const expected = "<SomeComponent prop={1} />";
-      expect(result).to.equal(expected);
     });
   });
 });

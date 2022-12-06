@@ -31,7 +31,29 @@ export type MDXSegment = {
 /** Header in kebab case as key to object of markdown segments */
 export type HeaderKeyedMDXSegment = { [id: string]: MDXSegment };
 
-const cache: Map<MDX, HeaderKeyedMDXSegment> = new Map();
+/**
+ * quick and dirty fifo
+ * @private
+ */
+export class Fifo<T, U> {
+  _cache: Map<T, U> = new Map();
+
+  constructor(public limit = 50) {}
+
+  get(key: T) {
+    return this._cache.get(key);
+  }
+
+  set(key: T, val: U) {
+    if (this._cache.size === this.limit) {
+      this._cache.delete(this._cache.keys().next().value);
+    }
+    this._cache.set(key, val);
+    return val;
+  }
+}
+
+const _cache = new Fifo<MDX, HeaderKeyedMDXSegment>();
 
 /**
  * Split up an MDX files into headers for easy use in multiple parts of documentation
@@ -119,7 +141,9 @@ const cache: Map<MDX, HeaderKeyedMDXSegment> = new Map();
 export const segmentMDX = (
   mdx: MDX,
   /** force skipping the cache */
-  force?: boolean
+  force?: boolean,
+  /** provide cache instance */
+  cache = _cache
 ): HeaderKeyedMDXSegment => {
   if (typeof mdx !== "function") return {};
 
@@ -154,10 +178,6 @@ export const segmentMDX = (
     ])
   );
 
-  // quick and dirty fifo
-  if (cache.size === 50) {
-    cache.delete(cache.keys().next().value);
-  }
   cache.set(mdx, result);
 
   return result;

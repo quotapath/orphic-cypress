@@ -4,6 +4,7 @@
  * @module
  */
 export * from "./add";
+export * from "./data-cy";
 
 /* eslint-disable @typescript-eslint/no-namespace */
 declare global {

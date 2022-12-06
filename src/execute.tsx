@@ -31,8 +31,7 @@ class CyTestConfigError extends Error {
  */
 export const executeCyTests = <T extends StoryFileCy>(
   stories: T,
-  describeText?: string,
-  captureScreens?: boolean
+  describeText?: string
 ) => {
   const describeFn =
     stories.default.cyOnly || stories.default.parameters?.cyOnly
@@ -79,12 +78,6 @@ export const executeCyTests = <T extends StoryFileCy>(
           ];
           if (mockData.length > 0) mockToCyIntercept(mockData);
         });
-
-        if (captureScreens) {
-          afterEach(() => {
-            cy.screenshot({ capture: "runner" });
-          });
-        }
 
         // cy test format where a function can then contain 'it's and 'before' etc
         // actions will be available at `cy.get("@actions")` or `this.actions`
