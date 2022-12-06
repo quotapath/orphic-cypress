@@ -37,8 +37,11 @@ export type HeaderKeyedMDXSegment = { [id: string]: MDXSegment };
  */
 export class Fifo<T, U> {
   _cache: Map<T, U> = new Map();
+  limit: number;
 
-  constructor(public limit = 50) {}
+  constructor(limit = 50) {
+    this.limit = limit;
+  }
 
   get(key: T) {
     return this._cache.get(key);
@@ -53,7 +56,15 @@ export class Fifo<T, U> {
   }
 }
 
-const _cache = new Fifo<MDX, HeaderKeyedMDXSegment>();
+const cache = new Fifo<MDX, HeaderKeyedMDXSegment>();
+
+/**
+ * simple kebab-case converter for space separated text,
+ * returns undefined if str is undefined or null
+ * @private
+ */
+export const safeKebabCase = (str?: string | null) =>
+  typeof str === "string" ? str.toLowerCase().replace(/ /g, "-") : null;
 
 /**
  * Split up an MDX files into headers for easy use in multiple parts of documentation
@@ -141,9 +152,7 @@ const _cache = new Fifo<MDX, HeaderKeyedMDXSegment>();
 export const segmentMDX = (
   mdx: MDX,
   /** force skipping the cache */
-  force?: boolean,
-  /** provide cache instance */
-  cache = _cache
+  force?: boolean
 ): HeaderKeyedMDXSegment => {
   if (typeof mdx !== "function") return {};
 
@@ -159,14 +168,16 @@ export const segmentMDX = (
   };
 
   React.Children.forEach(rendered.props.children, (child) => {
+    const childrenOfChild = child.props.children;
     if (/^h\d$/.test(child.props.mdxType)) {
-      currentId = child.props.id;
+      // not sure why exactly the id is sometimes already present
+      currentId = child.props.id || safeKebabCase(childrenOfChild) || "unknown";
       collection[currentId] = { full: [child], body: [], md: "" };
     } else if (collection[currentId]) {
       collection[currentId].full.push(child);
       collection[currentId].body.push(child);
       if (isRawMd(child.props)) {
-        const rawMd = child.props.children.props.children;
+        const rawMd = childrenOfChild.props.children;
         collection[currentId].md += rawMd;
       }
     }
