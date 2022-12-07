@@ -24,7 +24,8 @@ module.exports = {
         ...config.resolve.alias,
         src: path.resolve(__dirname, "..", "src"),
         stories: path.resolve(__dirname, "..", "stories"),
-        preview: path.resolve(__dirname, "preview"),
+        "storybook/preview": path.resolve(__dirname, "preview"),
+        "storybook/components": path.resolve(__dirname, "components"),
       },
     };
     return config;

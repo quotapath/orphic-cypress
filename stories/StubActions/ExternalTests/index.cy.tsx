@@ -1,8 +1,8 @@
 import { composeStories } from "@storybook/react";
 import React from "react";
 import { stubStoryActions } from "src";
+import * as sbPreview from "storybook/preview";
 import * as stories from "./index.stories";
-import * as sbPreview from "preview";
 
 const { ArgtypeActionStub, ImplicitArgtypeActionStubViaRegex } = composeStories(
   stories,

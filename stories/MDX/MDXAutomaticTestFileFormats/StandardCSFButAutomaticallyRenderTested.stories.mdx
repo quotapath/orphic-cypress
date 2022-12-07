@@ -7,6 +7,8 @@ import { Button, Title } from "stories";
 
 Simply check if the component renders okay without extra cypress assertions
 
-<Story name="StandardCSFButAutomaticallyRenderTested" args={{ label: "CSF" }}>
-  {(args) => <Button {...args} />}
-</Story>
+<Canvas>
+  <Story name="StandardCSFButAutomaticallyRenderTested" args={{ label: "CSF" }}>
+    {(args) => <Button {...args} />}
+  </Story>
+</Canvas>

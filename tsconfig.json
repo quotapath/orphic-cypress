@@ -20,7 +20,8 @@
     "paths": {
       "src": ["./src/"],
       "stories": ["./stories/"],
-      "preview": ["./.storybook/preview"]
+      "storybook/preview": ["./.storybook/preview"],
+      "storybook/components": ["./.storybook/components"]
     }
   }
 }

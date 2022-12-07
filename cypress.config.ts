@@ -43,6 +43,10 @@ webpackConfig.module.rules.push({
   test: /\.md$/,
   use: mdUse(true),
 });
+webpackConfig.module.rules.push({
+  test: /\.css$/i,
+  use: ["style-loader", "css-loader"],
+});
 
 export default defineConfig({
   videoUploadOnPasses: false,

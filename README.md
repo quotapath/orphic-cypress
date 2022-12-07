@@ -22,6 +22,7 @@ In short, this is a little overengineering, a little black magic, and a lot of d
 - [A typescript transform](#isolated-component-files-transformer) that turns your `stories.tsx` files into cypress test files with just a bit of black magic
 - Tools for turning [storybook addon mock api calls into cypress intercepts](#intercepting-api-requests)
 - General storybook doc utils for building [snippets from storysource](https://quotapath.github.io/orphic-cypress/functions/storybook_story_code.transformSource.html) or to [segment an mdx file](https://quotapath.github.io/orphic-cypress/functions/storybook_segment_mdx.segmentMDX.html) to use in multiple doc locations.
+- A fun syntax for [literate testing](https://quotapath.github.io/orphic-cypress/storybook/?path=/docs/cypressutils-tasks--arbitrary-task#literate-testing)
 
 See extended module documentation in [github pages](https://quotapath.github.io/orphic-cypress/) and numerous examples at a [hosted storybook](https://quotapath.github.io/orphic-cypress/storybook/)
 

@@ -1,5 +1,5 @@
 import { composeStories } from "@storybook/react";
-import * as sbPreview from "preview";
+import * as sbPreview from "storybook/preview";
 import React from "react";
 import { stubStoryActions } from "src";
 // @ts-ignore

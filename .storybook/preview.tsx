@@ -9,11 +9,11 @@ import {
   Title as SBTitle,
 } from "@storybook/addon-docs";
 import { themes } from "@storybook/theming";
-import { startCase } from "lodash";
 import React, { useContext } from "react";
 import { transformSource } from "../src/storybook/story-code";
+import "./styles.css";
 
-export const CustomDocsStory: React.FC<DocsStoryProps> = ({
+const CustomDocsStory: React.FC<DocsStoryProps> = ({
   id,
   name,
   expanded = true,
@@ -38,7 +38,7 @@ export const CustomDocsStory: React.FC<DocsStoryProps> = ({
   );
 };
 
-export const CustomStories = () => {
+const CustomStories = () => {
   const { componentStories } = useContext(DocsContext);
 
   let stories: DocsStoryProps[] = componentStories();
@@ -63,23 +63,13 @@ export const CustomStories = () => {
  *
  * @private
  */
-export const DocsPage: React.FC = ({ children }) => (
+const DocsPage: React.FC = ({ children }) => (
   <>
     <SBTitle />
     <CustomStories />
     {children}
   </>
 );
-
-export const Title = ({ name, pad }: { name?: string; pad?: boolean }) => {
-  const context = React.useContext(DocsContext);
-  return (
-    <>
-      {pad && <br />}
-      <SBTitle>{startCase(name || context.name)}</SBTitle>
-    </>
-  );
-};
 
 export const parameters = {
   docs: {

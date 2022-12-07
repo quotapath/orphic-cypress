@@ -11,6 +11,7 @@
     "**/declarations/**/*",
     "**/transformers/__mock__/**/*",
     "cypress/e2e/**/*",
-    "src/mount.ts"
+    "src/mount.ts",
+    "src/storybook/UnitTest.tsx"
   ]
 }

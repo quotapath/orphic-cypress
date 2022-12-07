@@ -1,2 +1,3 @@
 export * from "./Button";
-export { Title } from "preview";
+// re-exported for convenience
+export { Title } from "storybook/components";
