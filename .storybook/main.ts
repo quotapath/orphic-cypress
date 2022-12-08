@@ -26,10 +26,10 @@ module.exports = {
       ...config.resolve,
       alias: {
         ...config.resolve.alias,
-        src: path.resolve(__dirname, "..", "src"),
+        "orphic-cypress": path.resolve(__dirname, "..", "src"),
         stories: path.resolve(__dirname, "..", "stories"),
-        "storybook/preview": path.resolve(__dirname, "preview"),
-        "storybook/components": path.resolve(__dirname, "components"),
+        "dot-storybook/preview": path.resolve(__dirname, "preview"),
+        "dot-storybook/components": path.resolve(__dirname, "components"),
       },
     };
     return config;

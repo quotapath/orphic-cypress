@@ -11,9 +11,12 @@ const port = process.env.PORT || 3001;
 module.exports = {
   resolve: {
     alias: {
-      "storybook/preview": path.resolve(__dirname, ".storybook/preview"),
-      "storybook/components": path.resolve(__dirname, ".storybook/components"),
-      src: path.resolve(__dirname, "src"),
+      "dot-storybook/preview": path.resolve(__dirname, ".storybook/preview"),
+      "dot-storybook/components": path.resolve(
+        __dirname,
+        ".storybook/components"
+      ),
+      "orphic-cypress": path.resolve(__dirname, "src"),
       stories: path.resolve(__dirname, "stories"),
       modulesDirectories: ["node_modules"],
     },

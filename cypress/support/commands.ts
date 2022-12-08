@@ -35,4 +35,4 @@
 //     }
 //   }
 // }
-export { dataCy } from "src";
+export { dataCy } from "orphic-cypress";

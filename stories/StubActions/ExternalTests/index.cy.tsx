@@ -1,7 +1,7 @@
 import { composeStories } from "@storybook/react";
 import React from "react";
-import { stubStoryActions } from "src";
-import * as sbPreview from "storybook/preview";
+import { stubStoryActions } from "orphic-cypress";
+import * as sbPreview from "dot-storybook/preview";
 import * as stories from "./index.stories";
 
 const { ArgtypeActionStub, ImplicitArgtypeActionStubViaRegex } = composeStories(

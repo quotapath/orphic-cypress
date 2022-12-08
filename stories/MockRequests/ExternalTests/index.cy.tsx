@@ -1,6 +1,6 @@
 import { composeStories } from "@storybook/react";
 import React from "react";
-import { mockToCyIntercept } from "src";
+import { mockToCyIntercept } from "orphic-cypress";
 import * as stories from "./index.stories";
 
 const { WillFetch } = composeStories(stories);

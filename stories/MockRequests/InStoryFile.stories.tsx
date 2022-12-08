@@ -1,5 +1,5 @@
 import * as React from "react";
-import type { ComponentStoryCy, ComponentStoryObjCy } from "src";
+import type { ComponentStoryCy, ComponentStoryObjCy } from "orphic-cypress";
 import { Button } from "stories";
 
 export const WillFetch: ComponentStoryCy<typeof Button> = (args) => {

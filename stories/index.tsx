@@ -1,3 +1,3 @@
 export * from "./Button";
 // re-exported for convenience
-export { Title } from "storybook/components";
+export { Title } from "dot-storybook/components";

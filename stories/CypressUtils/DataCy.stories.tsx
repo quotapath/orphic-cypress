@@ -1,5 +1,5 @@
 import * as React from "react";
-import type { ComponentStoryCy } from "src";
+import type { ComponentStoryCy } from "orphic-cypress";
 import { ClickCount } from "stories";
 import dedent from "ts-dedent";
 

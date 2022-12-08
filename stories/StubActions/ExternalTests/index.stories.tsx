@@ -1,5 +1,5 @@
 import React from "react";
-import type { ComponentStoryCy, ComponentStoryObjCy } from "src";
+import type { ComponentStoryCy, ComponentStoryObjCy } from "orphic-cypress";
 import { ClickCount } from "../../Button";
 
 export default {

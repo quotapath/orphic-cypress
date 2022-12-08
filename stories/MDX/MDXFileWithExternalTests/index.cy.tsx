@@ -1,7 +1,7 @@
 import { composeStories } from "@storybook/react";
-import * as sbPreview from "storybook/preview";
+import * as sbPreview from "dot-storybook/preview";
 import React from "react";
-import { stubStoryActions } from "src";
+import { stubStoryActions } from "orphic-cypress";
 // @ts-ignore
 import * as stories from "./index.stories.mdx";
 

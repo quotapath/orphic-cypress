@@ -1,6 +1,6 @@
 import { ComponentStory } from "@storybook/react";
 import React from "react";
-import type { ComponentStoryCy, ComponentStoryObjCy } from "src";
+import type { ComponentStoryCy, ComponentStoryObjCy } from "orphic-cypress";
 import { Button } from "stories";
 
 export default {

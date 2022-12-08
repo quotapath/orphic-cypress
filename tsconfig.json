@@ -18,10 +18,10 @@
     "skipLibCheck": true,
     "declaration": true,
     "paths": {
-      "src": ["./src/"],
+      "orphic-cypress": ["./src/"],
       "stories": ["./stories/"],
-      "storybook/preview": ["./.storybook/preview"],
-      "storybook/components": ["./.storybook/components"]
+      "dot-storybook/preview": ["./.storybook/preview"],
+      "dot-storybook/components": ["./.storybook/components"]
     }
   }
 }

@@ -1,5 +1,5 @@
 import React from "react";
-import type { ComponentStoryCy } from "src";
+import type { ComponentStoryCy } from "orphic-cypress";
 import { Button } from "stories";
 
 export default { component: Button };
