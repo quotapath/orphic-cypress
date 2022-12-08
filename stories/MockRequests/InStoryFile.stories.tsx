@@ -24,7 +24,7 @@ export default {
 };
 
 WillFetch.cy = () => {
-  cy.wait("@/api/label*").then((interception) => {
+  cy.wait("@/api/label?q=2").then((interception) => {
     expect(interception.request!.url).to.contain("q=2");
     // maybe not worth testing in reality considering we know what we've mocked
     expect(interception.response!.statusCode).to.equal(200);
@@ -35,7 +35,7 @@ WillFetch.cy = () => {
 WillFetch.parameters = {
   mockData: [
     {
-      url: "/api/label*",
+      url: "/api/label?q=2",
       method: "GET",
       status: 200,
       response: { data: "Loaded" },
@@ -55,7 +55,7 @@ export const AliasedButWillFail = {
   parameters: {
     mockData: [
       {
-        url: "/api/label*",
+        url: "/api/label?q=2",
         method: "GET",
         status: 500,
         response: { data: "Failed" },
@@ -85,14 +85,14 @@ export const CyTestFormatAlsoAutoMocks: ComponentStoryObjCy<typeof Button> = {
   cyTest(Comp) {
     it("should require a manual call of `mockToCyIntercept`", () => {
       cy.mount(<Comp />);
-      cy.wait("@/api/label*").then((interception) => {
+      cy.wait("@/api/label?q=2").then((interception) => {
         expect(interception.response!.body).to.deep.equal({ data: "Loaded" });
       });
     });
 
     it("should allow manual intercept calls just fine", () => {
       // you could do this instead, here or in a beforeEach or in default `cy` param
-      cy.intercept("GET", "/api/label*", { body: { data: "Manual" } }).as(
+      cy.intercept("GET", "/api/label?q=2", { body: { data: "Manual" } }).as(
         "manual"
       );
       cy.mount(<Comp />);
