@@ -11,6 +11,7 @@ import {
 import { themes } from "@storybook/theming";
 import React, { useContext } from "react";
 import { transformSource } from "../src/storybook/story-code";
+import { unitTestDecorator } from "../src/storybook/UnitTest";
 import "./styles.css";
 
 const CustomDocsStory: React.FC<DocsStoryProps> = ({
@@ -102,3 +103,5 @@ export const parameters = {
     },
   },
 };
+
+export const decorators = [unitTestDecorator];

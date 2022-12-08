@@ -7,4 +7,4 @@
 
 export { segmentMDX } from "./segment-mdx";
 export { transformSource } from "./story-code";
-export { UnitTest } from "./UnitTest";
+export { UnitTest, unitTestDecorator } from "./UnitTest";

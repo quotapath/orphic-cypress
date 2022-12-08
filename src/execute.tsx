@@ -115,7 +115,11 @@ export const executeCyTests = <T extends StoryFileCy>(
                 throw new CyTestConfigError("object", stories.default.title);
               }
               cy.mount(<Comp {...this.actions} />);
-              cyTest.bind(this)();
+              if (typeof cyTest === "string") {
+                eval(cyTest).bind(this)();
+              } else {
+                cyTest.bind(this)();
+              }
             });
           });
         }

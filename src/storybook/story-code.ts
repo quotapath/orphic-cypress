@@ -212,8 +212,6 @@ export const transformSource =
       let componentName = originalStoryFn.name;
 
       const locationKey = id.split("--")[1];
-      console.log(locationKey);
-      console.log(storyContext);
       let location = locationsMap[locationKey];
       const allLines = source.split("\n");
 

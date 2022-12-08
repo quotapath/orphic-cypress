@@ -1,0 +1,189 @@
+import { Canvas, Meta, Story } from "@storybook/addon-docs";
+import { UnitTest } from "../../src/storybook/UnitTest";
+import { Title } from "stories";
+
+<Meta id="cypressutils-tasks-and-literate-testing" />
+
+# Literate Testing
+
+There is no need for this to be a story instead of a simple `*.cy.ts` file,
+but using orphic-cypress enables a fun literate testing syntax where even
+unit tests could be written in mdx and display nicely in storybook for
+documentation purposes.
+
+These will show up in docs without any additional lift, however to get them
+to appear on the canvas tab and in cypress canvas, you'll need to use the
+`unitTestDecorator`.
+
+Sourceloader does not work with mdx files (as far as I can tell), so I'll drop
+some snippets in here for example's sake.
+
+```tsx
+<Story
+  name="ArbitraryTask"
+  parameters={{
+    cy: () =>
+      cy.task("arbitraryTask", 2).then(($num) => expect($num).to.equal(2)),
+  }}
+>
+  <UnitTest name="ArbitraryTask" />
+</Story>
+```
+
+# Task Tests
+
+## Arbitrary Task
+
+Should execute an arbitrary task and and get the result from a promise.
+
+<Story
+  name="ArbitraryTask"
+  parameters={{
+    cy: () =>
+      cy.task("arbitraryTask", 2).then(($num) => expect($num).to.equal(2)),
+  }}
+>
+  <UnitTest name="ArbitraryTask" description={false} />
+</Story>
+
+## Arbitrary task with Command Syntax
+
+Command task for more convenient ergonomics and well typed signature
+
+This story uses `parameters: { cyUnitTest: true }` to show test code, and
+also has the test as a string so that its format stays exactly the same
+(babel or others can alter). Note that empty stories can get a little
+funky looking at least in mdx1.
+
+<Story
+  name="ArbitraryTaskWithCommandSyntax"
+  parameters={{
+    cy: {
+      "should execute an arbitrary task via command syntax": `() => {
+        cy.arbitraryTask(2).then(($num) => expect($num).to.equal(2));
+      }`,
+    },
+    cyUnitTest: true,
+  }}
+>
+  <></>
+</Story>
+
+Source Code:
+
+```tsx
+<Story
+  name="ArbitraryTaskWithCommandSyntax"
+  parameters={{
+    cy: {
+      "should execute an arbitrary task via command syntax": `() => {
+        cy.arbitraryTask(2).then(($num) => expect($num).to.equal(2));
+      }`,
+    },
+    cyUnitTest: true,
+  }}
+>
+  <></>
+</Story>
+```
+
+## Some other formats
+
+First `.cy` function with a `description` prop passed to `UnitTest`
+
+<Story
+  name="CyFunction"
+  parameters={{
+    cy() {
+      cy.arbitraryTask(2).then(($num) => expect($num).to.equal(2));
+    },
+  }}
+>
+  <UnitTest
+    name="CyFunction"
+    description="should execute an arbitrary task via command syntax"
+  />
+</Story>
+
+Source code:
+
+```ts
+<Story
+  name="CyFunction"
+  parameters={{
+    cy() {
+      cy.arbitraryTask(2).then(($num) => expect($num).to.equal(2));
+    },
+  }}
+>
+  <UnitTest
+    name="CyFunction"
+    description="should execute an arbitrary task via command syntax"
+  />
+</Story>
+```
+
+Then `.cyTest` function with multiple internal tests, but no description
+
+<Story
+  name="CyTest"
+  parameters={{
+    cyTest: () => {
+      it("should get 3 in return", () => {
+        cy.arbitraryTask(3).then(($num) => expect($num).to.equal(3));
+      });
+      // whitespace only allowed in mdx2 unfortunately
+      it("should get 4 in return", () => {
+        cy.arbitraryTask(4).then(($num) => expect($num).to.equal(4));
+      });
+    },
+  }}
+>
+  <></>
+</Story>
+
+This one removes the `UnitTest` component from out of the `Story`. That
+will work in docs, which is perhaps good enough, but it won't show up
+in the story itself, and thus won't show in cypress or on canvas tab,
+though tests will still execute fine. Not sure why you'd really want
+to though.
+
+<UnitTest name="CyTest" />
+
+Source code:
+
+```ts
+<Story
+  name="CyTest"
+  parameters={{
+    cyTest: () => {
+      it("should get 3 in return", () => {
+        cy.arbitraryTask(3).then(($num) => expect($num).to.equal(3));
+      });
+      // whitespace only allowed in mdx2 unfortunately
+      it("should get 4 in return", () => {
+        cy.arbitraryTask(4).then(($num) => expect($num).to.equal(4));
+      });
+    },
+  }}
+>
+  <></>
+</Story>
+
+This one removes the `UnitTest` ...
+
+<UnitTest name="CyTest" />
+```
+
+## Tests on tests on tests
+
+woah there
+
+<Story
+  name="TestsOnTestsOnTests"
+  parameters={{
+    cy: () => cy.get("body").should("contain", "literally this sentence"),
+  }}
+>
+  <UnitTest name="TestsOnTestsOnTests" description={false} />
+</Story>

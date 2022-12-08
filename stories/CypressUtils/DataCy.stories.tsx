@@ -22,8 +22,9 @@ DataCy.cy = () => {
     cy.dataCy($clickContainer, "count").should("contain", 0)
   );
 };
-// story-code @end
+
 DataCy.parameters = {
+  cyUnitTest: true,
   docs: {
     description: {
       story: dedent`

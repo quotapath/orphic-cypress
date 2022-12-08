@@ -18,6 +18,10 @@ module.exports = {
     "storybook-addon-mock",
   ],
   webpackFinal: async (config) => {
+    // I don't want to minimize because I'm running some literate testing
+    // through UnitTest and don't like going to strings for the cy functions,
+    // though that is a legitimate option
+    config.optimization.minimizer = [];
     config.resolve = {
       ...config.resolve,
       alias: {
