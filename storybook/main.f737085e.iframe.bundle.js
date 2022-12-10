@@ -309,8 +309,8 @@ function MDXContent(_ref) {
     parentName: "pre",
     "className": "language-ts"
   }, "describe(description, () => {\n  Cypress.env(\"storybookFiles\").forEach((file: string) => {\n    const stories = requireFileCallback(file);\n    executeCyTests(stories, stories.default.title || file);\n  });\n});\n")), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("h2", {
-    "id": "finally-how-to-actully-run-the-thing"
-  }, "Finally, how to actully run the thing"), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("p", null, "This repo sets up and runs both require and isolated tests, and contains commands for headed versions of both. It's hopefully a good reference besides the docs. Look to ", (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("a", {
+    "id": "finally-how-to-actually-run-the-thing"
+  }, "Finally, how to actually run the thing"), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("p", null, "This repo sets up and runs both require and isolated tests, and contains commands for headed versions of both. It's hopefully a good reference besides the docs. Look to ", (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("a", {
     parentName: "p",
     "href": "https://github.com/quotapath/orphic-cypress/blob/main/cypress.config.ts",
     "target": "_blank",
@@ -379,7 +379,11 @@ function MDXContent(_ref) {
   }, "this")), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("pre", null, (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("code", {
     parentName: "pre",
     "className": "language-ts"
-  }, "mountTest([], (fullFilePath) =>\n  require(\"stories/\" + fullFilePath.replace(\"stories/\", \"\"))\n);\n")), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("br", null), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("h1", {
+  }, "mountTest([], (fullFilePath) =>\n  require(\"stories/\" + fullFilePath.replace(\"stories/\", \"\"))\n);\n")), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("h3", {
+    "id": "switching-back-and-forth"
+  }, "Switching back and forth"), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("p", null, "You might run into cases with webpack cache where the stories are still instrumented with ts magic even though you wanted to run the require version, which will result in duplicating those tests. If you see that come up, run ", (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("inlineCode", {
+    parentName: "p"
+  }, "rm -rf node_modules/.cache")), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("br", null), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("h1", {
     "id": "intercepting-api-requests"
   }, "Intercepting API Requests"), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("p", null, "Mocking requests can be done in essentially the same way as any cypress test, via ", (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("inlineCode", {
     parentName: "p"
@@ -7665,4 +7669,4 @@ var _frameworkImportPath = __webpack_require__("./node_modules/@storybook/react/
 /******/ var __webpack_exports__ = __webpack_require__.O();
 /******/ }
 ]);
-//# sourceMappingURL=main.57196733.iframe.bundle.js.map
+//# sourceMappingURL=main.f737085e.iframe.bundle.js.map
