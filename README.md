@@ -16,13 +16,13 @@ In short, this is a little overengineering, a little black magic, and a lot of d
 ## Features
 
 - [A comprehensive set of examples](https://quotapath.github.io/orphic-cypress/storybook/) for using cypress to test storybook with or without tools given here, including some surprising finds [like how to use composeStories with mdx files](https://quotapath.github.io/orphic-cypress/storybook/?path=/docs/mdx-file-with-external-tests)
-- An automatic cypress component test executor for plain old storybook stories
+- An automatic cypress component test executor for plain old storybook stories, written in typescript or mdx
 - [A series of file syntaxes](#additional-syntaxes) to support `.play` like functionality in story files
 - [Automatic action stubs and spies](#stubbing-actions) with first level cypress support
 - [A typescript transform](#isolated-component-files-transformer) that turns your `stories.tsx` files into cypress test files with just a bit of black magic
 - Tools for turning [storybook addon mock api calls into cypress intercepts](#intercepting-api-requests)
 - General storybook doc utils for building [snippets from storysource](https://quotapath.github.io/orphic-cypress/functions/storybook_story_code.transformSource.html) or to [segment an mdx file](https://quotapath.github.io/orphic-cypress/functions/storybook_segment_mdx.segmentMDX.html) to use in multiple doc locations.
-- A fun syntax for [literate testing](https://quotapath.github.io/orphic-cypress/storybook/?path=/docs/cypressutils-tasks--arbitrary-task#literate-testing)
+- When taken to the extreme, this is a mechanism for [literate testing!](#literate-testing)
 
 See extended module documentation in [github pages](https://quotapath.github.io/orphic-cypress/) and numerous examples at a [hosted storybook](https://quotapath.github.io/orphic-cypress/storybook/)
 
@@ -32,13 +32,11 @@ See extended module documentation in [github pages](https://quotapath.github.io/
 
 We love storybook and component driven development, but we also love cypress!
 
-We were initially excited about [storybook's interaction testing](https://storybook.js.org/docs/react/writing-tests/interaction-testing). We even wrote some tests and committed to this as the direction forward, translating over our early enzyme tests.
+We were initially excited about [storybook's interaction testing](https://storybook.js.org/docs/react/writing-tests/interaction-testing). We even wrote some tests and committed to it as the right direction to translating over our early enzyme tests.
 
-Ultimately though, we found that the bringing in net-new technologies like jest and testing-library would be too much cognitive overhead and dissonance alongside our end-to-end tests already written using cypress, and our unit tests already using the mocha/chai/sinon stack.
+Ultimately though, we found that bringing in net-new technologies like jest and testing-library was too much cognitive overhead and code dissonance alongside our existing end-to-end tests in cypress and unit tests in the mocha/chai/sinon stack.
 
-So, we set out to come up with a standard for executing storybook tests in cypress with just the right balance of spooky magic that we have minimal boilerplate, encourage writing tests early and often, and cover stories which don't have explicit tests. Although it's with a heavy heart that we leave behind some of the benefits of storybook's solution, we're thrilled to have test coverage that fits with our existing paradigms. And cypress component testing is really slick.
-
-We also export a few helpers that we find useful for things like creating commands and tasks in typescript.
+So, we set out to come up with a standard for executing storybook tests in cypress with just the right balance of spooky magic. We wanted minimal boilerplate to encourage writing tests early and often, and to cover stories which don't have explicit tests to prevent stories going stale and breaking. Although it's with a heavy heart that we leave behind some of the benefits of storybook's solution, we're thrilled to have test coverage that fits with our existing paradigms. And cypress component testing is really slick.
 
 <br/>
 
@@ -66,12 +64,12 @@ describe("SomeComponent", () => {
 });
 ```
 
-But, that could conceivably be seen as a lot of boilerplate, especially when compared to the `play` syntax of storybook's interactive tests. You'd have to drop something like this into every directory containing a storybook story and perform the `should render ok` test to make sure your stories aren't breaking. And we haven't even gotten into things like stubbing actions or mocking API calls which would be duplicative of storybook setup.
+But, that could conceivably be seen as a lot of boilerplate, especially when compared to the `play` syntax of storybook's interactive tests. You'd have to drop something like this into every directory containing a storybook story and perform the `should render ok` test to make sure your stories aren't breaking. And we haven't even gotten into things like stubbing actions or mocking API calls, which would be duplicative of storybook setup.
 
 Instead we could write some simple utilities so that we can keep the files in the `*.stories.tsx`:
 
 ```tsx
-const CompWithLabel = () => <Something label="test" />; // was already here
+const CompWithLabel = () => <Something label="test" />; // this story was already here
 CompWithLabel.cy = () =>
   cy.get(".typography").should("be.visible").and("contain", "test");
 ```
@@ -134,6 +132,22 @@ CompWithLabel.cyTest = (Story) => {
 
 This executes within it's own `describe` block and is useful for providing component props or setup not included in stories, or for writing `before`, `beforeEach`, etc hooks.
 
+All of these properties could also be added to the story's `parameters`. That might be more canonical but is often messier and less-well-typed. In mdx files, they _must_
+be parameters:
+
+```tsx
+<Story
+  name="StoryFunctionWithCyFunction"
+  parameters={{
+    cy: () => cy.dataCy("button").should("contain", "Story function"),
+  }}
+>
+  {(args) => <Button {...args} label="Story function" />}
+</Story>
+```
+
+See more mdx examples in storybook [here and in surrounding stories](https://quotapath.github.io/orphic-cypress/storybook/?path=/docs/mdx-mdxautomatictestfileformats-storybookfiles--story-function-with-cy-function)
+
 ## Opting out
 
 You can opt out of allowing any or all of these syntaxes via cypress configuration. See [config module documentation](https://quotapath.github.io/orphic-cypress/types/config.CyTestConfig.html) for more details.
@@ -162,11 +176,77 @@ TODO
 
 Mocking requests can be done in essentially the same way as any cypress test, via `cy.intercept`, but having some utils at hand is always nice.
 
-We've used [storybook-addon-mock](https://github.com/nutboltu/storybook-addon-mock/) for our own storybook, although tempted by mock service workers, because it was dead simple to set up and worked out of the box. It also offers a nice and clean `mockData` story parameter which we can hook off of. So orphic-cypress exports [mockToCyIntercept](https://quotapath.github.io/orphic-cypress/functions/intercept.mockToCyIntercept.html) which transforms the specified mock objects to intercepts. That's called on `executeCyTests` and so is automatically invoked on either isolated or non-isolated test runs, but must be manually called for external files.
+We've used [storybook-addon-mock](https://github.com/nutboltu/storybook-addon-mock/) for our own storybook. Although tempted by mock service workers, storybook-addon-mock was dead simple to set up and worked out of the box. It also offers a nice and clean `mockData` story parameter which we can hook off of. So orphic-cypress exports [mockToCyIntercept](https://quotapath.github.io/orphic-cypress/functions/intercept.mockToCyIntercept.html) which transforms the specified mock objects to intercepts. That's called on `executeCyTests` and so is automatically invoked on either isolated or non-isolated test runs, but must be manually called for external files.
 
 See [storybook files](https://quotapath.github.io/orphic-cypress/storybook/?path=/docs/mockrequests-overview--page) for example uses.
 
 ![intercept api requests in cypress](https://user-images.githubusercontent.com/9889378/204159804-a2df1b09-7efe-4a93-8f57-a631f53401ac.png)
+
+<br/>
+
+# Literate Testing
+
+MDX is a phenomenal format for literate programming and once we had loading of MDX files down, it becomes a fantastic means of literate testing. Then I realized there was no reason in particular that we could only test components, why not units?
+
+Already we had this at hand
+
+```mdx
+1 + 1 should equal 2, obviously
+
+<Story
+  name="SimpleMath"
+  parameters={{
+    cy: () => expect(1 + 1).to.equal(2),
+  }}
+>
+  <></>
+</Story>
+```
+
+Awesome, we can document our javascript logic in storybook and confirm accuracy in cypress. But, with above, nothing shows up in the cypress panel. So I made a quick [UnitTest](https://quotapath.github.io/orphic-cypress/functions/storybook_UnitTest.UnitTest.html) component and [decorator](https://quotapath.github.io/orphic-cypress/functions/storybook_UnitTest.unitTestDecorator.html). Update to
+
+```diff
+- <></>
++ <UnitTest name="SimpleMath">
+```
+
+and now you'll get the tests to render (with the caveat that its compiled code so you'd have to opt out of minimization, see [storybook main](./.storybook/main.ts#L27).
+
+![literate testing in storybook](https://user-images.githubusercontent.com/9889378/206355127-ed6cfdf8-8021-4949-8769-f9f2080a3d06.png)
+
+In storybook, that looks like this, where the top of the file is markdown and the first test display starts at the 'Arbitrary Task' header. [See it live here](https://quotapath.github.io/orphic-cypress/storybook/?path=/docs/cypressutils-tasks-and-literate-testing--arbitrary-task).
+
+And then in cypress, and in the 'canvas' view, we get this
+
+![literate testing in cypress](https://user-images.githubusercontent.com/9889378/206355138-ef45d0db-bd92-47b4-9ed6-e2a626c5a2d6.png)
+
+I'm psyched. But did I stop there, nope. The fact that the code is compiled is a little lame. We have the mdx in a reasonable format, so we can do some slightly hacky things and support using code blocks! With this code
+
+    <Story name="CyCodeBlock" parameters={{ cyCodeBlock: true }}>
+      <></>
+    </Story>
+
+    ```ts CyCodeBlock
+    /**
+     * should work as a code block where this first comment is an optional
+     * description; it can be any kind of js comment as long as it's the first
+     * thing in the block
+     */
+    const expected: number = 2;
+
+    cy.arbitraryTask(2).then(($num) => {
+      expect($num).to.equal(expected);
+    });
+    ```
+
+we get this in storybook on the left and cypress on the right
+
+<p align="middle">
+  <img alt="code block in storybook" src="https://user-images.githubusercontent.com/9889378/206865846-9715783f-5e1f-4d05-aaab-053023360145.png" width="49%" style="max-width: 100%;" />
+  <img alt="code block in cypress" src="https://user-images.githubusercontent.com/9889378/206865829-66fffb3a-25f6-439d-aafe-f79b7dc5912b.png" width="49%" style="max-width: 100%" />
+</p>
+
+Just link the block by story name and drop in an optional comment to become the `it` test description. Code blocks are great because they can be linted and formatted via prettier/eslint, maybe even type checked.
 
 <br/>
 
