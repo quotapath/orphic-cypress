@@ -1,9 +1,11 @@
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const path = require("path");
 
 module.exports = {
   stories: ["../stories/**/*.stories.@(mdx|js|jsx|ts|tsx)"],
   addons: [
     {
+      // eslint-disable-next-line storybook/no-uninstalled-addons
       name: "@storybook/addon-docs",
       options: {
         transcludeMarkdown: true,
@@ -19,8 +21,9 @@ module.exports = {
   ],
   webpackFinal: async (config) => {
     // I don't want to minimize because I'm running some literate testing
-    // through UnitTest and don't like going to strings for the cy functions,
-    // though that is a legitimate option
+    // through UnitTest and, for example's sake, have some that don't use
+    // strings for .cy and .cyTest, or code blocks, but print the actual
+    // compiled code in the story
     config.optimization.minimizer = [];
     config.resolve = {
       ...config.resolve,

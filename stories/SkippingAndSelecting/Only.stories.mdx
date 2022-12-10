@@ -11,7 +11,9 @@ That should be used with caution of course, e.g. actually including something
 like these tests would effectively narrow down which tests were running in a major way,
 especially in the non-isolated, 'mount' test.
 
-```ts
+```tsx
+import { Button } from "components";
+
 export default { component: Button };
 
 export const NotSkippedFunction: ComponentStoryCy<typeof Button> = (args) => (

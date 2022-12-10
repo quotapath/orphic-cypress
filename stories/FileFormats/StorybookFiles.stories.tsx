@@ -46,7 +46,7 @@ StoryFunctionWithCyObject.parameters = {
 .cy also allows an object syntax where the text keys become the input for cypress \`it\`'s
 and the bodies execute within their own tests.
 
-\`\`\`tsx
+~~~tsx
 export const StoryFunctionWithCyObject: ComponentStoryCy<typeof Button> = (
   args
 ) => <Button {...args} label="Story object" />;
@@ -58,11 +58,11 @@ StoryFunctionWithCyObject.cy = {
   "should not be disabled by default": () =>
     cy.dataCy("button").should("not.be.disabled"),
 };
-\`\`\`
+~~~
 
 becomes
 
-\`\`\`tsx
+~~~ts
 describe("Story Function With Cy Object", () => {
   it("should contain 'Story object' label", () =>
     cy.dataCy("button").should("contain", "Story object")
@@ -72,7 +72,7 @@ describe("Story Function With Cy Object", () => {
     cy.dataCy("button").should("not.be.disabled")
   );
 });
-\`\`\`
+~~~
 `,
     },
     source: { code: null },
@@ -139,6 +139,7 @@ export const ParametersWithCyTests: ComponentStory<typeof Button> = (args) => (
 ParametersWithCyTests.parameters = {
   // cyTest, cySkip, cyOnly also available here
   cy: () => cy.dataCy("button").should("contain", "Parameters"),
+  // story-code @skip-start
   docs: {
     description: {
       story: `
@@ -148,6 +149,7 @@ to the definitions. NOTE: you can use storybook's own ComponentStory or
 ComponentStoryObj for types, but it'll leave parameters completely untyped.`,
     },
   },
+  // story-code @skip-end
 };
 // story-code @end
 

@@ -7,9 +7,9 @@ import { ClickCount } from "stories";
 
 You can define stories in MDX format! I really didn't think this'd work, but if you mimic storybook's own webpack rules for .mdx files, then they act exactly like CSF files.
 
-```ts
-import { Meta, Story } from '@storybook/addon-docs';
-import { ClickCount } from '../../Button';
+```md
+import { Meta, Story } from "@storybook/addon-docs";
+import { ClickCount } from "../../Button";
 
 <Meta id="mdx-file-with-external-tests" component={ClickCount} />
 
@@ -36,7 +36,7 @@ import { ClickCount } from '../../Button';
 
 And the test would look like this:
 
-```ts
+```tsx
 import { composeStories } from "@storybook/react";
 import React from "react";
 // @ts-ignore

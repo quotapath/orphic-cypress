@@ -2,8 +2,6 @@ import { Meta, Story } from "@storybook/addon-docs";
 import * as stories from "./index.stories";
 import { Button } from "stories";
 
-<!-- id here and in story is just for doc permalink purposes -->
-
 <Meta component={Button} id="external-test" />
 
 # Defining Tests in an External File
@@ -36,13 +34,14 @@ If the stories feature mdx docs according to [this recipe](https://github.com/st
 ```ts
 // this is necessary b/c stories here have mdx generated docs
 delete (stories.default as { includeStories?: string[] }).includeStories;
-const { ExternalTest } = composeStories(stories);
+// proceed normally, e.g.
+// const { ExternalTest } = composeStories(stories);
 ```
 
 In the story file, define stories exactly as you normally would, although you may
 want to skip automatic test execution.
 
-```ts
+```tsx
 export default {
   component: Button,
   // otherwise this would do a mount test like Untested.stories.tsx

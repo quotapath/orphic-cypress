@@ -46,7 +46,7 @@ We also export a few helpers that we find useful for things like creating comman
 
 As is, you could set up cypress component testing following [their guide](https://docs.cypress.io/guides/component-testing/quickstart-react#Configuring-Component-Testing) and write tests like this without any need for the code in this package.
 
-```ts
+```tsx
 import { composeStories } from "@storybook/testing-react";
 import React from "react";
 
@@ -70,7 +70,7 @@ But, that could conceivably be seen as a lot of boilerplate, especially when com
 
 Instead we could write some simple utilities so that we can keep the files in the `*.stories.tsx`:
 
-```ts
+```tsx
 const CompWithLabel = () => <Something label="test" />; // was already here
 CompWithLabel.cy = () =>
   cy.get(".typography").should("be.visible").and("contain", "test");
@@ -115,7 +115,7 @@ Each of these is executed in it's own isolated `it` function.
 
 allows the most control but backs off of some of the automatic setup that takes place
 
-```ts
+```tsx
 CompWithLabel.cyTest = (Story) => {
   it("should contain the 'test' label", () => {
     cy.mount(<Story />);
@@ -182,15 +182,17 @@ Component tests are near to unit tests in that they are low-level tests that cov
 
 Lets take a simple example: we have a component that shows some copy if the user is not permissioned, but shows some copy and does a bit of logic if they do have access. Here's some pseudo-code of what you'd expect to see as tests:
 
-```ts
+```tsx
 it("should show copy for a user without permissions", () => {
-  const element = render(<OurComponent>);
+  const element = render(<OurComponent />);
   expect(element.text).to.equal("No soup for you!");
 });
 
 it("should show details for a user ", () => {
-  const element = render(<OurComponent isPermissioned={true} flagCount={4}>);
-  expect(element.text).to.equal("You have four flagged items you need to address");
+  const element = render(<OurComponent isPermissioned={true} flagCount={4} />);
+  expect(element.text).to.equal(
+    "You have four flagged items you need to address"
+  );
   expect(numToWord).to.be.calledOnce.with(4);
 });
 ```
@@ -245,7 +247,7 @@ TODO
 
 They look like this (example pulled from cypress docs):
 
-```ts
+```tsx
 import { Stepper } from "./";
 
 it("stepper should default to 0", () => {
@@ -282,7 +284,7 @@ You could execute the `.play` property in jest tests directly, and could likely 
 
 Here's storybook's own example from [testing-react docs](https://storybook.js.org/addons/@storybook/testing-react)
 
-```ts
+```tsx
 const { InputFieldFilled } = composeStories(stories);
 
 test("renders with play function", async () => {

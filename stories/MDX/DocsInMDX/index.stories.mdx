@@ -12,7 +12,7 @@ The storybook preferred way of writing stories in CSF format but adding document
 
 For cypress tests purposes, we'll want to include the default export but then add `includeStories: []`, which is a pattern hinted at in that documentation but which must have changed slightly. However, for automatic testing purposes, that will be a problem for `composeStories`. As such, you should add `cyIncludeStories: true` to your default export. For this repo specifically, we don't want to show the component itself in the docs, so we set `parameters.docs.disable` to `true`. All in, the story file looks like this
 
-```ts
+```tsx
 import type { ComponentStory } from "@storybook/react";
 import * as React from "react";
 import { Button } from "../../Button";
@@ -39,10 +39,10 @@ DocsInMDX.parameters = {
 
 and the MDX file looks like, well..., this file. But here's a snippet:
 
-```tsx
-import { Meta, Story } from '@storybook/addon-docs';
-import * as stories from './index.stories';
-import { Button } from '../../Button';
+```mdx
+import { Meta, Story } from "@storybook/addon-docs";
+import * as stories from "./index.stories";
+import { Button } from "../../Button";
 
 <Meta title="Docs In MDX" component={Button} />
 

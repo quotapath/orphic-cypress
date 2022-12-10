@@ -73,18 +73,18 @@ export const safeKebabCase = (str?: string | null) =>
  * or in multiple files, with some added perks.
  *
  * Currently, this breaks on any header such that a file like
- * ```md
+ * ~~~md
  * # First Component
  *
  * Something
  *
  * ## Second Component
  *
- * \`\`\`md
+ * ```md
  * # Second header description
  * This second component does stuff
- * \`\`\`
  * ```
+ * ~~~
  * becomes essentially
  * ```ts
  * {
@@ -136,7 +136,7 @@ export const safeKebabCase = (str?: string | null) =>
  * ```
  *
  * Or, in an mdx file like so (real example):
- * ```mdx
+ * ```md
  * import { Meta } from "@storybook/addon-docs";
  * import readme from "../../README.md";
  * import { segmentMDX } from "orphic-cypress";

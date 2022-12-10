@@ -1,4 +1,4 @@
-import { Meta, Subheading, Story } from "@storybook/addon-docs";
+import { Meta, Story } from "@storybook/addon-docs";
 import { Button, Title } from "stories";
 
 <Meta
@@ -67,7 +67,7 @@ hooks such as `beforeEach` to establish test state
 
 The .cyTest format can contain hooks like beforeEach directly inside its function body, which is the only way to have such hooks execute for only specific story tests.
 
-```mdx
+```tsx
 <Story
   name="CyTestFunctionBody"
   parameters={{

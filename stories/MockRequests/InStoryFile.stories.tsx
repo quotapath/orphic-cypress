@@ -25,7 +25,7 @@ export default {
 
 WillFetch.cy = () => {
   cy.wait("@/api/label?q=2").then((interception) => {
-    expect(interception.request!.url).to.contain("q=2");
+    expect(interception.request.url).to.contain("q=2");
     // maybe not worth testing in reality considering we know what we've mocked
     expect(interception.response!.statusCode).to.equal(200);
     expect(interception.response!.body).to.deep.equal({ data: "Loaded" });

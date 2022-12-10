@@ -133,7 +133,7 @@ const partitionCommentsAndCode = (
     }
   }
   // for now at least,
-  const joinedDescription = comments.length > 0 ? comments.join("") : "";
+  const joinedDescription = comments.length > 0 ? comments.join(" ") : "";
   return [joinedDescription, code.join("\n")];
 };
 
