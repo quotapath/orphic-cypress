@@ -150,3 +150,41 @@ ComponentStoryObj for types, but it'll leave parameters completely untyped.`,
   },
 };
 // story-code @end
+
+export const CyFunctionString: ComponentStoryObjCy<typeof Button> = {
+  cy: '() => cy.dataCy("button").should("contain", "click me")',
+};
+
+export const CyObjString: ComponentStoryObjCy<typeof Button> = {
+  cy: {
+    "should contain 'Story object' label": `() =>
+    cy.dataCy("button").should("contain", "click me")`,
+
+    "should not be disabled by default": `() =>
+    cy.dataCy("button").should("not.be.disabled")`,
+  },
+};
+
+export const CyTestString: ComponentStoryObjCy<typeof Button> = {
+  parameters: {
+    cyTest: `(Story) => {
+      it("should contain 'Story test' label", () => {
+        cy.mount(<Story />);
+        cy.dataCy("button").should("contain", "click me");
+      });
+
+      it("should accept a disabled prop", () => {
+        cy.mount(<Story disabled />);
+        cy.dataCy("button").should("be.disabled");
+      });
+
+      it.skip("should skip a test", () => {
+        cy.mount(<Story />);
+        cy.dataCy("button").should(
+          "contain",
+          "This test would fail if not skipped"
+        );
+      });
+    }`,
+  },
+};

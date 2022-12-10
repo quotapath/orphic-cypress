@@ -15,28 +15,33 @@ export type UnitTestProps = {
    * description for tests which have cy function or cyTest formats.
    * Provides a reasonable default but can opt out with `false`
    */
-  description?: string | false;
+  description?: string | false | null;
   /**
    * Parameters, probably passed in from parent in unitTestDecorator,
    * though I suppose passing in directly could be useful somehow
    */
   parameters?: WithCy<any>;
+  /**
+   * Potentially internal only: if the literate test is from code block. Used to
+   * deduplicate display of code block in docs view
+   */
+  isCodeBlock?: boolean;
 };
+
+const getDefaultDescription = (cyTest: unknown) =>
+  `should pass the following ${cyTest ? "cyTest" : "cy"} expectation`;
 
 /** Get entries to map over to then display in each Preview component */
 const getNormalizedCyTestEntries = (parameters: any, props: UnitTestProps) => {
   if (!parameters) return [];
   const { cy, cyTest } = parameters;
-  const defaultDescription = `should pass the following a ${
-    cyTest ? "cyTest" : "cy"
-  } expectation`;
   if (cy) {
     return typeof cy === "object"
       ? Object.entries(cy)
-      : [[props.description ?? defaultDescription, cy]];
+      : [[props.description ?? getDefaultDescription(false), cy]];
   }
   if (cyTest) {
-    return [[props.description ?? defaultDescription, cyTest]];
+    return [[props.description ?? getDefaultDescription(true), cyTest]];
   }
   return [];
 };
@@ -67,22 +72,23 @@ export const ParametersContext = createContext({});
  */
 export const UnitTest = (props: UnitTestProps) => {
   // lots of different possible ways of getting parameters in here
-  const context = useContext(DocsContext);
+  const docsContext = useContext(DocsContext);
   const parametersContext = useContext(ParametersContext);
   let parameters = props.parameters;
-  const hasContext = context && Object.keys(context).length > 0;
+  const hasDocsContext = docsContext && Object.keys(docsContext).length > 0;
   const hasParametersContext =
     parametersContext && Object.keys(parametersContext).length > 0;
   if (!parameters) {
-    if (hasContext) {
-      const storyId = getStoryId(props, context);
-      const story = context.componentStories().find(({ id }) => id === storyId);
+    if (hasDocsContext) {
+      const storyId = getStoryId(props, docsContext);
+      const story = docsContext
+        .componentStories()
+        .find(({ id }) => id === storyId);
       parameters = story?.parameters;
     } else if (hasParametersContext) {
       parameters = parametersContext;
     }
   }
-
   if (!parameters) return null;
 
   const cyMap = getNormalizedCyTestEntries(parameters, props);
@@ -90,14 +96,73 @@ export const UnitTest = (props: UnitTestProps) => {
   const previews = cyMap.map(([key, orgCode], i) => {
     const code = dedent((orgCode as () => void).toString());
     return (
-      <div key={key || i}>
+      <div key={String(key) || i}>
         {key && <div className="orphic-cypress-unit-test">{key}</div>}
-        <Source language="tsx" dark format={false} code={code} />
+        {!(props.isCodeBlock && hasDocsContext) && (
+          <Source language="tsx" dark format={false} code={code} />
+        )}
       </div>
     );
   });
 
   return <>{previews}</>;
+};
+
+const regex = {
+  multilineInit: /^\s?\/\*/,
+  multilineClose: /\*\//,
+  comment: /^\s?(\/\/|\/\*\*|\*\/|\*)\s?/,
+};
+
+const partitionCommentsAndCode = (
+  fnToParse: string
+): [comments: string, code: string] => {
+  const [comments, code]: [string[], string[]] = [[], []];
+  const fnToParseSplit = fnToParse.split("\n");
+  let isMultiLine =
+    regex.multilineInit.test(fnToParseSplit[0]) &&
+    !regex.multilineClose.test(fnToParseSplit[0]);
+  for (const line of fnToParse.split("\n")) {
+    if (code.length === 0 && (regex.comment.test(line) || isMultiLine)) {
+      if (regex.multilineClose.test(line)) isMultiLine = false;
+      const newComment = line.replace(regex.comment, "");
+      // strip empty lines
+      if (newComment.length) comments.push(newComment);
+    } else {
+      code.push(line);
+    }
+  }
+  // for now at least,
+  const joinedDescription = comments.length > 0 ? comments.join("") : "";
+  return [joinedDescription, code.join("\n")];
+};
+
+/**
+ * Gets the code block matching a story from the mdx page.
+ * Just a tad hacky with how its getting to the MDXContent
+ * @private
+ */
+export const getStoryCyFromMDXCodeBlock = (
+  parameters: any,
+  storyName: string,
+  functionize?: boolean
+): { [description: string]: string } => {
+  const mdxContent = parameters?.docs?.page?.()?.props?.children?.type?.({});
+  for (const child of mdxContent?.props?.children ?? []) {
+    if (child?.props?.mdxType === "pre") {
+      const childrenProps = child.props.children?.props;
+      if (childrenProps.metastring === storyName) {
+        const [description, code] = partitionCommentsAndCode(
+          childrenProps.children
+        );
+        return {
+          [description.length ? description : getDefaultDescription(false)]:
+            functionize ? `() => { ${code} }` : code,
+        };
+      }
+    }
+  }
+  return {};
 };
 
 /**
@@ -109,13 +174,24 @@ export const UnitTest = (props: UnitTestProps) => {
  */
 export const unitTestDecorator = (Story: any, context: any) => {
   const parameters = { ...context.originalStoryFn, ...context.parameters };
+  if (parameters.cyCodeBlock) {
+    parameters.cy = getStoryCyFromMDXCodeBlock(
+      context.parameters,
+      context.originalStoryFn.storyName
+    );
+  }
+
   return (
     <ParametersContext.Provider value={parameters}>
       <Story />
-      {context.parameters?.cyUnitTest && (
+      {(parameters.cyUnitTest || parameters.cyCodeBlock) && (
         <span data-cy="cy-unit-test">
           <br />
-          <UnitTest name={context.name} parameters={parameters} />
+          <UnitTest
+            name={context.name}
+            parameters={parameters}
+            isCodeBlock={parameters.cyCodeBlock}
+          />
         </span>
       )}
     </ParametersContext.Provider>

@@ -75,7 +75,10 @@ const stubArgTypeActions = (
  * @private
  */
 export type Stories = {
-  [name: string]: ComponentStoryCy<any> | ComponentStoryObjCy<any>;
+  [name: string]: (ComponentStoryCy<any> | ComponentStoryObjCy<any>) & {
+    /** this seems to be the accurate storyName for the component */
+    storyName: string;
+  };
 };
 
 /**

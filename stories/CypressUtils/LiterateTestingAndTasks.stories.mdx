@@ -113,7 +113,7 @@ First `.cy` function with a `description` prop passed to `UnitTest`
 
 Source code:
 
-```ts
+```tsx
 <Story
   name="CyFunction"
   parameters={{
@@ -158,7 +158,7 @@ to though.
 
 Source code:
 
-```ts
+```tsx
 <Story
   name="CyTest"
   parameters={{
@@ -180,6 +180,116 @@ This one removes the `UnitTest` ...
 
 <UnitTest name="CyTest" />
 ```
+
+## Use a code block for perfect syntax
+
+Oh Dang!
+
+<Story name="CyCodeBlock" parameters={{ cyCodeBlock: true }}>
+  <></>
+</Story>
+
+```ts CyCodeBlock
+/**
+ * should work as a code block where this first comment is an optional
+ * description; it can be any kind of js comment as long as it's the
+ * first thing in the block
+ */
+const expected: number = 2;
+
+cy.arbitraryTask(2).then(($num) => {
+  expect($num).to.equal(expected);
+});
+```
+
+that looks like this, where a code block is linked to the story by name in the metastring
+position.
+
+````tsx
+<Story name="CyCodeBlock" parameters={{ cyCodeBlock: true }}>
+  <></>
+</Story>;
+
+```ts CyCodeBlock
+/**
+ * should work as a code block where this first comment is an optional the test description,
+ * and it can be any kind of js comment as long as its the first thing in the block
+ */
+const expected: number = 2;
+
+cy.arbitraryTask(2).then(($num) => {
+  expect($num).to.equal(expected);
+});
+```;
+````
+
+And it can be a bit simpler
+
+<Story name="SimpleBlock" parameters={{ cyCodeBlock: true }}>
+  <></>
+</Story>
+
+```ts SimpleBlock
+cy.arbitraryTask(2).then(($num) => expect($num).to.equal(2));
+```
+
+````tsx
+<Story name="SimpleBlock" parameters={{ cyCodeBlock: true }}>
+  <></>
+</Story>;
+
+```ts SimpleBlock
+cy.arbitraryTask(2).then(($num) => expect($num).to.equal(2));
+```;
+````
+
+Or more complex via cyTest
+
+<Story name="ComplexBlock" parameters={{ cyCodeBlock: true, cyTest: true }}>
+  <></>
+</Story>
+
+```ts ComplexBlock
+// Complex block has a couple of tests and a beforeEach
+let expected: number;
+
+beforeEach(() => {
+  expected = 2;
+});
+
+it("should have a first test", () => {
+  cy.arbitraryTask(2).then(($num) => expect($num).to.equal(expected));
+});
+
+it("should have a second test", () => {
+  cy.arbitraryTask(2).then(($num) => expect($num).to.equal(expected));
+});
+```
+
+Source code:
+
+````tsx
+<Story name="ComplexBlock" parameters={{ cyCodeBlock: true, cyTest: true }}>
+  <></>
+</Story>;
+
+```ts ComplexBlock
+// Complex block has a couple of tests and a beforeEach
+let expected: number;
+
+beforeEach(() => {
+  expected = 2;
+});
+
+it("should have a first test", () => {
+  cy.arbitraryTask(2).then(($num) => expect($num).to.equal(expected));
+});
+
+it("should have a second test", () => {
+  cy.arbitraryTask(2).then(($num) => expect($num).to.equal(expected));
+});
+```;
+````
 
 ## Tests on tests on tests
 

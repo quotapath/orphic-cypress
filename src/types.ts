@@ -4,8 +4,11 @@ import type { JSXElementConstructor } from "react";
 
 /** Function which expects no arg and returns void */
 export type VoidFn = () => void;
-/** A test function where `cy` is available */
-export type CyTest = VoidFn;
+/**
+ * A test function where `cy` is available
+ * Can be a string which will be executed via `eval`
+ */
+export type CyTest = VoidFn | string;
 /** .cy format with object syntax where keys are `it` descriptions */
 export type CyObj = {
   [itTestText: string]: CyTest;
@@ -15,30 +18,38 @@ export type CyTestProp<T> = (comp: T) => void;
 /** Additional properties which can be added to stories to control cypress */
 export type WithCy<T> = {
   /**
-   * Either a function directly, or an object of test description
-   * keys to test function values. A major advantage here is there
-   * is no need to `mount` or pass mocked actions to the component
-   * just write some assertions
+   * Either a function directly, or an object of test description keys to test
+   * function values. A major advantage here is there is no need to `mount` or
+   * pass mocked actions to the component just write some assertions
    */
   cy?: CyTest | CyObj;
   /**
-   * Write a function that will execute within cypress and so can
-   * contain `it`, `beforeEach`, `it.skip` etc
+   * Write a function that will execute within cypress and so can contain `it`,
+   * `beforeEach`, `it.skip` etc. Can also be a string representation of the
+   * same which will be `eval` evaluated. A boolean, when combined with
+   * cyCodeBlock means it should execute outside of a cypress `it`
    */
-  cyTest?: CyTestProp<T>;
+  cyTest?: CyTestProp<T> | string | boolean;
   /** use it.only for the test(s) for this component */
   cyOnly?: boolean;
   /** use it.skip for the test(s) for this component */
   cySkip?: boolean;
+  /** use the {@link storybook/UnitTest.UnitTest} component */
+  cyUnitTest?: boolean;
 };
 
 /**
- * All cy properties can also be assigned through `parameters`, which
- * is perhaps more canonical but messier
+ * All cy properties from {@link WithCy} can also be assigned through
+ * the story's `parameters`, which is perhaps more canonical, but messier
  */
-export type CyParameters<T> = {
-  /** normal story.parameters with extended cy properties */
-  parameters?: WithCy<T>;
+export type CyParameters<T> = WithCy<T> & {
+  /**
+   * The story should find a code block in an mdx file with a metastring
+   * label that corresponds to the story name. Can be used in concert with
+   * {@link WithCy:cyTest} to mean that the code block should be executed
+   * as if it were a cyTest and not automatically nested into an `it`.
+   */
+  cyCodeBlock?: boolean;
 };
 
 /**
@@ -47,7 +58,11 @@ export type CyParameters<T> = {
  */
 export type ComponentStoryCy<
   T extends keyof JSX.IntrinsicElements | JSXElementConstructor<any>
-> = ComponentStory<T> & WithCy<T> & CyParameters<T>;
+> = ComponentStory<T> &
+  WithCy<T> & {
+    /** normal cypress parameters with more types */
+    parameters?: CyParameters<T>;
+  };
 
 /**
  * Drop this in where you would normally see ComponentStoryObj type to add
@@ -55,7 +70,11 @@ export type ComponentStoryCy<
  */
 export type ComponentStoryObjCy<
   T extends keyof JSX.IntrinsicElements | JSXElementConstructor<any>
-> = ComponentStoryObj<T> & WithCy<T> & CyParameters<T>;
+> = ComponentStoryObj<T> &
+  WithCy<T> & {
+    /** normal cypress parameters with more types */
+    parameters?: CyParameters<T>;
+  };
 
 /** Extensions to the default export from storybook files */
 export type StoryFileCyExtension = {

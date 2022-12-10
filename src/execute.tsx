@@ -1,11 +1,13 @@
 import { storyNameFromExport } from "@storybook/csf";
 import { composeStories } from "@storybook/testing-react";
 import React from "react";
+import * as ts from "typescript";
 
 import type { Stories } from "./actions";
 import { stubStoryActions } from "./actions";
 import type { CyTestConfig } from "./config";
 import { mockToCyIntercept } from "./intercept";
+import { getStoryCyFromMDXCodeBlock } from "./storybook/UnitTest";
 import type { StoryFileCy } from "./types";
 
 /* istanbul ignore next */
@@ -20,6 +22,22 @@ class CyTestConfigError extends Error {
     Object.setPrototypeOf(this, new.target.prototype);
   }
 }
+
+const evalTranspile = (code: string) => {
+  const transformed = eval(
+    ts.transpile(
+      `(React) => ${code}`,
+      {
+        jsx: ts.JsxEmit.React,
+        module: ts.ModuleKind.ES2022,
+        target: ts.ScriptTarget.ES2022,
+        alwaysStrict: false,
+      },
+      "test.cy.tsx"
+    )
+  )(React);
+  return eval(transformed);
+};
 
 /**
  * Execute standard cypress tests against a set of storybook components.
@@ -44,7 +62,10 @@ export const executeCyTests = <T extends StoryFileCy>(
     // adding `cy` property to default is a way to add hooks like `beforeEach`
     // for all tests in the file. I guess you could even write a test here.
     const defaultCy = stories.default.cy || stories.default.parameters?.cy;
-    if (defaultCy) defaultCy();
+    if (defaultCy) {
+      if (typeof defaultCy === "string") evalTranspile(defaultCy)();
+      else defaultCy();
+    }
     const config: CyTestConfig = Cypress.env("cyTest");
 
     const cyIncludeStories =
@@ -69,6 +90,7 @@ export const executeCyTests = <T extends StoryFileCy>(
         const story = (stories as any as Stories)[name];
         const parameters = story.parameters || {};
         const cyTest = story.cyTest || parameters.cyTest;
+
         beforeEach(() => {
           /* istanbul ignore next */
           if (cyTest && config?.format?.cyTest === false) {
@@ -85,7 +107,34 @@ export const executeCyTests = <T extends StoryFileCy>(
         // cy test format where a function can then contain 'it's and 'before' etc
         // actions will be available at `cy.get("@actions")` or `this.actions`
         // and you can skip/only in the test
-        if (cyTest) return cyTest(Comp);
+        if (cyTest) {
+          if (typeof cyTest === "string") {
+            return evalTranspile(cyTest)(Comp);
+          }
+          if (cyTest === true) {
+            if (!parameters.cyCodeBlock) {
+              throw new Error(
+                "Provided `cyTest: true` but did not provide `cyCodeBlock`, which is required"
+              );
+            }
+            const [description, cyTestFromBlock] = Object.entries(
+              getStoryCyFromMDXCodeBlock(
+                stories.default.parameters,
+                story.storyName,
+                true
+              )
+            )[0];
+            story.cyTest = cyTestFromBlock;
+
+            if (description) {
+              return describe(description, () => {
+                evalTranspile(cyTestFromBlock)(Comp);
+              });
+            }
+            return evalTranspile(cyTestFromBlock)(Comp);
+          }
+          return cyTest(Comp);
+        }
         // cy object format for a more streamlined test that does the mount for you
         const itFn =
           story.cyOnly || parameters.cyOnly
@@ -93,17 +142,26 @@ export const executeCyTests = <T extends StoryFileCy>(
             : story.cySkip || parameters.cySkip
             ? it.skip
             : it;
+        if (parameters.cyCodeBlock) {
+          // MUTATE STORY
+          story.cy = getStoryCyFromMDXCodeBlock(
+            stories.default.parameters,
+            story.storyName,
+            true
+          );
+        }
         const storyCy = story.cy || parameters.cy;
         if (storyCy) {
           // cy is a function directly
-          if (typeof storyCy === "function") {
+          if (typeof storyCy === "function" || typeof storyCy === "string") {
             return itFn("should satisfy a cy test expectation", function () {
               /* istanbul ignore next */
               if (config?.format?.function === false) {
                 throw new CyTestConfigError("function", stories.default.title);
               }
               cy.mount(<Comp {...this.actions} />);
-              storyCy.bind(this)();
+              if (typeof storyCy === "function") return storyCy.bind(this)();
+              evalTranspile(storyCy).bind(this)();
             });
           }
           // otherwise cy is an object with story descriptions as keys and test
@@ -116,7 +174,7 @@ export const executeCyTests = <T extends StoryFileCy>(
               }
               cy.mount(<Comp {...this.actions} />);
               if (typeof cyTest === "string") {
-                eval(cyTest).bind(this)();
+                evalTranspile(cyTest).bind(this)();
               } else {
                 cyTest.bind(this)();
               }
