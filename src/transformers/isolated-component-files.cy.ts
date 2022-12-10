@@ -50,7 +50,7 @@ const csf = dedent`
 
   export const StoryFn: ComponentStory<typeof Comp> = (args) => <Comp {...args} />;
   export const StoryObj: ComponentStoryObj<typeof Comp> = {
-    args: { label: "test" };
+    args: { label: "test" }
   };
 `;
 

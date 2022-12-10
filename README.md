@@ -168,7 +168,158 @@ https://user-images.githubusercontent.com/9889378/203308863-105eac48-a70a-4c21-a
 
 # Isolated Component Files Transformer
 
-TODO
+There are two ways to run these tests: via importing all storybook files by glob and iterating through them in one file, or by using a little bit of black magic in the form of a typescript transformer to enable the storybook typescript and mdx files themselves to act as the cypress tests. This is perhaps best explained with a couple of screenshots.
+
+![required tests](https://user-images.githubusercontent.com/9889378/206868377-27d1b7d9-dd85-477a-bd31-fb6e4a04b6f4.png)
+![isolated tests](https://user-images.githubusercontent.com/9889378/206868376-e9b60b72-4883-401d-a34e-a46dba76dd50.png)
+
+The first is the approach via a single file, and the second is via the transformer. The require approach is decently faster despite the actual test execution time being equivalent. That's helped a bit by [experimentSingleTabRunMode](https://docs.cypress.io/guides/references/experiments#Component-Testing), which seems pretty stable, but the transformer version is about half as slow. What the latter gives you though is isolation and debugability. You can `-s` to specify a spec pattern and run just a single test, you can add `.only` or the orphic-cypress equivalent `.cyOnly` and only affect the one file's worth of tests. And most importantly you can pull up a headed run and execute just a single file's tests.
+
+![isolated tests spec screen](https://user-images.githubusercontent.com/9889378/206868853-ae2c148d-6088-4c3c-9857-3e610869a3af.png)
+![isolated tests single run](https://user-images.githubusercontent.com/9889378/206868833-0bfb4914-56d3-41aa-beee-bd8dc83dcd41.png)
+
+The files are the tests, which is exactly the mental model cypress uses. The way that works is by taking a file like this
+
+```tsx
+import type { ComponentStory, ComponentStoryObj } from "@storybook/react";
+import { Comp } from "components/Comp";
+import * as React from "react";
+export default {
+  component: Comp,
+  title: "Component",
+};
+export const StoryFn: ComponentStory<typeof Comp> = (args) => (
+  <Comp {...args} />
+);
+export const StoryObj: ComponentStoryObj<typeof Comp> = {
+  args: { label: "test" },
+};
+```
+
+and during the typescript compilation process, add a line at the top and bottom:
+
+```ts
+import { executeCyTests } from "orphic-cypress";
+// whole rest of file...
+executeCyTests({
+  default: { component: Comp, title: "Component" },
+  StoryFn,
+  StoryObj,
+});
+```
+
+You can read about how to add it to webpack [here](https://quotapath.github.io/orphic-cypress/functions/transformers.transformIsolatedComponentFiles-1.html), it should also work with other mechanisms of involving transformers in the typescript process.
+
+The require version uses that same [executeCyTests](https://quotapath.github.io/orphic-cypress/functions/execute.executeCyTests.html), though it has to loop through files and execute in one describe block, just a bit truncated
+
+```ts
+describe(description, () => {
+  Cypress.env("storybookFiles").forEach((file: string) => {
+    const stories = requireFileCallback(file);
+    executeCyTests(stories, stories.default.title || file);
+  });
+});
+```
+
+## Finally, how to actually run the thing
+
+This repo sets up and runs both require and isolated tests, and contains commands for headed versions of both. It's hopefully a good reference besides the docs. Look to [the cypress config file](https://github.com/quotapath/orphic-cypress/blob/main/cypress.config.ts), the [package.json scripts](https://github.com/quotapath/orphic-cypress/blob/main/package.json#L7) and the [mount test](https://github.com/quotapath/orphic-cypress/blob/main/stories/mount.cy.ts).
+
+### Isolated Files
+
+To run isolated tests, you won't need much config: just get the transformer in place and then run with `CYPRESS_USE_ISOLATED_CT_FILES=true` environment variable set. Details on that transformer webpack config are again [here](https://quotapath.github.io/orphic-cypress/functions/transformers.transformIsolatedComponentFiles-1.html), but I'll copy in a snippet from orphic-cypress' [webpack config](https://github.com/quotapath/orphic-cypress/blob/main/webpack.config.ts) for overkill
+
+```ts
+import {
+  transformIsolatedComponentFiles,
+  useIsolatedComponentFiles,
+} from "orphic-cypress";
+
+module.exports = {
+  // ...
+  module: {
+    // hide warnings for 'Critical dependency: require function is used in a way
+    // in which dependencies cannot be statically extracted', at least in packages
+    exprContextCritical: false,
+    rules: [
+      {
+        test: /\.[jt]sx?$/,
+        exclude: [/node_modules/],
+        use: [
+          {
+            loader: "ts-loader",
+            options: {
+              happyPackMode: true,
+              transpileOnly: true,
+              ...(useIsolatedComponentFiles && {
+                getCustomTransformers: () => ({
+                  before: [transformIsolatedComponentFiles()],
+                }),
+              }),
+            },
+          },
+        ],
+      },
+    ],
+  },
+};
+```
+
+`useIsolatedComponentFiles` is just the boolean from `CYPRESS_USE_ISOLATED_CT_FILES` env var and it can be used elsewhere for convenience.
+
+### Require Files
+
+The `require` version takes more configuration. You'll need to set storybook files in the cypress config file's component test section via [setStoryBookFiles](https://quotapath.github.io/orphic-cypress/functions/mount.setStorybookFiles.html)
+
+```ts
+export default defineConfig({
+  component: {
+    setupNodeEvents: (on, config) => {
+      setStorybookFiles(on, config);
+      return config;
+    },
+  },
+});
+```
+
+Then call [mountTest]() in a `Something.cy.tsx` named file, passing it a [requireFileCallback](https://quotapath.github.io/orphic-cypress/types/mount.RequireFileCallback.html) which necessarily has to have a bit of manual input to get webpack to import correctly. This is copied from the `requireFileCallback` link above, but for our real world case, that looked like
+
+```ts
+// in mount.cy.tsx
+import { mountTest } from "orphic-cypress";
+
+const requireFileCallback: RequireFileCallback = (fullFilePath: string) => {
+  const replaced = fullFilePath
+    .replace("src/app/", "")
+    .replace("src/common/", "");
+  // We have to give webpack a little bit to hook onto, so we remove
+  // the module entrypoint and include that directly as a string to `require`
+  if (fullFilePath.startsWith("src/app")) {
+    return require("app/" + replaced);
+  }
+  if (fullFilePath.startsWith("src/common")) {
+    return require("common/" + replaced);
+  }
+  return;
+};
+
+mountTest(
+  [], // files to skip altogether
+  requireFileCallback
+);
+```
+
+In orphic-cypress' tests, it just looks like [this](https://github.com/quotapath/orphic-cypress/blob/main/stories/mount.cy.ts)
+
+```ts
+mountTest([], (fullFilePath) =>
+  require("stories/" + fullFilePath.replace("stories/", ""))
+);
+```
+
+### Switching back and forth
+
+You might run into cases with webpack cache where the stories are still instrumented with ts magic even though you wanted to run the require version, which will result in duplicating those tests. If you see that come up, run `rm -rf node_modules/.cache`
 
 <br/>
 
@@ -203,11 +354,11 @@ Already we had this at hand
 </Story>
 ```
 
-Awesome, we can document our javascript logic in storybook and confirm accuracy in cypress. But, with above, nothing shows up in the cypress panel. So I made a quick [UnitTest](https://quotapath.github.io/orphic-cypress/functions/storybook_UnitTest.UnitTest.html) component and [decorator](https://quotapath.github.io/orphic-cypress/functions/storybook_UnitTest.unitTestDecorator.html). Update to
+Awesome, we can document our javascript logic in storybook with ample markdown and confirm accuracy in cypress. But, with above, nothing shows up in the cypress panel and the test code itself doesn't appear in storybook. So I made a quick [UnitTest](https://quotapath.github.io/orphic-cypress/functions/storybook_UnitTest.UnitTest.html) component and [decorator](https://quotapath.github.io/orphic-cypress/functions/storybook_UnitTest.unitTestDecorator.html). Update to
 
 ```diff
 - <></>
-+ <UnitTest name="SimpleMath">
++ <UnitTest name="SimpleMath" />
 ```
 
 and now you'll get the tests to render (with the caveat that its compiled code so you'd have to opt out of minimization, see [storybook main](./.storybook/main.ts#L27).
@@ -220,35 +371,43 @@ And then in cypress, and in the 'canvas' view, we get this
 
 ![literate testing in cypress](https://user-images.githubusercontent.com/9889378/206355138-ef45d0db-bd92-47b4-9ed6-e2a626c5a2d6.png)
 
-I'm psyched. But did I stop there, nope. The fact that the code is compiled is a little lame. We have the mdx in a reasonable format, so we can do some slightly hacky things and support using code blocks! With this code
+I'm psyched. But did I stop there, nope. The fact that the code is compiled is a little lame. We have the mdx in a reasonable format, so we can do some slightly hacky things and support using code blocks! With this code (swap out `"` for triple backticks)
 
-    <Story name="CyCodeBlock" parameters={{ cyCodeBlock: true }}>
-      <></>
-    </Story>
+```
+<Story name="CyCodeBlock" parameters={{ cyCodeBlock: true }}>
+  <></>
+</Story>
 
-    ```ts CyCodeBlock
-    /**
-     * should work as a code block where this first comment is an optional
-     * description; it can be any kind of js comment as long as it's the first
-     * thing in the block
-     */
-    const expected: number = 2;
+"ts CyCodeBlock
+/**
+  * should work as a code block where this first comment is an optional
+  * description; it can be any kind of js comment as long as it's the first
+  * thing in the block
+  */
+const expected: number = 2;
 
-    cy.arbitraryTask(2).then(($num) => {
-      expect($num).to.equal(expected);
-    });
-    ```
+cy.arbitraryTask(2).then(($num) => {
+  expect($num).to.equal(expected);
+});
+"
+```
 
-we get this in storybook on the left and cypress on the right
+we get this in storybook in the first image and cypress in the second
 
-<p align="middle">
-  <img alt="code block in storybook" src="https://user-images.githubusercontent.com/9889378/206865846-9715783f-5e1f-4d05-aaab-053023360145.png" width="49%" style="max-width: 100%;" />
-  <img alt="code block in cypress" src="https://user-images.githubusercontent.com/9889378/206865829-66fffb3a-25f6-439d-aafe-f79b7dc5912b.png" width="49%" style="max-width: 100%" />
-</p>
+![code block in storybook](https://user-images.githubusercontent.com/9889378/206865846-9715783f-5e1f-4d05-aaab-053023360145.png)
+![code block in cypress](https://user-images.githubusercontent.com/9889378/206865829-66fffb3a-25f6-439d-aafe-f79b7dc5912b.png)
 
 Just link the block by story name and drop in an optional comment to become the `it` test description. Code blocks are great because they can be linted and formatted via prettier/eslint, maybe even type checked.
 
+Note: this is not something we've tried out yet, could be/probably is totally off the rails.
+
 <br/>
+
+# Test Coverage
+
+This turned out to be fairly simple. To instrument the code, I added `'istanbul'` to the babel plugins, and added a [.nycrc.json](https://github.com/quotapath/orphic-cypress/blob/main/.nycrc.json) config file.
+
+TODO: bit more here obviously.
 
 # A General Overview of the Landscape
 
@@ -407,6 +566,20 @@ Lame. So utterly lame. So we're naming this after the [Orphic Tablets](https://r
 
 It's a literary, _storybook_, name. Why name a repo which is mostly examples? Just for fun.
 
+# Some more ideas
+
+- vite support. I've never used it
+  - vitest headless execution of literate testing could bypass `mount` calls
+- mdx2 support. tried it, was fairly close
+- storybook 7 beta support
+- more transforms:
+  - add the file name as the storyname due to a common pattern we have of `import { RealCompName } from "./"; /* ... */ export const Default = () => /* single story */; Default.storyName = "RealCompName;` so that it rolls up
+  - transforms around the docgen details so that you could dynamically change them before they hit anything in storybook, e.g. add `_Optional_` to optional props b/c the red star isn't obvous enough
+- an addon panel? Maybe it could display the results or even snapshots of the last cypress run of that test
+- e2e tests for example purposes and to validate docs, with merged coverage. e2e works fine, getting it to properly cover the storybook code wasn't yet
+
 # Prior Art
 
 [Cypress's recommendation on component testing storybook](https://www.cypress.io/blog/2021/05/19/cypress-x-storybook-2-0/) is essentially the 'what you can do without this package'
+
+[cypress-storybook](https://github.com/NicholasBoll/cypress-storybook) is a collection of utils for e2e testing which end up hooking into storybook's event emitter. That style of testing seems less preferrable than component tests, but it's fun and some of the ideas could still be applicable
