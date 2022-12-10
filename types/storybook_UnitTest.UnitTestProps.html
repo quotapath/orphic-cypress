@@ -16,20 +16,25 @@
 <li><a href="../modules/storybook_UnitTest.html">storybook/UnitTest</a></li>
 <li><a href="storybook_UnitTest.UnitTestProps.html">UnitTestProps</a></li></ul>
 <h1>Type alias UnitTestProps</h1></div>
-<div class="tsd-signature">Unit<wbr/>Test<wbr/>Props<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span><br/><span>    </span>description<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol">; </span><br/><span>    </span>id<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span><br/><span>    </span>name<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span><br/><span>    </span>parameters<span class="tsd-signature-symbol">?: </span><a href="types.WithCy.html" class="tsd-signature-type" data-tsd-kind="Type alias">WithCy</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">; </span><br/><span class="tsd-signature-symbol">}</span></div>
+<div class="tsd-signature">Unit<wbr/>Test<wbr/>Props<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span><br/><span>    </span>description<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol">; </span><br/><span>    </span>id<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span><br/><span>    </span>isCodeBlock<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">; </span><br/><span>    </span>name<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span><br/><span>    </span>parameters<span class="tsd-signature-symbol">?: </span><a href="types.WithCy.html" class="tsd-signature-type" data-tsd-kind="Type alias">WithCy</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">; </span><br/><span class="tsd-signature-symbol">}</span></div>
 <div class="tsd-comment tsd-typography"><p>Props for the UnitTest component, mostly to link to story</p>
 </div>
 <div class="tsd-type-declaration">
 <h4>Type declaration</h4>
 <ul class="tsd-parameters">
 <li class="tsd-parameter">
-<h5><code class="tsd-tag ts-flagOptional">Optional</code> description<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span></h5>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> description<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></h5>
 <div class="tsd-comment tsd-typography"><p>description for tests which have cy function or cyTest formats.
 Provides a reasonable default but can opt out with <code>false</code></p>
 </div></li>
 <li class="tsd-parameter">
 <h5><code class="tsd-tag ts-flagOptional">Optional</code> id<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span></h5>
 <div class="tsd-comment tsd-typography"><p>id matching the story&#39;s name. either name or id must be provided</p>
+</div></li>
+<li class="tsd-parameter">
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> is<wbr/>Code<wbr/>Block<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span></h5>
+<div class="tsd-comment tsd-typography"><p>Potentially internal only: if the literate test is from code block. Used to
+deduplicate display of code block in docs view</p>
 </div></li>
 <li class="tsd-parameter">
 <h5><code class="tsd-tag ts-flagOptional">Optional</code> name<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span></h5>
@@ -41,7 +46,7 @@ Provides a reasonable default but can opt out with <code>false</code></p>
 though I suppose passing in directly could be useful somehow</p>
 </div></li></ul></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/quotapath/orphic-cypress/blob/1a7d874/src/storybook/UnitTest.tsx#L9">storybook/UnitTest.tsx:9</a></li></ul></aside></div>
+<li>Defined in <a href="https://github.com/quotapath/orphic-cypress/blob/34169fe/src/storybook/UnitTest.tsx#L9">storybook/UnitTest.tsx:9</a></li></ul></aside></div>
 <div class="col-4 col-menu menu-sticky-wrap menu-highlight">
 <div class="tsd-navigation settings">
 <details class="tsd-index-accordion"><summary class="tsd-accordion-summary">
