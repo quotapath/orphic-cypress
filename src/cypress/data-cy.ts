@@ -62,8 +62,11 @@ type DataCy = DataCyWithSubject & {
  */
 export const dataCy: DataCy = (...args: any) => {
   // handle the unlikely scenario someone takes the first signature literally
-  if (!args[0] && typeof args[1] !== "string") {
-    return cy.wrap(args[1]).dataCy(args[2], args[3], args[4]);
+  const unlikelyArgs = args as [undefined, ...Parameters<DataCyWithSubject>];
+  if (!unlikelyArgs[0] && typeof unlikelyArgs[1] !== "string") {
+    return cy
+      .wrap(unlikelyArgs[1])
+      .dataCy(unlikelyArgs[2], unlikelyArgs[3], unlikelyArgs[4]);
   }
   const [subject, selector, children, options] =
     args as Parameters<DataCyWithSubject>;

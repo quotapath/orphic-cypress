@@ -130,7 +130,9 @@ export const stubStoryActions = <T extends StoryFileCy>(
   const argTypesRegex = parameters?.actions?.argTypesRegex;
 
   const docgenInfo = (
-    stories.default?.component as any as { __docgenInfo: any }
+    stories.default?.component as any as {
+      __docgenInfo?: { props: { [key: string]: unknown } };
+    }
   )?.__docgenInfo;
   const asRegex = new RegExp(argTypesRegex);
   // start with args and props, unique

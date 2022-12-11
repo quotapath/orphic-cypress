@@ -1,6 +1,5 @@
 import { storyNameFromExport } from "@storybook/csf";
 import { composeStories } from "@storybook/testing-react";
-import React from "react";
 import * as ts from "typescript";
 
 import type { Stories } from "./actions";
@@ -35,7 +34,9 @@ const evalTranspile = (code: string) => {
       },
       "test.cy.tsx"
     )
-  )(React);
+    // TODO: evaluate necessity if say jsx wasn't React based
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+  )(require("react"));
   return eval(transformed);
 };
 
@@ -159,7 +160,7 @@ export const executeCyTests = <T extends StoryFileCy>(
               if (config?.format?.function === false) {
                 throw new CyTestConfigError("function", stories.default.title);
               }
-              cy.mount(<Comp {...this.actions} />);
+              cy.mount(Comp({ ...this.actions }));
               if (typeof storyCy === "function") return storyCy.bind(this)();
               evalTranspile(storyCy).bind(this)();
             });
@@ -172,7 +173,7 @@ export const executeCyTests = <T extends StoryFileCy>(
               if (config?.format?.object === false) {
                 throw new CyTestConfigError("object", stories.default.title);
               }
-              cy.mount(<Comp {...this.actions} />);
+              cy.mount(Comp({ ...this.actions }));
               if (typeof cyTest === "string") {
                 evalTranspile(cyTest).bind(this)();
               } else {
@@ -185,7 +186,7 @@ export const executeCyTests = <T extends StoryFileCy>(
         if (name !== "__page") {
           // no test defined, just check that it renders ok
           itFn(`${name} should render ok`, function () {
-            cy.mount(<Comp {...this.actions} />);
+            cy.mount(Comp({ ...this.actions }));
           });
         }
       });
