@@ -661,7 +661,7 @@ function MDXContent(_ref) {
     "href": "https://www.cypress.io/blog/2021/05/19/cypress-x-storybook-2-0/",
     "target": "_blank",
     "rel": "nofollow noopener noreferrer"
-  }, "Cypress's recommendation on component testing storybook"), " is essentially the 'what you can do without this package'\n", (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("a", {
+  }, "Cypress's recommendation on component testing storybook"), " is essentially the 'what you can do without this package'"), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("p", null, (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("a", {
     parentName: "p",
     "href": "https://github.com/NicholasBoll/cypress-storybook",
     "target": "_blank",
@@ -2095,7 +2095,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _mdx_js_react__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__("./node_modules/@mdx-js/react/dist/esm.js");
 /* harmony import */ var _storybook_addon_docs__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__("./node_modules/@storybook/addon-docs/dist/esm/index.js");
 /* harmony import */ var _README_md__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__("./README.md");
-/* harmony import */ var _src_storybook_segment_mdx__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__("./src/storybook/segment-mdx.tsx");
+/* harmony import */ var _src_storybook_segment_mdx__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__("./src/storybook/segment-mdx.ts");
 
 
 
@@ -6870,7 +6870,7 @@ catch (__react_docgen_typescript_loader_error) { }
 
 /***/ }),
 
-/***/ "./src/storybook/segment-mdx.tsx":
+/***/ "./src/storybook/segment-mdx.ts":
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -7141,39 +7141,6 @@ var segmentMDX = function segmentMDX(mdx, force) {
     }, v)];
   })));
 };
-try {
-    // @ts-ignore
-    Fifo.displayName = "Fifo";
-    // @ts-ignore
-    Fifo.__docgenInfo = { "description": "quick and dirty fifo", "displayName": "Fifo", "props": {} };
-    // @ts-ignore
-    if (typeof STORYBOOK_REACT_CLASSES !== "undefined")
-        // @ts-ignore
-        STORYBOOK_REACT_CLASSES["src/storybook/segment-mdx.tsx#Fifo"] = { docgenInfo: Fifo.__docgenInfo, name: "Fifo", path: "src/storybook/segment-mdx.tsx#Fifo" };
-}
-catch (__react_docgen_typescript_loader_error) { }
-try {
-    // @ts-ignore
-    safeKebabCase.displayName = "safeKebabCase";
-    // @ts-ignore
-    safeKebabCase.__docgenInfo = { "description": "simple kebab-case converter for space separated text,\nreturns undefined if str is undefined or null", "displayName": "safeKebabCase", "props": {} };
-    // @ts-ignore
-    if (typeof STORYBOOK_REACT_CLASSES !== "undefined")
-        // @ts-ignore
-        STORYBOOK_REACT_CLASSES["src/storybook/segment-mdx.tsx#safeKebabCase"] = { docgenInfo: safeKebabCase.__docgenInfo, name: "safeKebabCase", path: "src/storybook/segment-mdx.tsx#safeKebabCase" };
-}
-catch (__react_docgen_typescript_loader_error) { }
-try {
-    // @ts-ignore
-    segmentMDX.displayName = "segmentMDX";
-    // @ts-ignore
-    segmentMDX.__docgenInfo = { "description": "Split up an MDX files into headers for easy use in multiple parts of documentation\nor in multiple files, with some added perks.\n\nCurrently, this breaks on any header such that a file like\n~~~md\n# First Component\n\nSomething\n\n## Second Component\n\n```md\n# Second header description\nThis second component does stuff\n```\n~~~\nbecomes essentially\n```ts\n{\n  \"first-component\": {\n    full: [<h1>First Component</h1>,<p>Something</p>],\n    body: [<p>Something</p>],\n    md: \"\",\n  },\n  \"second-component\": {\n    full: [<h1>Second Component</h1>,<p>Other</p>],\n    body: [<code>....</code>],\n    md: \"# Second header description\\nThis second component does stuff\",\n  },\n}\n```\nAlthough actually they'll be functions at those locations that also have those properties,\nbut is `() => full` at invocation. Note how it picks up md code blocks as raw text, suitable\nfor story descriptions.\n\n\nThen you can use it like\n```ts\nimport mdx from \"./some.mdx\";\nconst mdxObject = segmentMDX(mdx);\n// define FirstComponent...\nFirstComponent.parameters = {\n  docs: {\n    page: mdxObject['first-component'],\n  }\n};\n// define SecondComponent...\nSecondComponent.parameters = {\n  docs: {\n    story: {\n      description: mdxObject['second-component'].md,\n    }\n  }\n};\n```\n\nAnd if you needed to combine them you could do something like\n```ts\ndocs: {\n  page: () => [\n    ...mdxObject[\"first-component\"].full,\n    ...mdxObject[\"second-component\"].full,\n  ]\n}\n```\n\nOr, in an mdx file like so (real example):\n```md\nimport { Meta } from \"@storybook/addon-docs\";\nimport readme from \"../../README.md\";\nimport { segmentMDX } from \"orphic-cypress\";\n\n<Meta title=\"MockRequests/Overview\" />\n\n<>{segmentMDX(readme)[\"intercepting-api-requests\"].full}</>\n\n<-- more markdown -->\n# Further afield\n```\n\nUses a dead simple FIFO cache of size 50 just to avoid thinking about memory consumption issues.", "displayName": "segmentMDX", "props": {} };
-    // @ts-ignore
-    if (typeof STORYBOOK_REACT_CLASSES !== "undefined")
-        // @ts-ignore
-        STORYBOOK_REACT_CLASSES["src/storybook/segment-mdx.tsx#segmentMDX"] = { docgenInfo: segmentMDX.__docgenInfo, name: "segmentMDX", path: "src/storybook/segment-mdx.tsx#segmentMDX" };
-}
-catch (__react_docgen_typescript_loader_error) { }
 
 /***/ }),
 
@@ -7391,8 +7358,8 @@ __webpack_require__.d(__webpack_exports__, {
   "Z": () => (/* binding */ mdx)
 });
 
-// EXTERNAL MODULE: ./src/storybook/segment-mdx.tsx
-var segment_mdx = __webpack_require__("./src/storybook/segment-mdx.tsx");
+// EXTERNAL MODULE: ./src/storybook/segment-mdx.ts
+var segment_mdx = __webpack_require__("./src/storybook/segment-mdx.ts");
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.object.keys.js
 var es_object_keys = __webpack_require__("./node_modules/core-js/modules/es.object.keys.js");
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.array.index-of.js
@@ -7681,4 +7648,4 @@ var _frameworkImportPath = __webpack_require__("./node_modules/@storybook/react/
 /******/ var __webpack_exports__ = __webpack_require__.O();
 /******/ }
 ]);
-//# sourceMappingURL=main.91be7eda.iframe.bundle.js.map
+//# sourceMappingURL=main.88457682.iframe.bundle.js.map
