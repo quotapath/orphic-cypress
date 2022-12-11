@@ -256,19 +256,15 @@ function MDXContent(_ref) {
     "rel": "nofollow noopener noreferrer"
   }, "https://user-images.githubusercontent.com/9889378/203308863-105eac48-a70a-4c21-a439-dead63ef0aed.mp4")), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("br", null), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("h1", {
     "id": "isolated-component-files-transformer"
-  }, "Isolated Component Files Transformer"), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("p", null, "There are two ways to run these tests: via importing all storybook files by glob and iterating through them in one file, or by using a little bit of black magic in the form of a typescript transformer to enable the storybook typescript and mdx files themselves to act as the cypress tests. This is perhaps best explained with a couple of screenshots."), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("p", {
-    align: "middle"
-  }, (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("img", {
-    alt: "required tests",
-    src: "https://user-images.githubusercontent.com/9889378/206868377-27d1b7d9-dd85-477a-bd31-fb6e4a04b6f4.png",
-    width: "49%",
-    style: "max-width: 100%"
-  }), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("img", {
-    alt: "isolated tests",
-    src: "https://user-images.githubusercontent.com/9889378/206868376-e9b60b72-4883-401d-a34e-a46dba76dd50.png",
-    width: "49%",
-    style: "max-width: 100%"
-  })), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("p", null, "On the left is the approach via a single file, and on the right is via the transformer. The require approach is decently faster despite the actual test execution time being equivalent. That's helped a bit by ", (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("a", {
+  }, "Isolated Component Files Transformer"), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("p", null, "There are two ways to run these tests: via importing all storybook files by glob and iterating through them in one file, or by using a little bit of black magic in the form of a typescript transformer to enable the storybook typescript and mdx files themselves to act as the cypress tests. This is perhaps best explained with a couple of screenshots."), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("p", null, (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("img", {
+    parentName: "p",
+    "src": "https://user-images.githubusercontent.com/9889378/206868377-27d1b7d9-dd85-477a-bd31-fb6e4a04b6f4.png",
+    "alt": "required tests"
+  }), "\n", (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("img", {
+    parentName: "p",
+    "src": "https://user-images.githubusercontent.com/9889378/206868376-e9b60b72-4883-401d-a34e-a46dba76dd50.png",
+    "alt": "isolated tests"
+  })), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("p", null, "The first is the approach via a single file, and the second is via the transformer. The require approach is decently faster despite the actual test execution time being equivalent. That's helped a bit by ", (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("a", {
     parentName: "p",
     "href": "https://docs.cypress.io/guides/references/experiments#Component-Testing",
     "target": "_blank",
@@ -279,16 +275,14 @@ function MDXContent(_ref) {
     parentName: "p"
   }, ".only"), " or the orphic-cypress equivalent ", (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("inlineCode", {
     parentName: "p"
-  }, ".cyOnly"), " and only affect the one file's worth of tests. And most importantly you can pull up a headed run and execute just a single file's tests."), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("p", {
-    align: "middle"
-  }, (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("img", {
-    width: "49%",
-    alt: "isolated tests spec screen",
-    src: "https://user-images.githubusercontent.com/9889378/206868853-ae2c148d-6088-4c3c-9857-3e610869a3af.png"
-  }), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("img", {
-    width: "49%",
-    alt: "isolated tests single run",
-    src: "https://user-images.githubusercontent.com/9889378/206868833-0bfb4914-56d3-41aa-beee-bd8dc83dcd41.png"
+  }, ".cyOnly"), " and only affect the one file's worth of tests. And most importantly you can pull up a headed run and execute just a single file's tests."), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("p", null, (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("img", {
+    parentName: "p",
+    "src": "https://user-images.githubusercontent.com/9889378/206868853-ae2c148d-6088-4c3c-9857-3e610869a3af.png",
+    "alt": "isolated tests spec screen"
+  }), "\n", (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("img", {
+    parentName: "p",
+    "src": "https://user-images.githubusercontent.com/9889378/206868833-0bfb4914-56d3-41aa-beee-bd8dc83dcd41.png",
+    "alt": "isolated tests single run"
   })), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("p", null, "The files are the tests, which is exactly the mental model cypress uses. The way that works is by taking a file like this"), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("pre", null, (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("code", {
     parentName: "pre",
     "className": "language-tsx"
@@ -336,7 +330,9 @@ function MDXContent(_ref) {
     "rel": "nofollow noopener noreferrer"
   }, "here"), ", but I'll copy in a snippet from orphic-cypress' ", (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("a", {
     parentName: "p",
-    "href": ""
+    "href": "https://github.com/quotapath/orphic-cypress/blob/main/webpack.config.ts",
+    "target": "_blank",
+    "rel": "nofollow noopener noreferrer"
   }, "webpack config"), " for overkill"), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("pre", null, (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("code", {
     parentName: "pre",
     "className": "language-ts"
@@ -415,7 +411,7 @@ function MDXContent(_ref) {
   }, "Literate Testing"), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("p", null, "MDX is a phenomenal format for literate programming and once we had loading of MDX files down, it becomes a fantastic means of literate testing. Then I realized there was no reason in particular that we could only test components, why not units?"), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("p", null, "Already we had this at hand"), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("pre", null, (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("code", {
     parentName: "pre",
     "className": "language-mdx"
-  }, "1 + 1 should equal 2, obviously\n\n<Story\n  name=\"SimpleMath\"\n  parameters={{\n    cy: () => expect(1 + 1).to.equal(2),\n  }}\n>\n  <></>\n</Story>\n")), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("p", null, "Awesome, we can document our javascript logic in storybook and confirm accuracy in cypress. But, with above, nothing shows up in the cypress panel. So I made a quick ", (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("a", {
+  }, "1 + 1 should equal 2, obviously\n\n<Story\n  name=\"SimpleMath\"\n  parameters={{\n    cy: () => expect(1 + 1).to.equal(2),\n  }}\n>\n  <></>\n</Story>\n")), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("p", null, "Awesome, we can document our javascript logic in storybook with ample markdown and confirm accuracy in cypress. But, with above, nothing shows up in the cypress panel and the test code itself doesn't appear in storybook. So I made a quick ", (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("a", {
     parentName: "p",
     "href": "https://quotapath.github.io/orphic-cypress/functions/storybook_UnitTest.UnitTest.html",
     "target": "_blank",
@@ -448,23 +444,26 @@ function MDXContent(_ref) {
     parentName: "p"
   }, "\""), " for triple backticks)"), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("pre", null, (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("code", {
     parentName: "pre"
-  }, "<Story name=\"CyCodeBlock\" parameters={{ cyCodeBlock: true }}>\n  <></>\n</Story>\n\n\"ts CyCodeBlock\n/**\n  * should work as a code block where this first comment is an optional\n  * description; it can be any kind of js comment as long as it's the first\n  * thing in the block\n  */\nconst expected: number = 2;\n\ncy.arbitraryTask(2).then(($num) => {\n  expect($num).to.equal(expected);\n});\n\"\n")), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("p", null, "we get this in storybook on the left and cypress on the right"), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("p", {
-    align: "middle"
-  }, (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("img", {
-    alt: "code block in storybook",
-    src: "https://user-images.githubusercontent.com/9889378/206865846-9715783f-5e1f-4d05-aaab-053023360145.png",
-    width: "49%",
-    style: "max-width: 100%;"
-  }), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("img", {
-    alt: "code block in cypress",
-    src: "https://user-images.githubusercontent.com/9889378/206865829-66fffb3a-25f6-439d-aafe-f79b7dc5912b.png",
-    width: "49%",
-    style: "max-width: 100%"
+  }, "<Story name=\"CyCodeBlock\" parameters={{ cyCodeBlock: true }}>\n  <></>\n</Story>\n\n\"ts CyCodeBlock\n/**\n  * should work as a code block where this first comment is an optional\n  * description; it can be any kind of js comment as long as it's the first\n  * thing in the block\n  */\nconst expected: number = 2;\n\ncy.arbitraryTask(2).then(($num) => {\n  expect($num).to.equal(expected);\n});\n\"\n")), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("p", null, "we get this in storybook in the first image and cypress in the second"), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("p", null, (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("img", {
+    parentName: "p",
+    "src": "https://user-images.githubusercontent.com/9889378/206865846-9715783f-5e1f-4d05-aaab-053023360145.png",
+    "alt": "code block in storybook"
+  }), "\n", (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("img", {
+    parentName: "p",
+    "src": "https://user-images.githubusercontent.com/9889378/206865829-66fffb3a-25f6-439d-aafe-f79b7dc5912b.png",
+    "alt": "code block in cypress"
   })), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("p", null, "Just link the block by story name and drop in an optional comment to become the ", (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("inlineCode", {
     parentName: "p"
-  }, "it"), " test description. Code blocks are great because they can be linted and formatted via prettier/eslint, maybe even type checked."), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("br", null), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("h1", {
+  }, "it"), " test description. Code blocks are great because they can be linted and formatted via prettier/eslint, maybe even type checked."), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("p", null, "Note: this is not something we've tried out yet, could be/probably is totally off the rails."), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("br", null), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("h1", {
     "id": "test-coverage"
-  }, "Test Coverage"), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("p", null, "This repo does it, and its great."), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("p", null, "TODO: bit more here obviously."), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("h1", {
+  }, "Test Coverage"), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("p", null, "This turned out to be fairly simple. To instrument the code, I added ", (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("inlineCode", {
+    parentName: "p"
+  }, "'istanbul'"), " to the babel plugins, and added a ", (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("a", {
+    parentName: "p",
+    "href": "https://github.com/quotapath/orphic-cypress/blob/main/.nycrc.json",
+    "target": "_blank",
+    "rel": "nofollow noopener noreferrer"
+  }, ".nycrc.json"), " config file."), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("p", null, "TODO: bit more here obviously."), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("h1", {
     "id": "a-general-overview-of-the-landscape"
   }, "A General Overview of the Landscape"), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("h2", {
     "id": "what-are-component-tests"
@@ -629,7 +628,13 @@ function MDXContent(_ref) {
     "id": "some-more-ideas"
   }, "Some more ideas"), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("ul", null, (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("li", {
     parentName: "ul"
-  }, "vite support. I've never used it"), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("li", {
+  }, "vite support. I've never used it", (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("ul", {
+    parentName: "li"
+  }, (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("li", {
+    parentName: "ul"
+  }, "vitest headless execution of literate testing could bypass ", (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("inlineCode", {
+    parentName: "li"
+  }, "mount"), " calls"))), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("li", {
     parentName: "ul"
   }, "mdx2 support. tried it, was fairly close"), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("li", {
     parentName: "ul"
@@ -647,14 +652,21 @@ function MDXContent(_ref) {
     parentName: "li"
   }, "_Optional_"), " to optional props b/c the red star isn't obvous enough"))), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("li", {
     parentName: "ul"
-  }, "an addon panel? Maybe it could display the results or even snapshots of the last cypress run of that test")), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("h1", {
+  }, "an addon panel? Maybe it could display the results or even snapshots of the last cypress run of that test"), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("li", {
+    parentName: "ul"
+  }, "e2e tests for example purposes and to validate docs, with merged coverage. e2e works fine, getting it to properly cover the storybook code wasn't yet")), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("h1", {
     "id": "prior-art"
   }, "Prior Art"), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("p", null, (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("a", {
     parentName: "p",
     "href": "https://www.cypress.io/blog/2021/05/19/cypress-x-storybook-2-0/",
     "target": "_blank",
     "rel": "nofollow noopener noreferrer"
-  }, "Cypress's recommendation on component testing storybook"), " is essentially the 'what you can do without this package'"));
+  }, "Cypress's recommendation on component testing storybook"), " is essentially the 'what you can do without this package'\n", (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("a", {
+    parentName: "p",
+    "href": "https://github.com/NicholasBoll/cypress-storybook",
+    "target": "_blank",
+    "rel": "nofollow noopener noreferrer"
+  }, "cypress-storybook"), " is a collection of utils for e2e testing which end up hooking into storybook's event emitter. That style of testing seems less preferrable than component tests, but it's fun and some of the ideas could still be applicable"));
 }
 MDXContent.displayName = "MDXContent";
 ;
@@ -7669,4 +7681,4 @@ var _frameworkImportPath = __webpack_require__("./node_modules/@storybook/react/
 /******/ var __webpack_exports__ = __webpack_require__.O();
 /******/ }
 ]);
-//# sourceMappingURL=main.f737085e.iframe.bundle.js.map
+//# sourceMappingURL=main.91be7eda.iframe.bundle.js.map
