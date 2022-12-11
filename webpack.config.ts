@@ -64,7 +64,7 @@ module.exports = {
               transpileOnly: true,
               ...(useIsolatedComponentFiles && {
                 getCustomTransformers: () => ({
-                  before: [transformIsolatedComponentFiles("src")],
+                  before: [transformIsolatedComponentFiles()],
                 }),
               }),
             },
