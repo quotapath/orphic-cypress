@@ -405,9 +405,7 @@ Note: this is not something we've tried out yet, could be/probably is totally of
 
 # Test Coverage
 
-This turned out to be fairly simple. To instrument the code, I added `'istanbul'` to the babel plugins, and added a [.nycrc.json](https://github.com/quotapath/orphic-cypress/blob/main/.nycrc.json) config file.
-
-TODO: bit more here obviously.
+This turned out to be fairly simple. To instrument the code, I added `'istanbul'` to the babel plugins, and added a [.nycrc.json](https://github.com/quotapath/orphic-cypress/blob/main/.nycrc.json) config file. Then for cypress to gather coverage, I added a fork of cypress's coverage lib [@bahmutov/cypress-code-coverage](https://github.com/bahmutov/cypress-code-coverage), following [this well written blog post](https://glebbahmutov.com/blog/component-code-coverage/), and that was that. Instead of opting for codecov or something, I wrote a [quick python script](https://github.com/quotapath/orphic-cypress/blob/main/.github/scripts/get_coverage_url.py) which grabs the line coverage percentage and makes an svg via [img.shields.io](https://img.shields.io/badge/). Coverage for the isolated and required variants of the test runs are merged, though not for any particular reason besides curiousity. Finally the badge and the lcov gets thrown into the `docs` dir for github pages publishing, the whole process taking place within github actions.
 
 # A General Overview of the Landscape
 
@@ -478,7 +476,71 @@ SomeStory.play = async ({ canvasElement }) => {
 
 #### Cypress execution of builtin interactive tests by visiting the story's url or iframe
 
-TODO
+This was another path I'd gone down. You can have hit storybook via an e2e cypress configuration and then do some combination of loading the normal page, writing an assertion against the interactive addon panel, going to the iframe and/or hooking into cypress internals all while writing some of the assertions in storybook and some in cypress. It ends up being a bizarre hybrid. Storybook themselves [have an example of this sort](https://storybook.js.org/docs/react/writing-tests/importing-stories-in-tests#example-with-cypress). Rarely if ever is the automatic execution of stories mentioned.
+
+Which is why I kind of liked our approach. A first attempt traversed the sidebar and checked the interactions panel, but a second one got the stories.json output, went to the generic iframe page and hooked into storybook's event emitter to load stories and execute play, like so:
+
+```ts
+/**
+ * Test that there are no errors in a storybook's iframe, which will throw exceptions
+ * for expect assertion failures.
+ *
+ * Expects to already be on the styleguide page from a previous `cy.visitStyleguide`
+ * but will go to a story if needed.
+ */
+export const testStory = ({ id: storyId }: { id: string }) => {
+  // for some reason, error state requires a full revisit
+  cy.window().then((win) => {
+    // @ts-ignore
+    if (win.__test_runner_error) {
+      // @ts-ignore
+      win.__test_runner_error = false;
+      return cy.visitStyleguide(storyId, true);
+    }
+  });
+  cy.get("#root").should("exist");
+
+  // pure documentation pages do not register 'storyRendered' etc events
+  if (/--page$/.test(storyId)) return;
+
+  // adapted from storybook's playwright test runner
+  // https://github.com/storybookjs/test-runner/blob/next/playwright/custom-environment.js#L110-L124
+  cy.window()
+    .its("__STORYBOOK_ADDONS_CHANNEL__")
+    .then((channel) =>
+      new Promise((resolve, reject) => {
+        channel.once("storyRendered", resolve);
+        channel.once("storyUnchanged", resolve);
+        channel.once("storyErrored", ({ description }) =>
+          reject(new StorybookTestRunnerError(storyId, description))
+        );
+        channel.once("storyThrewException", (error: Error) =>
+          reject(new StorybookTestRunnerError(storyId, error.message))
+        );
+        channel.once(
+          "storyMissing",
+          (id: string) =>
+            id === storyId &&
+            reject(
+              new StorybookTestRunnerError(
+                storyId,
+                "The story was missing when trying to access it."
+              )
+            )
+        );
+        channel.emit("setCurrentStory", { storyId });
+      }).catch((e) => {
+        cy.window().then((win) => {
+          // @ts-ignore
+          win.__test_runner_error = true;
+          throw e;
+        });
+      })
+    );
+};
+```
+
+Which, as the code docs say, was inspired by the official storybook playwright runner. Again, very cool, but ulimately, in our opinion, an untenable hybrid with too much cognitive overhead.
 
 ---
 
@@ -580,6 +642,6 @@ It's a literary, _storybook_, name. Why name a repo which is mostly examples? Ju
 
 # Prior Art
 
-[Cypress's recommendation on component testing storybook](https://www.cypress.io/blog/2021/05/19/cypress-x-storybook-2-0/) is essentially the 'what you can do without this package'
+[Cypress's recommendation on component testing storybook](https://www.cypress.io/blog/2021/05/19/cypress-x-storybook-2-0/) by Bart Ledoux is essentially the 'what you can do without this package'.
 
 [cypress-storybook](https://github.com/NicholasBoll/cypress-storybook) is a collection of utils for e2e testing which end up hooking into storybook's event emitter. That style of testing seems less preferrable than component tests, but it's fun and some of the ideas could still be applicable

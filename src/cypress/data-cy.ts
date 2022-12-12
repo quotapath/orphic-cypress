@@ -64,14 +64,20 @@ export const dataCy: DataCy = (...args: any) => {
   // handle the unlikely scenario someone takes the first signature literally
   const unlikelyArgs = args as [undefined, ...Parameters<DataCyWithSubject>];
   if (!unlikelyArgs[0] && typeof unlikelyArgs[1] !== "string") {
-    return cy
-      .wrap(unlikelyArgs[1])
-      .dataCy(unlikelyArgs[2], unlikelyArgs[3], unlikelyArgs[4]);
+    // type coerce here due to build intentionally not including the added types
+    return (cy.wrap(unlikelyArgs[1]) as unknown as { dataCy: DataCy }).dataCy(
+      unlikelyArgs[2],
+      unlikelyArgs[3],
+      unlikelyArgs[4]
+    );
   }
   const [subject, selector, children, options] =
     args as Parameters<DataCyWithSubject>;
   return subject
-    ? cy.wrap(subject).within(() => cy.dataCy(selector, children, options))
+    ? cy.wrap(subject).within(() =>
+        // again, type coerce here due to build intentionally not including the added types
+        (cy as { dataCy: DataCy }).dataCy(selector, children, options)
+      )
     : cy.get(
         `[data-cy="${selector}"]${children ? ` ${children}` : ""}`,
         options
