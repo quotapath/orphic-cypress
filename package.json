@@ -1,6 +1,6 @@
 {
   "name": "orphic-cypress",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Set of utilities and typescript transformers to cover storybook stories with cypress component tests",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -10,6 +10,7 @@
     "test:isolated": "CYPRESS_USE_ISOLATED_CT_FILES=true cypress run --component",
     "test:isolated:headed": "CYPRESS_USE_ISOLATED_CT_FILES=true cypress open --project . --component",
     "prebuild": "rm -rf ./dist",
+    "prepublishOnly": "npm run build",
     "cache-clear": "rm -rf ./node_modules/.cache",
     "build": "tsc -p tsconfig.build.json",
     "lint": "eslint \"**/*.{ts,tsx,js,jsx,md,mdx}\"",

@@ -1,7 +1,7 @@
 # taken verbatim from
 # https://docs.github.com/en/actions/publishing-packages/publishing-nodejs-packages#publishing-packages-to-the-npm-registry
-# thus far
-name: Publish Package to npmjs
+# besides the build step
+name: Publish to npmjs
 on:
   release:
     types: [created]

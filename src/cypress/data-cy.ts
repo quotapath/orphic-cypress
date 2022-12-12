@@ -76,7 +76,11 @@ export const dataCy: DataCy = (...args: any) => {
   return subject
     ? cy.wrap(subject).within(() =>
         // again, type coerce here due to build intentionally not including the added types
-        (cy as { dataCy: DataCy }).dataCy(selector, children, options)
+        (cy as unknown as { dataCy: DataCy }).dataCy(
+          selector,
+          children,
+          options
+        )
       )
     : cy.get(
         `[data-cy="${selector}"]${children ? ` ${children}` : ""}`,
