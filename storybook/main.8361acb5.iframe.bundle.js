@@ -463,7 +463,29 @@ function MDXContent(_ref) {
     "href": "https://github.com/quotapath/orphic-cypress/blob/main/.nycrc.json",
     "target": "_blank",
     "rel": "nofollow noopener noreferrer"
-  }, ".nycrc.json"), " config file."), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("p", null, "TODO: bit more here obviously."), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("h1", {
+  }, ".nycrc.json"), " config file. Then for cypress to gather coverage, I added a fork of cypress's coverage lib ", (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("a", {
+    parentName: "p",
+    "href": "https://github.com/bahmutov/cypress-code-coverage",
+    "target": "_blank",
+    "rel": "nofollow noopener noreferrer"
+  }, "@bahmutov/cypress-code-coverage"), ", following ", (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("a", {
+    parentName: "p",
+    "href": "https://glebbahmutov.com/blog/component-code-coverage/",
+    "target": "_blank",
+    "rel": "nofollow noopener noreferrer"
+  }, "this well written blog post"), ", and that was that. Instead of opting for codecov or something, I wrote a ", (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("a", {
+    parentName: "p",
+    "href": "https://github.com/quotapath/orphic-cypress/blob/main/.github/scripts/get_coverage_url.py",
+    "target": "_blank",
+    "rel": "nofollow noopener noreferrer"
+  }, "quick python script"), " which grabs the line coverage percentage and makes an svg via ", (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("a", {
+    parentName: "p",
+    "href": "https://img.shields.io/badge/",
+    "target": "_blank",
+    "rel": "nofollow noopener noreferrer"
+  }, "img.shields.io"), ". Coverage for the isolated and required variants of the test runs are merged, though not for any particular reason besides curiousity. Finally the badge and the lcov gets thrown into the ", (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("inlineCode", {
+    parentName: "p"
+  }, "docs"), " dir for github pages publishing, the whole process taking place within github actions."), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("h1", {
     "id": "a-general-overview-of-the-landscape"
   }, "A General Overview of the Landscape"), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("h2", {
     "id": "what-are-component-tests"
@@ -530,7 +552,15 @@ function MDXContent(_ref) {
     parentName: "ul"
   }, "It\u2019s a true pain to set up in CI. They have their own test runner in playwrite, but I couldn\u2019t get it working with a quick pass in circleci. I built a custom cypress executor, but that broke when we moved to nginx.")))), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("hr", null), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("h4", {
     "id": "cypress-execution-of-builtin-interactive-tests-by-visiting-the-storys-url-or-iframe"
-  }, "Cypress execution of builtin interactive tests by visiting the story's url or iframe"), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("p", null, "TODO"), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("hr", null), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("h4", {
+  }, "Cypress execution of builtin interactive tests by visiting the story's url or iframe"), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("p", null, "This was another path I'd gone down. You can have hit storybook via an e2e cypress configuration and then do some combination of loading the normal page, writing an assertion against the interactive addon panel, going to the iframe and/or hooking into cypress internals all while writing some of the assertions in storybook and some in cypress. It ends up being a bizarre hybrid. Storybook themselves ", (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("a", {
+    parentName: "p",
+    "href": "https://storybook.js.org/docs/react/writing-tests/importing-stories-in-tests#example-with-cypress",
+    "target": "_blank",
+    "rel": "nofollow noopener noreferrer"
+  }, "have an example of this sort"), ". Rarely if ever is the automatic execution of stories mentioned."), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("p", null, "Which is why I kind of liked our approach. A first attempt traversed the sidebar and checked the interactions panel, but a second one got the stories.json output, went to the generic iframe page and hooked into storybook's event emitter to load stories and execute play, like so:"), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("pre", null, (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("code", {
+    parentName: "pre",
+    "className": "language-ts"
+  }, "/**\n * Test that there are no errors in a storybook's iframe, which will throw exceptions\n * for expect assertion failures.\n *\n * Expects to already be on the styleguide page from a previous `cy.visitStyleguide`\n * but will go to a story if needed.\n */\nexport const testStory = ({ id: storyId }: { id: string }) => {\n  // for some reason, error state requires a full revisit\n  cy.window().then((win) => {\n    // @ts-ignore\n    if (win.__test_runner_error) {\n      // @ts-ignore\n      win.__test_runner_error = false;\n      return cy.visitStyleguide(storyId, true);\n    }\n  });\n  cy.get(\"#root\").should(\"exist\");\n\n  // pure documentation pages do not register 'storyRendered' etc events\n  if (/--page$/.test(storyId)) return;\n\n  // adapted from storybook's playwright test runner\n  // https://github.com/storybookjs/test-runner/blob/next/playwright/custom-environment.js#L110-L124\n  cy.window()\n    .its(\"__STORYBOOK_ADDONS_CHANNEL__\")\n    .then((channel) =>\n      new Promise((resolve, reject) => {\n        channel.once(\"storyRendered\", resolve);\n        channel.once(\"storyUnchanged\", resolve);\n        channel.once(\"storyErrored\", ({ description }) =>\n          reject(new StorybookTestRunnerError(storyId, description))\n        );\n        channel.once(\"storyThrewException\", (error: Error) =>\n          reject(new StorybookTestRunnerError(storyId, error.message))\n        );\n        channel.once(\n          \"storyMissing\",\n          (id: string) =>\n            id === storyId &&\n            reject(\n              new StorybookTestRunnerError(\n                storyId,\n                \"The story was missing when trying to access it.\"\n              )\n            )\n        );\n        channel.emit(\"setCurrentStory\", { storyId });\n      }).catch((e) => {\n        cy.window().then((win) => {\n          // @ts-ignore\n          win.__test_runner_error = true;\n          throw e;\n        });\n      })\n    );\n};\n")), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("p", null, "Which, as the code docs say, was inspired by the official storybook playwright runner. Again, very cool, but ulimately, in our opinion, an untenable hybrid with too much cognitive overhead."), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("hr", null), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("h4", {
     "id": "cypress-component-tests-directly-without-storybook"
   }, "Cypress component tests directly without storybook"), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("p", null, "They look like this (example pulled from cypress docs):"), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("pre", null, (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("code", {
     parentName: "pre",
@@ -661,7 +691,7 @@ function MDXContent(_ref) {
     "href": "https://www.cypress.io/blog/2021/05/19/cypress-x-storybook-2-0/",
     "target": "_blank",
     "rel": "nofollow noopener noreferrer"
-  }, "Cypress's recommendation on component testing storybook"), " is essentially the 'what you can do without this package'"), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("p", null, (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("a", {
+  }, "Cypress's recommendation on component testing storybook"), " by Bart Ledoux is essentially the 'what you can do without this package'."), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("p", null, (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("a", {
     parentName: "p",
     "href": "https://github.com/NicholasBoll/cypress-storybook",
     "target": "_blank",
@@ -7648,4 +7678,4 @@ var _frameworkImportPath = __webpack_require__("./node_modules/@storybook/react/
 /******/ var __webpack_exports__ = __webpack_require__.O();
 /******/ }
 ]);
-//# sourceMappingURL=main.88457682.iframe.bundle.js.map
+//# sourceMappingURL=main.8361acb5.iframe.bundle.js.map
