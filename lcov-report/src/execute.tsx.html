@@ -257,8 +257,8 @@
 <a name='L192'></a><a href='#L192'>192</a>
 <a name='L193'></a><a href='#L193'>193</a>
 <a name='L194'></a><a href='#L194'>194</a>
-<a name='L195'></a><a href='#L195'>195</a>
-<a name='L196'></a><a href='#L196'>196</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L195'></a><a href='#L195'>195</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -284,8 +284,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">113x</span>
 <span class="cline-any cline-yes">400x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -455,13 +453,14 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { storyNameFromExport } from "@storybook/csf";
 import { composeStories } from "@storybook/testing-react";
+import React from "react";
 import * as ts from "typescript";
 &nbsp;
 import type { Stories } from "./actions";
 import { stubStoryActions } from "./actions";
 import type { CyTestConfig } from "./config";
 import { mockToCyIntercept } from "./intercept";
-import { getStoryCyFromMDXCodeBlock } from "./storybook/UnitTest";
+import { getStoryCyFromMdxCodeBlock } from "./storybook/UnitTest";
 import type { StoryFileCy } from "./types";
 &nbsp;
 /* istanbul ignore next */
@@ -469,7 +468,7 @@ class CyTestConfigError extends Error {
   constructor(format: "cyTest" | "object" | "function", storyTitle?: string) {
     super(
       `Opted out of allowing the ${format} format. See your setupNodeEvents` +
-        ` and/or env.cyTest.format.${format} to alter the config, or update the test${
+        ` and/or env["orphic-cypress"].format.${format} to alter the config, or update the test${
           storyTitle ? ` for ${storyTitle}` : ""
         } by changing it to a supported format or moving it to an external file`
     );
@@ -489,9 +488,7 @@ const evalTranspile = (code: string) =&gt; {
       },
       "test.cy.tsx"
     )
-    // TODO: evaluate necessity if say jsx wasn't React based
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-  )(require("react"));
+  )(React);
   return eval(transformed);
 };
 &nbsp;
@@ -522,7 +519,7 @@ export const executeCyTests = &lt;T extends StoryFileCy&gt;(
       <span class="missing-if-branch" title="if path not taken" >I</span>if (typeof defaultCy === "string") <span class="cstat-no" title="statement not covered" >evalTranspile(defaultCy)();</span>
       else defaultCy();
     }
-    const config: CyTestConfig = Cypress.env("cyTest");
+    const config: CyTestConfig = Cypress.env("orphic-cypress");
 &nbsp;
     const cyIncludeStories =
       stories.default.cyIncludeStories ||
@@ -574,7 +571,7 @@ export const executeCyTests = &lt;T extends StoryFileCy&gt;(
               );
             }
             const [description, cyTestFromBlock] = Object.entries(
-              getStoryCyFromMDXCodeBlock(
+              getStoryCyFromMdxCodeBlock(
                 stories.default.parameters,
                 story.storyName,
                 true
@@ -600,7 +597,7 @@ export const executeCyTests = &lt;T extends StoryFileCy&gt;(
             : it;
         if (parameters.cyCodeBlock) {
           // MUTATE STORY
-          story.cy = getStoryCyFromMDXCodeBlock(
+          story.cy = getStoryCyFromMdxCodeBlock(
             stories.default.parameters,
             story.storyName,
             true
@@ -615,7 +612,7 @@ export const executeCyTests = &lt;T extends StoryFileCy&gt;(
               if (config?.format?.function === false) {
                 throw new CyTestConfigError("function", stories.default.title);
               }
-              cy.mount(Comp({ ...this.actions }));
+              cy.mount(&lt;Comp {...this.actions} /&gt;);
               if (typeof storyCy === "function") return storyCy.bind(this)();
               evalTranspile(storyCy).bind(this)();
             });
@@ -628,7 +625,7 @@ export const executeCyTests = &lt;T extends StoryFileCy&gt;(
               if (config?.format?.object === false) {
                 throw new CyTestConfigError("object", stories.default.title);
               }
-              cy.mount(Comp({ ...this.actions }));
+              cy.mount(&lt;Comp {...this.actions} /&gt;);
               if (typeof cyTest === "string") {
                 evalTranspile(cyTest).bind(this)();
               } else {
@@ -641,7 +638,7 @@ export const executeCyTests = &lt;T extends StoryFileCy&gt;(
         if (name !== "__page") {
           // no test defined, just check that it renders ok
           itFn(`${name} should render ok`, function () {
-            cy.mount(Comp({ ...this.actions }));
+            cy.mount(&lt;Comp {...this.actions} /&gt;);
           });
         }
       });
@@ -655,7 +652,7 @@ export const executeCyTests = &lt;T extends StoryFileCy&gt;(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2022-12-12T03:58:29.563Z
+                at 2022-12-17T11:56:53.713Z
             </div>
         <script src="../prettify.js"></script>
         <script>

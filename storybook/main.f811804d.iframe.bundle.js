@@ -82,6 +82,15 @@ function MDXContent(_ref) {
     parentName: "a",
     "src": "https://quotapath.github.io/orphic-cypress/test-coverage.svg",
     "alt": "test coverage"
+  })), " ", (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("a", {
+    parentName: "p",
+    "href": "https://www.npmjs.com/package/orphic-cypress",
+    "target": "_blank",
+    "rel": "nofollow noopener noreferrer"
+  }, (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("img", {
+    parentName: "a",
+    "src": "https://badge.fury.io/js/orphic-cypress.svg",
+    "alt": "npm version"
   }))), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("p", null, "A set of utilities, typescript transformers, and general examples on how to cover storybook stories with cypress component tests.\nIn short, this is a little overengineering, a little black magic, and a lot of documentation on making these kinds of tests as easy and concise as possible."), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("h2", {
     "id": "features"
   }, "Features"), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("ul", null, (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("li", {
@@ -131,7 +140,7 @@ function MDXContent(_ref) {
     "rel": "nofollow noopener noreferrer"
   }, "snippets from storysource"), " or to ", (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("a", {
     parentName: "li",
-    "href": "https://quotapath.github.io/orphic-cypress/functions/storybook_segment_mdx.segmentMDX.html",
+    "href": "https://quotapath.github.io/orphic-cypress/functions/storybook_segment_mdx.segmentMdx.html",
     "target": "_blank",
     "rel": "nofollow noopener noreferrer"
   }, "segment an mdx file"), " to use in multiple doc locations."), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("li", {
@@ -486,6 +495,20 @@ function MDXContent(_ref) {
   }, "img.shields.io"), ". Coverage for the isolated and required variants of the test runs are merged, though not for any particular reason besides curiousity. Finally the badge and the lcov gets thrown into the ", (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("inlineCode", {
     parentName: "p"
   }, "docs"), " dir for github pages publishing, the whole process taking place within github actions."), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("h1", {
+    "id": "contributing-to-this-orphic-cypress"
+  }, "Contributing to this orphic-cypress"), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("p", null, "Do it! That'd be great. I could probably expand this a bit, but generally everything is available via npm scripts: ", (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("inlineCode", {
+    parentName: "p"
+  }, "npm run test"), " runs mount/require version and ", (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("inlineCode", {
+    parentName: "p"
+  }, "npm run test:isolated"), " runs isolated version, then ", (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("inlineCode", {
+    parentName: "p"
+  }, "npm run test:headed"), " and ", (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("inlineCode", {
+    parentName: "p"
+  }, "npm run test:isolated:headed"), " are the headed browser versions. All of those test the storybook stories located at ", (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("inlineCode", {
+    parentName: "p"
+  }, "./stories"), ", as well as unit tests. ", (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("inlineCode", {
+    parentName: "p"
+  }, "npm run storybook"), " will bring up that storybook environment."), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("h1", {
     "id": "a-general-overview-of-the-landscape"
   }, "A General Overview of the Landscape"), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("h2", {
     "id": "what-are-component-tests"
@@ -684,7 +707,9 @@ function MDXContent(_ref) {
     parentName: "ul"
   }, "an addon panel? Maybe it could display the results or even snapshots of the last cypress run of that test"), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("li", {
     parentName: "ul"
-  }, "e2e tests for example purposes and to validate docs, with merged coverage. e2e works fine, getting it to properly cover the storybook code wasn't yet")), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("h1", {
+  }, "e2e tests for example purposes and to validate docs, with merged coverage. e2e works fine, getting it to properly cover the storybook code wasn't yet"), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("li", {
+    parentName: "ul"
+  }, "vue support. Or angular, plain html etc. not sure how much appetite I have for that since our daily driver is react and it'd probably be an undertaking, but maybe. Contributions welcome!")), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("h1", {
     "id": "prior-art"
   }, "Prior Art"), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("p", null, (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("a", {
     parentName: "p",
@@ -2155,7 +2180,7 @@ function MDXContent(_ref) {
   }), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)(_storybook_addon_docs__WEBPACK_IMPORTED_MODULE_7__/* .Meta */ .h_, {
     id: "mockrequests-overview",
     mdxType: "Meta"
-  }), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)(react__WEBPACK_IMPORTED_MODULE_5__.Fragment, null, (0,_src_storybook_segment_mdx__WEBPACK_IMPORTED_MODULE_9__/* .segmentMDX */ .Xr)(_README_md__WEBPACK_IMPORTED_MODULE_8__/* ["default"] */ .Z)["intercepting-api-requests"].full), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("h2", {
+  }), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)(react__WEBPACK_IMPORTED_MODULE_5__.Fragment, null, (0,_src_storybook_segment_mdx__WEBPACK_IMPORTED_MODULE_9__/* .segmentMdx */ .pW)(_README_md__WEBPACK_IMPORTED_MODULE_8__/* ["default"] */ .Z)["intercepting-api-requests"].full), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("h2", {
     "id": "further-afield"
   }, "Further afield"), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("p", null, "If you really wanted the storybook mock itself to work, you could pull in ", (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("inlineCode", {
     parentName: "p"
@@ -6587,7 +6612,7 @@ var __namedExportsOrder = ["StubActions", "CheckOtherAliasesAndAccessOptions", "
 /* harmony export */   "df": () => (/* binding */ unitTestDecorator),
 /* harmony export */   "y$": () => (/* binding */ UnitTest)
 /* harmony export */ });
-/* unused harmony exports ParametersContext, getStoryCyFromMDXCodeBlock */
+/* unused harmony exports ParametersContext, getStoryCyFromMdxCodeBlock */
 /* harmony import */ var _home_runner_work_orphic_cypress_orphic_cypress_node_modules_core_js_modules_es_object_entries_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("./node_modules/core-js/modules/es.object.entries.js");
 /* harmony import */ var _home_runner_work_orphic_cypress_orphic_cypress_node_modules_core_js_modules_es_object_entries_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_home_runner_work_orphic_cypress_orphic_cypress_node_modules_core_js_modules_es_object_entries_js__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _home_runner_work_orphic_cypress_orphic_cypress_node_modules_core_js_modules_es_symbol_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__("./node_modules/core-js/modules/es.symbol.js");
@@ -6798,7 +6823,7 @@ var partitionCommentsAndCode = function partitionCommentsAndCode(fnToParse) {
  * Just a tad hacky with how its getting to the MDXContent
  * @private
  */
-var getStoryCyFromMDXCodeBlock = function getStoryCyFromMDXCodeBlock(parameters, storyName, functionize) {
+var getStoryCyFromMdxCodeBlock = function getStoryCyFromMdxCodeBlock(parameters, storyName, functionize) {
   var _parameters$docs, _parameters$docs$page, _parameters$docs$page2, _parameters$docs$page3, _parameters$docs$page4, _parameters$docs$page5, _mdxContent$props$chi, _mdxContent$props;
   var mdxContent = parameters === null || parameters === void 0 ? void 0 : (_parameters$docs = parameters.docs) === null || _parameters$docs === void 0 ? void 0 : (_parameters$docs$page = _parameters$docs.page) === null || _parameters$docs$page === void 0 ? void 0 : (_parameters$docs$page2 = _parameters$docs$page.call(_parameters$docs)) === null || _parameters$docs$page2 === void 0 ? void 0 : (_parameters$docs$page3 = _parameters$docs$page2.props) === null || _parameters$docs$page3 === void 0 ? void 0 : (_parameters$docs$page4 = _parameters$docs$page3.children) === null || _parameters$docs$page4 === void 0 ? void 0 : (_parameters$docs$page5 = _parameters$docs$page4.type) === null || _parameters$docs$page5 === void 0 ? void 0 : _parameters$docs$page5.call(_parameters$docs$page4, {});
   var _iterator2 = _createForOfIteratorHelper((_mdxContent$props$chi = mdxContent === null || mdxContent === void 0 ? void 0 : (_mdxContent$props = mdxContent.props) === null || _mdxContent$props === void 0 ? void 0 : _mdxContent$props.children) !== null && _mdxContent$props$chi !== void 0 ? _mdxContent$props$chi : []),
@@ -6838,7 +6863,7 @@ var getStoryCyFromMDXCodeBlock = function getStoryCyFromMDXCodeBlock(parameters,
 var unitTestDecorator = function unitTestDecorator(Story, context) {
   var parameters = Object.assign({}, context.originalStoryFn, context.parameters);
   if (parameters.cyCodeBlock) {
-    parameters.cy = getStoryCyFromMDXCodeBlock(context.parameters, context.originalStoryFn.storyName);
+    parameters.cy = getStoryCyFromMdxCodeBlock(context.parameters, context.originalStoryFn.storyName);
   }
   return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_24__.jsxs)(ParametersContext.Provider, {
     value: parameters,
@@ -6877,13 +6902,13 @@ try {
 catch (__react_docgen_typescript_loader_error) { }
 try {
     // @ts-ignore
-    getStoryCyFromMDXCodeBlock.displayName = "getStoryCyFromMDXCodeBlock";
+    getStoryCyFromMdxCodeBlock.displayName = "getStoryCyFromMdxCodeBlock";
     // @ts-ignore
-    getStoryCyFromMDXCodeBlock.__docgenInfo = { "description": "Gets the code block matching a story from the mdx page.\nJust a tad hacky with how its getting to the MDXContent", "displayName": "getStoryCyFromMDXCodeBlock", "props": {} };
+    getStoryCyFromMdxCodeBlock.__docgenInfo = { "description": "Gets the code block matching a story from the mdx page.\nJust a tad hacky with how its getting to the MDXContent", "displayName": "getStoryCyFromMdxCodeBlock", "props": {} };
     // @ts-ignore
     if (typeof STORYBOOK_REACT_CLASSES !== "undefined")
         // @ts-ignore
-        STORYBOOK_REACT_CLASSES["src/storybook/UnitTest.tsx#getStoryCyFromMDXCodeBlock"] = { docgenInfo: getStoryCyFromMDXCodeBlock.__docgenInfo, name: "getStoryCyFromMDXCodeBlock", path: "src/storybook/UnitTest.tsx#getStoryCyFromMDXCodeBlock" };
+        STORYBOOK_REACT_CLASSES["src/storybook/UnitTest.tsx#getStoryCyFromMdxCodeBlock"] = { docgenInfo: getStoryCyFromMdxCodeBlock.__docgenInfo, name: "getStoryCyFromMdxCodeBlock", path: "src/storybook/UnitTest.tsx#getStoryCyFromMdxCodeBlock" };
 }
 catch (__react_docgen_typescript_loader_error) { }
 try {
@@ -6905,7 +6930,7 @@ catch (__react_docgen_typescript_loader_error) { }
 
 "use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "Xr": () => (/* binding */ segmentMDX)
+/* harmony export */   "pW": () => (/* binding */ segmentMdx)
 /* harmony export */ });
 /* unused harmony exports Fifo, safeKebabCase */
 /* harmony import */ var _home_runner_work_orphic_cypress_orphic_cypress_node_modules_core_js_modules_es_map_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("./node_modules/core-js/modules/es.map.js");
@@ -7087,7 +7112,7 @@ var safeKebabCase = function safeKebabCase(str) {
  * Then you can use it like
  * ```ts
  * import mdx from "./some.mdx";
- * const mdxObject = segmentMDX(mdx);
+ * const mdxObject = segmentMdx(mdx);
  * // define FirstComponent...
  * FirstComponent.parameters = {
  *   docs: {
@@ -7118,11 +7143,11 @@ var safeKebabCase = function safeKebabCase(str) {
  * ```md
  * import { Meta } from "@storybook/addon-docs";
  * import readme from "../../README.md";
- * import { segmentMDX } from "orphic-cypress";
+ * import { segmentMdx } from "orphic-cypress";
  *
  * <Meta title="MockRequests/Overview" />
  *
- * <>{segmentMDX(readme)["intercepting-api-requests"].full}</>
+ * <>{segmentMdx(readme)["intercepting-api-requests"].full}</>
  *
  * <-- more markdown -->
  * # Further afield
@@ -7130,7 +7155,7 @@ var safeKebabCase = function safeKebabCase(str) {
  *
  * Uses a dead simple FIFO cache of size 50 just to avoid thinking about memory consumption issues.
  */
-var segmentMDX = function segmentMDX(mdx, force) {
+var segmentMdx = function segmentMdx(mdx, force) {
   var fromCache = !force && cache.get(mdx);
   if (fromCache) return fromCache;
   if (typeof mdx !== "function") return cache.set(mdx, {});
@@ -7459,7 +7484,7 @@ MDXContent.isMDXComponent = true;
 
 // @ts-ignore
 
-/* harmony default export */ const mdx = ((0,segment_mdx/* segmentMDX */.Xr)(MDXContent));
+/* harmony default export */ const mdx = ((0,segment_mdx/* segmentMdx */.pW)(MDXContent));
 
 /***/ }),
 
@@ -7678,4 +7703,4 @@ var _frameworkImportPath = __webpack_require__("./node_modules/@storybook/react/
 /******/ var __webpack_exports__ = __webpack_require__.O();
 /******/ }
 ]);
-//# sourceMappingURL=main.8361acb5.iframe.bundle.js.map
+//# sourceMappingURL=main.f811804d.iframe.bundle.js.map

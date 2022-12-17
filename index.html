@@ -24,7 +24,7 @@
 <a href="#orphic-cypress" id="orphic-cypress" style="color: inherit; text-decoration: none;">
   <h1>Orphic Cypress</h1>
 </a>
-<p><a href="https://quotapath.github.io/orphic-cypress/storybook/"><img src="https://raw.githubusercontent.com/storybookjs/brand/main/badge/badge-storybook.svg" alt="Storybook"></a> <a href="https://quotapath.github.io/orphic-cypress/"><img height="20" src="https://user-images.githubusercontent.com/9889378/203390045-ba98e185-2701-42d7-9c26-a9dae3446ece.png" /></a> <a href="https://github.com/quotapath/orphic-cypress/actions/workflows/ci.yml"><img src="https://github.com/quotapath/orphic-cypress/actions/workflows/ci.yml/badge.svg" alt="CI"></a> <a href="https://quotapath.github.io/orphic-cypress/lcov-report"><img src="https://quotapath.github.io/orphic-cypress/test-coverage.svg" alt="test coverage"></a></p>
+<p><a href="https://quotapath.github.io/orphic-cypress/storybook/"><img src="https://raw.githubusercontent.com/storybookjs/brand/main/badge/badge-storybook.svg" alt="Storybook"></a> <a href="https://quotapath.github.io/orphic-cypress/"><img height="20" src="https://user-images.githubusercontent.com/9889378/203390045-ba98e185-2701-42d7-9c26-a9dae3446ece.png" /></a> <a href="https://github.com/quotapath/orphic-cypress/actions/workflows/ci.yml"><img src="https://github.com/quotapath/orphic-cypress/actions/workflows/ci.yml/badge.svg" alt="CI"></a> <a href="https://quotapath.github.io/orphic-cypress/lcov-report"><img src="https://quotapath.github.io/orphic-cypress/test-coverage.svg" alt="test coverage"></a> <a href="https://www.npmjs.com/package/orphic-cypress"><img src="https://badge.fury.io/js/orphic-cypress.svg" alt="npm version"></a></p>
 <p>A set of utilities, typescript transformers, and general examples on how to cover storybook stories with cypress component tests.
 In short, this is a little overengineering, a little black magic, and a lot of documentation on making these kinds of tests as easy and concise as possible.</p>
 
@@ -38,7 +38,7 @@ In short, this is a little overengineering, a little black magic, and a lot of d
 <li><a href="#stubbing-actions">Automatic action stubs and spies</a> with first level cypress support</li>
 <li><a href="#isolated-component-files-transformer">A typescript transform</a> that turns your <code>stories.tsx</code> files into cypress test files with just a bit of black magic</li>
 <li>Tools for turning <a href="#intercepting-api-requests">storybook addon mock api calls into cypress intercepts</a></li>
-<li>General storybook doc utils for building <a href="https://quotapath.github.io/orphic-cypress/functions/storybook_story_code.transformSource.html">snippets from storysource</a> or to <a href="https://quotapath.github.io/orphic-cypress/functions/storybook_segment_mdx.segmentMDX.html">segment an mdx file</a> to use in multiple doc locations.</li>
+<li>General storybook doc utils for building <a href="https://quotapath.github.io/orphic-cypress/functions/storybook_story_code.transformSource.html">snippets from storysource</a> or to <a href="https://quotapath.github.io/orphic-cypress/functions/storybook_segment_mdx.segmentMdx.html">segment an mdx file</a> to use in multiple doc locations.</li>
 <li>When taken to the extreme, this is a mechanism for <a href="#literate-testing">literate testing!</a></li>
 </ul>
 <p>See extended module documentation in <a href="https://quotapath.github.io/orphic-cypress/">github pages</a> and numerous examples at a <a href="https://quotapath.github.io/orphic-cypress/storybook/">hosted storybook</a></p>
@@ -212,6 +212,11 @@ be parameters:</p>
 </a>
 <p>This turned out to be fairly simple. To instrument the code, I added <code>&#39;istanbul&#39;</code> to the babel plugins, and added a <a href="https://github.com/quotapath/orphic-cypress/blob/main/.nycrc.json">.nycrc.json</a> config file. Then for cypress to gather coverage, I added a fork of cypress&#39;s coverage lib <a href="https://github.com/bahmutov/cypress-code-coverage">@bahmutov/cypress-code-coverage</a>, following <a href="https://glebbahmutov.com/blog/component-code-coverage/">this well written blog post</a>, and that was that. Instead of opting for codecov or something, I wrote a <a href="https://github.com/quotapath/orphic-cypress/blob/main/.github/scripts/get_coverage_url.py">quick python script</a> which grabs the line coverage percentage and makes an svg via <a href="https://img.shields.io/badge/">img.shields.io</a>. Coverage for the isolated and required variants of the test runs are merged, though not for any particular reason besides curiousity. Finally the badge and the lcov gets thrown into the <code>docs</code> dir for github pages publishing, the whole process taking place within github actions.</p>
 
+<a href="#contributing-to-this-orphic-cypress" id="contributing-to-this-orphic-cypress" style="color: inherit; text-decoration: none;">
+  <h1>Contributing to this orphic-cypress</h1>
+</a>
+<p>Do it! That&#39;d be great. I could probably expand this a bit, but generally everything is available via npm scripts: <code>npm run test</code> runs mount/require version and <code>npm run test:isolated</code> runs isolated version, then <code>npm run test:headed</code> and <code>npm run test:isolated:headed</code> are the headed browser versions. All of those test the storybook stories located at <code>./stories</code>, as well as unit tests. <code>npm run storybook</code> will bring up that storybook environment.</p>
+
 <a href="#a-general-overview-of-the-landscape" id="a-general-overview-of-the-landscape" style="color: inherit; text-decoration: none;">
   <h1>A General Overview of the Landscape</h1>
 </a>
@@ -374,6 +379,7 @@ So you&#39;d think that Cypress would join in on this tradition, the cypress bei
 </li>
 <li>an addon panel? Maybe it could display the results or even snapshots of the last cypress run of that test</li>
 <li>e2e tests for example purposes and to validate docs, with merged coverage. e2e works fine, getting it to properly cover the storybook code wasn&#39;t yet</li>
+<li>vue support. Or angular, plain html etc. not sure how much appetite I have for that since our daily driver is react and it&#39;d probably be an undertaking, but maybe. Contributions welcome!</li>
 </ul>
 
 <a href="#prior-art" id="prior-art" style="color: inherit; text-decoration: none;">
@@ -402,6 +408,7 @@ So you&#39;d think that Cypress would join in on this tradition, the cypress bei
 <li class="current selected"><a href="modules.html">Orphic <wbr/>Cypress</a>
 <ul>
 <li class="tsd-kind-module"><a href="modules/actions.html">actions</a></li>
+<li class="tsd-kind-module"><a href="modules/bundlers.html">bundlers</a></li>
 <li class="tsd-kind-module"><a href="modules/config.html">config</a></li>
 <li class="tsd-kind-module"><a href="modules/cypress.html">cypress</a></li>
 <li class="tsd-kind-module"><a href="modules/execute.html">execute</a></li>
