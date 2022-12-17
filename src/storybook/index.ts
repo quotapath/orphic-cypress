@@ -5,6 +5,6 @@
  * @module
  */
 
-export { segmentMDX } from "./segment-mdx";
+export { segmentMdx } from "./segment-mdx";
 export { transformSource } from "./story-code";
 export { UnitTest, unitTestDecorator } from "./UnitTest";

@@ -1,6 +1,6 @@
 {
   "name": "orphic-cypress",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Set of utilities and typescript transformers to cover storybook stories with cypress component tests",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",

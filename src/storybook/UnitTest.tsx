@@ -142,7 +142,7 @@ const partitionCommentsAndCode = (
  * Just a tad hacky with how its getting to the MDXContent
  * @private
  */
-export const getStoryCyFromMDXCodeBlock = (
+export const getStoryCyFromMdxCodeBlock = (
   parameters: any,
   storyName: string,
   functionize?: boolean
@@ -175,7 +175,7 @@ export const getStoryCyFromMDXCodeBlock = (
 export const unitTestDecorator = (Story: any, context: any) => {
   const parameters = { ...context.originalStoryFn, ...context.parameters };
   if (parameters.cyCodeBlock) {
-    parameters.cy = getStoryCyFromMDXCodeBlock(
+    parameters.cy = getStoryCyFromMdxCodeBlock(
       context.parameters,
       context.originalStoryFn.storyName
     );

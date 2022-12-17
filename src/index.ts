@@ -1,5 +1,6 @@
 export type { WrappedActions } from "./actions";
 export { stubStoryActions } from "./actions";
+export * from "./bundlers";
 export * from "./config";
 export * from "./cypress";
 export * from "./intercept";

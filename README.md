@@ -8,7 +8,7 @@
 
 # Orphic Cypress
 
-[![Storybook](https://raw.githubusercontent.com/storybookjs/brand/main/badge/badge-storybook.svg)](https://quotapath.github.io/orphic-cypress/storybook/) <a href="https://quotapath.github.io/orphic-cypress/"><img height="20" src="https://user-images.githubusercontent.com/9889378/203390045-ba98e185-2701-42d7-9c26-a9dae3446ece.png" /></a> [![CI](https://github.com/quotapath/orphic-cypress/actions/workflows/ci.yml/badge.svg)](https://github.com/quotapath/orphic-cypress/actions/workflows/ci.yml) [![test coverage](https://quotapath.github.io/orphic-cypress/test-coverage.svg)](https://quotapath.github.io/orphic-cypress/lcov-report)
+[![Storybook](https://raw.githubusercontent.com/storybookjs/brand/main/badge/badge-storybook.svg)](https://quotapath.github.io/orphic-cypress/storybook/) <a href="https://quotapath.github.io/orphic-cypress/"><img height="20" src="https://user-images.githubusercontent.com/9889378/203390045-ba98e185-2701-42d7-9c26-a9dae3446ece.png" /></a> [![CI](https://github.com/quotapath/orphic-cypress/actions/workflows/ci.yml/badge.svg)](https://github.com/quotapath/orphic-cypress/actions/workflows/ci.yml) [![test coverage](https://quotapath.github.io/orphic-cypress/test-coverage.svg)](https://quotapath.github.io/orphic-cypress/lcov-report) [![npm version](https://badge.fury.io/js/orphic-cypress.svg)](https://www.npmjs.com/package/orphic-cypress)
 
 A set of utilities, typescript transformers, and general examples on how to cover storybook stories with cypress component tests.
 In short, this is a little overengineering, a little black magic, and a lot of documentation on making these kinds of tests as easy and concise as possible.
@@ -21,7 +21,7 @@ In short, this is a little overengineering, a little black magic, and a lot of d
 - [Automatic action stubs and spies](#stubbing-actions) with first level cypress support
 - [A typescript transform](#isolated-component-files-transformer) that turns your `stories.tsx` files into cypress test files with just a bit of black magic
 - Tools for turning [storybook addon mock api calls into cypress intercepts](#intercepting-api-requests)
-- General storybook doc utils for building [snippets from storysource](https://quotapath.github.io/orphic-cypress/functions/storybook_story_code.transformSource.html) or to [segment an mdx file](https://quotapath.github.io/orphic-cypress/functions/storybook_segment_mdx.segmentMDX.html) to use in multiple doc locations.
+- General storybook doc utils for building [snippets from storysource](https://quotapath.github.io/orphic-cypress/functions/storybook_story_code.transformSource.html) or to [segment an mdx file](https://quotapath.github.io/orphic-cypress/functions/storybook_segment_mdx.segmentMdx.html) to use in multiple doc locations.
 - When taken to the extreme, this is a mechanism for [literate testing!](#literate-testing)
 
 See extended module documentation in [github pages](https://quotapath.github.io/orphic-cypress/) and numerous examples at a [hosted storybook](https://quotapath.github.io/orphic-cypress/storybook/)
@@ -407,6 +407,10 @@ Note: this is not something we've tried out yet, could be/probably is totally of
 
 This turned out to be fairly simple. To instrument the code, I added `'istanbul'` to the babel plugins, and added a [.nycrc.json](https://github.com/quotapath/orphic-cypress/blob/main/.nycrc.json) config file. Then for cypress to gather coverage, I added a fork of cypress's coverage lib [@bahmutov/cypress-code-coverage](https://github.com/bahmutov/cypress-code-coverage), following [this well written blog post](https://glebbahmutov.com/blog/component-code-coverage/), and that was that. Instead of opting for codecov or something, I wrote a [quick python script](https://github.com/quotapath/orphic-cypress/blob/main/.github/scripts/get_coverage_url.py) which grabs the line coverage percentage and makes an svg via [img.shields.io](https://img.shields.io/badge/). Coverage for the isolated and required variants of the test runs are merged, though not for any particular reason besides curiousity. Finally the badge and the lcov gets thrown into the `docs` dir for github pages publishing, the whole process taking place within github actions.
 
+# Contributing to this orphic-cypress
+
+Do it! That'd be great. I could probably expand this a bit, but generally everything is available via npm scripts: `npm run test` runs mount/require version and `npm run test:isolated` runs isolated version, then `npm run test:headed` and `npm run test:isolated:headed` are the headed browser versions. All of those test the storybook stories located at `./stories`, as well as unit tests. `npm run storybook` will bring up that storybook environment.
+
 # A General Overview of the Landscape
 
 ## What are component tests?
@@ -639,6 +643,7 @@ It's a literary, _storybook_, name. Why name a repo which is mostly examples? Ju
   - transforms around the docgen details so that you could dynamically change them before they hit anything in storybook, e.g. add `_Optional_` to optional props b/c the red star isn't obvous enough
 - an addon panel? Maybe it could display the results or even snapshots of the last cypress run of that test
 - e2e tests for example purposes and to validate docs, with merged coverage. e2e works fine, getting it to properly cover the storybook code wasn't yet
+- vue support. Or angular, plain html etc. not sure how much appetite I have for that since our daily driver is react and it'd probably be an undertaking, but maybe. Contributions welcome!
 
 # Prior Art
 

@@ -90,7 +90,7 @@ export type StoryFileCyExtension = {
    *
    * If it is an array of strings, then it will simply replace the `includeStories`.
    *
-   * If it is true, then it remove includeStories, which is useful for a
+   * If it is true, then it removes includeStories, which is useful for a
    * special case when using an mdx file as source of documentation but writing
    * components in CSF. You'll want to have have default export `includeStories: []`
    * but then will need to specify this (unless using an external test file) in

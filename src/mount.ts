@@ -15,7 +15,7 @@ import { StoryFileCy } from "./types";
 
 /**
  * A function which will gather the required storybook files.
- * Often, require strings need to be hardcoded. Ours looked like this
+ * Often, require strings need to be hard coded. Ours looked like this
  *
  * ```ts
  * const requireFileCallback: RequireFileCallback = (fullFilePath) => {
@@ -62,7 +62,7 @@ export const mountTest = (
   skipFiles?: string[],
   /**
    * Transform the full file path into the imported module. This can be tricky
-   * b/c webpack needs some manual text to hook in properly. See `RequireFileCallback`
+   * b/c webpack needs some manual text to hook in properly. See {@link RequireFileCallback}
    */
   requireFileCallback: RequireFileCallback = require,
   /** Text passed to cypress's describe block */
@@ -73,11 +73,12 @@ export const mountTest = (
       if (skipFiles?.includes(file)) return;
       const stories = requireFileCallback(file);
       if (!stories || !stories.default) {
-        throw new Error(
-          `No stories found! you may want to add this to skipFile: ${file}`
+        console.error(
+          `\nNo stories found! you may want to add this to skipFile: ${file}\n`
         );
+      } else {
+        executeCyTests(stories, stories.default.title || file);
       }
-      executeCyTests(stories, stories.default.title || file);
     });
   });
 };
@@ -85,16 +86,16 @@ export const mountTest = (
 /**
  * Recursively look for files in a provided directory that include a pattern, `.stories.ts`
  * by default. Could be done easily with the `glob` library, but this is simple enough to
- * keep locally maintained. See `setStorybookFiles` for use inside `setupNodeEvents`
+ * keep locally maintained. See {@link setStorybookFiles} for use inside `setupNodeEvents`
  */
 export const getStorybookFiles = (
   dir: string,
-  storyPattern: string | RegExp = /\.stories|story\./
+  storyPattern: string | RegExp = /\.(stories|story)\./
 ): string[] =>
   fs.readdirSync(dir).flatMap((file) => {
     const absolute = path.join(dir, file);
     if (fs.statSync(absolute).isDirectory()) {
-      return getStorybookFiles(absolute);
+      return getStorybookFiles(absolute, storyPattern);
     }
     const matches =
       storyPattern instanceof RegExp
@@ -116,19 +117,20 @@ export const getStorybookFiles = (
  * ```ts
  * setupNodeEvents: (on, config) => {
  *   on.task({...});
- *   setStorybookFiles(on, config);
- *   config.env.something = "something";
+ *   setStorybookFiles(on, config, optionalStoryPattern);
  *   return config; // be sure to return config
  * },
  * ```
  */
 export const setStorybookFiles = (
   on: Cypress.PluginEvents,
-  config: Cypress.PluginConfigOptions
+  config: Cypress.PluginConfigOptions,
+  storyPattern?: string | RegExp
 ): Cypress.PluginConfigOptions => {
   if (!useIsolatedComponentFiles) {
     config.env.storybookFiles = getStorybookFiles(
-      config.env.storyLocation || "./src/"
+      config.env["orphic-cypress"]?.storyLocation || "./src/",
+      storyPattern
     );
   }
   return config;

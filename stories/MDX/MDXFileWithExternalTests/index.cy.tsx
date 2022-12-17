@@ -5,15 +5,15 @@ import { stubStoryActions } from "orphic-cypress";
 // @ts-ignore
 import * as stories from "./index.stories.mdx";
 
-const { mdxFileWithExternalTests: MDXFileWithExternalTests } = composeStories(
+const { mdxFileWithExternalTests: MdxFileWithExternalTests } = composeStories(
   stories,
   sbPreview
 );
 
 describe("External test file", () => {
   it("should contain the external label", () => {
-    const actions = stubStoryActions(MDXFileWithExternalTests, stories);
-    cy.mount(<MDXFileWithExternalTests {...actions} />);
+    const actions = stubStoryActions(MdxFileWithExternalTests, stories);
+    cy.mount(<MdxFileWithExternalTests {...actions} />);
     cy.dataCy("button").should("contain", "In MDX");
     cy.dataCy("button")
       .click()

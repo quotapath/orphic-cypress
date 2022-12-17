@@ -23,12 +23,13 @@ export const useIsolatedComponentFiles =
  *   // ... other config
  *   component: {
  *     env: {
- *       cyTest: {
+ *       "orphic-cypress": {
  *         format: {
  *           cyTest: false,
  *           object: false,
  *           function: true,
- *         }
+ *         },
+ *         storyLocation: "./somewhere/",
  *       }
  *     }
  *   }
@@ -44,7 +45,7 @@ export const useIsolatedComponentFiles =
  * Default is `true` for all values.
  */
 export type CyTestConfig = {
-  /** top level key */
+  /** top level key for opting out of file formats */
   format?: {
     /** disable .cyTest format */
     cyTest?: boolean;
@@ -53,4 +54,10 @@ export type CyTestConfig = {
     /** disable .cy function format */
     function?: boolean;
   };
+  /**
+   * optional to inform mount/require style tests that the root directory
+   * where stories can be found is not `./src/` which is the default.
+   * This lib for instance, sets it as `./stories/`
+   */
+  storyLocation?: string;
 };

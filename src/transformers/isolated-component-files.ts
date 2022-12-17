@@ -80,7 +80,21 @@ type Source = ts.SourceFile & {
  * }
  * ```
  *
- * TODO: docs for mdx
+ * To include mdx files as tests, add this to module rules
+ * ```ts
+ * {
+ *   test: /\.mdx$/,
+ *   use: [
+ *     <above ts-loader config>,
+ *     {
+ *       loader: require.resolve("@storybook/mdx1-csf/loader"),
+ *       options: { skipCsf },
+ *     },
+ *   ],
+ * },
+ * ```
+ * see {@link bundlers.cypressWebpackConfigMdx} for an abstraction to do just that,
+ * as well as load non-story mdx and md files.
  */
 export const transformIsolatedComponentFiles =
   (

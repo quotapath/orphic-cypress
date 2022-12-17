@@ -1,12 +1,13 @@
 import { storyNameFromExport } from "@storybook/csf";
 import { composeStories } from "@storybook/testing-react";
+import React from "react";
 import * as ts from "typescript";
 
 import type { Stories } from "./actions";
 import { stubStoryActions } from "./actions";
 import type { CyTestConfig } from "./config";
 import { mockToCyIntercept } from "./intercept";
-import { getStoryCyFromMDXCodeBlock } from "./storybook/UnitTest";
+import { getStoryCyFromMdxCodeBlock } from "./storybook/UnitTest";
 import type { StoryFileCy } from "./types";
 
 /* istanbul ignore next */
@@ -14,7 +15,7 @@ class CyTestConfigError extends Error {
   constructor(format: "cyTest" | "object" | "function", storyTitle?: string) {
     super(
       `Opted out of allowing the ${format} format. See your setupNodeEvents` +
-        ` and/or env.cyTest.format.${format} to alter the config, or update the test${
+        ` and/or env["orphic-cypress"].format.${format} to alter the config, or update the test${
           storyTitle ? ` for ${storyTitle}` : ""
         } by changing it to a supported format or moving it to an external file`
     );
@@ -34,9 +35,7 @@ const evalTranspile = (code: string) => {
       },
       "test.cy.tsx"
     )
-    // TODO: evaluate necessity if say jsx wasn't React based
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-  )(require("react"));
+  )(React);
   return eval(transformed);
 };
 
@@ -67,7 +66,7 @@ export const executeCyTests = <T extends StoryFileCy>(
       if (typeof defaultCy === "string") evalTranspile(defaultCy)();
       else defaultCy();
     }
-    const config: CyTestConfig = Cypress.env("cyTest");
+    const config: CyTestConfig = Cypress.env("orphic-cypress");
 
     const cyIncludeStories =
       stories.default.cyIncludeStories ||
@@ -119,7 +118,7 @@ export const executeCyTests = <T extends StoryFileCy>(
               );
             }
             const [description, cyTestFromBlock] = Object.entries(
-              getStoryCyFromMDXCodeBlock(
+              getStoryCyFromMdxCodeBlock(
                 stories.default.parameters,
                 story.storyName,
                 true
@@ -145,7 +144,7 @@ export const executeCyTests = <T extends StoryFileCy>(
             : it;
         if (parameters.cyCodeBlock) {
           // MUTATE STORY
-          story.cy = getStoryCyFromMDXCodeBlock(
+          story.cy = getStoryCyFromMdxCodeBlock(
             stories.default.parameters,
             story.storyName,
             true
@@ -160,7 +159,7 @@ export const executeCyTests = <T extends StoryFileCy>(
               if (config?.format?.function === false) {
                 throw new CyTestConfigError("function", stories.default.title);
               }
-              cy.mount(Comp({ ...this.actions }));
+              cy.mount(<Comp {...this.actions} />);
               if (typeof storyCy === "function") return storyCy.bind(this)();
               evalTranspile(storyCy).bind(this)();
             });
@@ -173,7 +172,7 @@ export const executeCyTests = <T extends StoryFileCy>(
               if (config?.format?.object === false) {
                 throw new CyTestConfigError("object", stories.default.title);
               }
-              cy.mount(Comp({ ...this.actions }));
+              cy.mount(<Comp {...this.actions} />);
               if (typeof cyTest === "string") {
                 evalTranspile(cyTest).bind(this)();
               } else {
@@ -186,7 +185,7 @@ export const executeCyTests = <T extends StoryFileCy>(
         if (name !== "__page") {
           // no test defined, just check that it renders ok
           itFn(`${name} should render ok`, function () {
-            cy.mount(Comp({ ...this.actions }));
+            cy.mount(<Comp {...this.actions} />);
           });
         }
       });

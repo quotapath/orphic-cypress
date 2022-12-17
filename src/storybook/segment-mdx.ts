@@ -13,9 +13,9 @@ const isRawMd = (childProps: {
 /** Rendered child, with props */
 export type RenderedChild = any;
 /** mdx component as it exists after importing via `import someMdx from "./some.mdx"` */
-export type MDX = (props: unknown) => RenderedChild;
+export type Mdx = (props: unknown) => RenderedChild;
 /** Object gathered for each header */
-export type ParsedMDX = {
+export type ParsedMdx = {
   /** Full content of this segment of markdown including the header */
   full: RenderedChild[];
   /** Content of this segment of markdown excluding header */
@@ -24,12 +24,12 @@ export type ParsedMDX = {
   md: string;
 };
 /** Function returned for each header, with properties assigned for more specific use cases */
-export type MDXSegment = {
+export type MdxSegment = {
   /** Function which is useful passed to parameters.docs.page directly */
   (): RenderedChild[];
-} & ParsedMDX;
+} & ParsedMdx;
 /** Header in kebab case as key to object of markdown segments */
-export type HeaderKeyedMDXSegment = { [id: string]: MDXSegment };
+export type HeaderKeyedMdxSegment = { [id: string]: MdxSegment };
 
 /**
  * quick and dirty fifo
@@ -58,7 +58,7 @@ export class Fifo<T, U> {
   }
 }
 
-const cache = new Fifo<MDX, HeaderKeyedMDXSegment>();
+const cache = new Fifo<Mdx, HeaderKeyedMdxSegment>();
 
 /**
  * simple kebab-case converter for space separated text,
@@ -108,7 +108,7 @@ export const safeKebabCase = (str?: string | null) =>
  * Then you can use it like
  * ```ts
  * import mdx from "./some.mdx";
- * const mdxObject = segmentMDX(mdx);
+ * const mdxObject = segmentMdx(mdx);
  * // define FirstComponent...
  * FirstComponent.parameters = {
  *   docs: {
@@ -139,11 +139,11 @@ export const safeKebabCase = (str?: string | null) =>
  * ```md
  * import { Meta } from "@storybook/addon-docs";
  * import readme from "../../README.md";
- * import { segmentMDX } from "orphic-cypress";
+ * import { segmentMdx } from "orphic-cypress";
  *
  * <Meta title="MockRequests/Overview" />
  *
- * <>{segmentMDX(readme)["intercepting-api-requests"].full}</>
+ * <>{segmentMdx(readme)["intercepting-api-requests"].full}</>
  *
  * <-- more markdown -->
  * # Further afield
@@ -151,11 +151,11 @@ export const safeKebabCase = (str?: string | null) =>
  *
  * Uses a dead simple FIFO cache of size 50 just to avoid thinking about memory consumption issues.
  */
-export const segmentMDX = (
-  mdx: MDX,
+export const segmentMdx = (
+  mdx: Mdx,
   /** force skipping the cache */
   force?: boolean
-): HeaderKeyedMDXSegment => {
+): HeaderKeyedMdxSegment => {
   const fromCache = !force && cache.get(mdx);
   if (fromCache) return fromCache;
 
@@ -165,7 +165,7 @@ export const segmentMDX = (
 
   let currentId = "file";
 
-  const collection: { [id: string]: ParsedMDX } = {
+  const collection: { [id: string]: ParsedMdx } = {
     file: { full: [], body: [], md: "" },
   };
 
@@ -188,7 +188,7 @@ export const segmentMDX = (
   return cache.set(
     mdx,
     Object.fromEntries(
-      Object.entries(collection).map(([k, v]): [string, MDXSegment] => [
+      Object.entries(collection).map(([k, v]): [string, MdxSegment] => [
         k,
         Object.assign(() => v.full, v),
       ])
