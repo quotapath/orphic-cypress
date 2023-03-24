@@ -191,7 +191,20 @@ function MDXContent(_ref) {
     "href": "https://quotapath.github.io/orphic-cypress/storybook/?path=/docs/fileformats-storybookfiles",
     "target": "_blank",
     "rel": "nofollow noopener noreferrer"
-  }, "storybook"), " for comprehensive examples."), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("h2", {
+  }, "storybook"), " for comprehensive examples."), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("p", null, "Why would you want to combine your storybook files and tests directly? Well, one of the biggest benefit is the reduction in boilerplate. We don't need a new file, don't need to import test utils or the components, and largely don't even need to write the ", (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("inlineCode", {
+    parentName: "p"
+  }, "describe"), "/", (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("inlineCode", {
+    parentName: "p"
+  }, "it"), " architecture. With all but the ", (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("inlineCode", {
+    parentName: "p"
+  }, "cyTest"), " format below, we don't have to even ", (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("inlineCode", {
+    parentName: "p"
+  }, "mount"), " the component, we can just jump right into testing. And with all formats, we don't have to stub actions or write out request interceptions, that all happens (transparently) under the hood. This reduction often means that the tests we need to write are literally one-liners. Reducing the barrier to testing by removing the need for a new file a ton of boilerplate is big."), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("p", null, "It also means your test setup such as a specialized storybook component render or the story's args are in the same file as the test assertions. If you go the separate file route, you'll often have stories like '3/4 completed TODO items' that exist more for the sake of testing, perhaps with a decent amount of setup, and then have to write 'it has 3/4 complete' assertions in the test file, perhaps exporting some of that setup so you can reuse it in the assertions."), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("p", null, "Finally, tests are documentation. This project and especially these syntaxes try to drive that philosophy home and encourage writing tests that help other developers understand how a component works."), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("p", null, "A con is of course that there is magic here: although this is designed to be as transparent and minimal as possible, there's still some syntax to learn and some things that get a bit interesting when it comes to things like sharing state between tests like in ", (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("a", {
+    parentName: "p",
+    "href": "https://quotapath.github.io/orphic-cypress/storybook/?path=/docs/fileformats-cypresstesthookslikebeforeeach",
+    "target": "_blank",
+    "rel": "nofollow noopener noreferrer"
+  }, "this before each example"), "."), (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("h2", {
     "id": "function-syntax"
   }, (0,_mdx_js_react__WEBPACK_IMPORTED_MODULE_6__/* .mdx */ .kt)("inlineCode", {
     parentName: "h2"
@@ -7703,4 +7716,4 @@ var _frameworkImportPath = __webpack_require__("./node_modules/@storybook/react/
 /******/ var __webpack_exports__ = __webpack_require__.O();
 /******/ }
 ]);
-//# sourceMappingURL=main.f811804d.iframe.bundle.js.map
+//# sourceMappingURL=main.e6efcbee.iframe.bundle.js.map
