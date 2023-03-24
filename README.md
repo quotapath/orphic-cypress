@@ -80,6 +80,14 @@ CompWithLabel.cy = () =>
 
 There are 3 available syntaxes for in-file use. See [storybook](https://quotapath.github.io/orphic-cypress/storybook/?path=/docs/fileformats-storybookfiles) for comprehensive examples.
 
+Why would you want to combine your storybook files and tests directly? Well, one of the biggest benefit is the reduction in boilerplate. We don't need a new file, don't need to import test utils or the components, and largely don't even need to write the `describe`/`it` architecture. With all but the `cyTest` format below, we don't have to even `mount` the component, we can just jump right into testing. And with all formats, we don't have to stub actions or write out request interceptions, that all happens (transparently) under the hood. This reduction often means that the tests we need to write are literally one-liners. Reducing the barrier to testing by removing the need for a new file a ton of boilerplate is big.
+
+It also means your test setup such as a specialized storybook component render or the story's args are in the same file as the test assertions. If you go the separate file route, you'll often have stories like '3/4 completed TODO items' that exist more for the sake of testing, perhaps with a decent amount of setup, and then have to write 'it has 3/4 complete' assertions in the test file, perhaps exporting some of that setup so you can reuse it in the assertions.
+
+Finally, tests are documentation. This project and especially these syntaxes try to drive that philosophy home and encourage writing tests that help other developers understand how a component works.
+
+A con is of course that there is magic here: although this is designed to be as transparent and minimal as possible, there's still some syntax to learn and some things that get a bit interesting when it comes to things like sharing state between tests like in [this before each example](https://quotapath.github.io/orphic-cypress/storybook/?path=/docs/fileformats-cypresstesthookslikebeforeeach).
+
 ## `function` syntax
 
 already shown above is the most succinct
