@@ -28,6 +28,11 @@ module.exports = {
     // strings for .cy and .cyTest, or code blocks, but print the actual
     // compiled code in the story
     config.optimization.minimizer = [];
+    config.module.rules.push({
+      resolve: {
+        fullySpecified: false,
+      },
+    });
     config.resolve = {
       ...config.resolve,
       alias: {

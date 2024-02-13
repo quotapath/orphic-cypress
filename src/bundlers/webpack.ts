@@ -11,10 +11,10 @@ const mdUse = (skipCsf: boolean) => [
       presets: ["@babel/preset-env", "@babel/preset-react"],
     },
   },
-  {
-    loader: require.resolve("@storybook/mdx1-csf/loader"),
-    options: { skipCsf },
-  },
+  // {
+  //   loader: require.resolve("@storybook/mdx2-csf/loader"),
+  //   options: { skipCsf },
+  // },
 ];
 
 type SimplifiedUse = { loader?: string };
