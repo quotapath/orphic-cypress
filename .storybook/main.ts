@@ -4,16 +4,23 @@ const path = require("path");
 module.exports = {
   stories: ["../stories/**/*.stories.@(mdx|js|jsx|ts|tsx)"],
 
-  addons: [{
-    // eslint-disable-next-line storybook/no-uninstalled-addons
-    name: "@storybook/addon-docs",
-    options: {
-      transcludeMarkdown: true,
-      sourceLoaderOptions: {
-        injectStoryParameters: false,
+  addons: [
+    {
+      // eslint-disable-next-line storybook/no-uninstalled-addons
+      name: "@storybook/addon-docs",
+      options: {
+        transcludeMarkdown: true,
+        // sourceLoaderOptions: {
+        //   injectStoryParameters: false,
+        // },
       },
     },
-  }, "@storybook/addon-links", "@storybook/addon-essentials", "@storybook/addon-storysource", "storybook-addon-mock", "@storybook/addon-mdx-gfm"],
+    "@storybook/addon-links",
+    "@storybook/addon-essentials",
+    "@storybook/addon-storysource",
+    "storybook-addon-mock",
+    "@storybook/addon-mdx-gfm",
+  ],
 
   webpackFinal: async (config) => {
     // I don't want to minimize because I'm running some literate testing
@@ -39,8 +46,12 @@ module.exports = {
 
     options: {
       builder: {
-        useSWC: true
-      }
-    }
-  }
+        useSWC: true,
+      },
+    },
+  },
+
+  docs: {
+    autodocs: "tag",
+  },
 };
